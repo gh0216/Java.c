@@ -179,3 +179,142 @@ public class TestDemo {
         System.out.println(floor(10));
     }
 }
+
+/*
+ * 将十进制转换成十六进制
+ */
+public class Demo14 {
+    public static void main(String[] args) {
+        int a = 1;
+        int b = 2;
+        System.out.println(a==b);
+        System.out.println(a!=b);
+        System.out.println(a<=b);
+        System.out.println(a>=b);
+    }
+    public static void main6(String[] args) {
+        String a = " hello ";
+        String b = " world ";
+        System.out.println(a+b);
+    }
+    public static void main5(String[] args) {
+        boolean flg = false ? false : true == true? true : false ;
+        System.out.println(flg);
+    }
+    public static void main4(String[] args) {
+        int a = 120;
+        String str = 10+"";
+        String num =String.valueOf(a);
+        System.out.println(num);
+        String str1 = 10+"";
+        int str2 = Integer.valueOf(str1);
+        System.out.println(str2);
+    }
+    public static void main3(String[] args) {
+        String a = "hsadhudas";
+        String b = "bjkdvsbv";
+        System.out.println(a+b);
+    }
+    public static void main2(String[] args) {
+        System.out.println(10%3);
+        System.out.println(-10%3);
+        System.out.println(10%-3);
+        System.out.println(-10%-3);
+    }
+    public static void main1(String[] args) {
+        int x = 32;
+        char[] arry = toHex(x);
+        toString(arry);
+    }
+
+    public static char[] toHex(int num) {
+        char[] chs = new char[8];
+        int index = chs.length - 1;
+        for (int x = 0; x < 8; x++) {
+            int temp = num & 15;
+            if (temp > 9)
+                chs[index] = ((char) (temp - 10 + 'A'));
+            else
+                chs[index] = ((char) (temp + '0'));
+            index--;
+            num = num >>> 4;
+        }
+        return chs;
+    }
+
+    public static void toString(char[] arr) {
+        String temp = "";
+        for (int x = 0; x < arr.length; x++) {
+            temp = temp + arr[x];
+        }
+        System.out.println("OX" + temp);
+    }
+}
+public class TestDemo {
+	public static void main(String[] args) {
+		
+	}
+	// 三个变量求最大最小值
+	public static void main(String[] args) {
+		int a = 256646;
+		int b = 15646;
+		int c = 16411313;
+		int d = a>b? a:b;//提出两个变量进行比较取最大值
+		int e = a<b? a:b;//提出两个变量进行比较取最小值
+		int max = d>c? d:c;//将前两个变量比较的最大值与最后一个变量进行比较，取最大值
+		int min = e<c? e:c;//将前两个变量比较的最小值与最后一个变量进行比较，取最小值
+		System.out.println("最大的数是"+max);
+		System.out.println("最小的数是"+min);
+	}
+	public static void main6(String[] args) {
+		int a = 1 ;
+		int b = 2 ;
+		float c = (float)(a/b); 
+		System.out.println(c);
+	}
+	public static void main5(String[] args) {
+		int a = 12;
+		int b = 6;
+		int c = 65;
+		int max = 0;
+		int min = 0;
+		System.out.println();
+	}
+	public static void main4(String[] args) {
+		//String num = "123";
+		//int a =Integer.valueOf(num);
+		//System.out.println(a);
+		int num = 10;
+		String str =10+"";
+		System.out.println(str);
+		String str2 = String.valueOf(num);
+		System.out.println(str2);
+		/*byte b1 = 1;
+		byte b2 = 2;
+		byte b3 = (byte)(b1 +b2);
+		System.out.println(b3);*/
+	}
+	public static void main3(String[] args) {
+		int a = 10;
+		long b = a;
+		int c = (int)b;
+		System.out.println(c);
+	}
+	public static void main2(String[] args) {
+		String a ="hello";
+		String b ="world";
+		String c = a + b;
+		System.out.println(c);
+    } 
+		
+	public static void main1(String[] args) {
+		int a = 10;
+		int b = 20;
+		int c = 0;
+		c = a;//将a赋值给c
+		a = b;//将b赋值给a
+		b = c;//将c赋值给b
+		System.out.println(a);//打印a的值
+		System.out.println(b);//打印b的值
+	}
+}
