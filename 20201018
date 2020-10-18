@@ -1,0 +1,297 @@
+import sun.plugin.viewer.frame.WNetscapeEmbeddedFrame;
+
+class Person {
+    public int num1;
+    public int a;
+    public static int count;
+    public String num2;
+    private String name ;
+    private int age;
+    public int count1 = 18;//用static定义一个数
+    public static String num3;//用static定义一个字符串
+    public String sex = "male";
+
+    public void eat(){
+        System.out.println("吃饭！");
+    }
+
+    public void sleep() {
+        System.out.println("睡觉！");
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getAge() {
+        return this.age;
+    }
+
+    public void func() {
+        System.out.println("姓名：" + num1+ ",年龄：" + num2);
+    }
+    public void func2() {
+        int max =  num1 + a ;
+        System.out.println(max);
+    }
+    private void func3() {
+        System.out.println("姓名：" + num1);
+        System.out.println("年龄：" + num2);
+    }
+
+//    static{
+//        System.out.println("静态代码块");
+//    }
+//    {
+//        System.out.println("实例代码块");
+//    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + num1 + '\'' +
+                ", age=" + num2 +
+                '}';
+    }
+}
+public class TestDemo {
+
+
+    public static void main6(String[] args) {
+        Person person = new Person();
+        System.out.println(person.count1);
+        System.out.println(person.sex);
+        person.func();
+        Person person2 = new Person();
+        person2.num2 = "李四";
+        person2.num1 = 18 ;
+        person2.func();
+    }
+
+    public static void main5(String[] args) {
+        Person person = new Person();
+        person.eat();
+        person.sleep();
+        System.out.println(person.num1);
+        System.out.println(person.num2);
+        //System.out.println(person.num2.length());//获取字符串长度
+    }
+
+    public static void main4(String[] args) {
+        Person person = new Person();
+        Person person1 = new Person();
+        Person person2= new Person();
+        Person person3 = new Person();
+        Person person4 = new Person();
+        Person person5 = new Person();
+        person.num1 = 48;
+        person.num2 = "Java";
+        System.out.println(person);
+        person.setName("Java");
+        System.out.println(person.getName());
+        person.setAge(456);
+        System.out.println(person.getAge());
+    }
+
+    public static void main3(String[] args) {
+        Person ter = new Person();
+        ter.num1 = 15;
+        ter.a = 56 ;
+        ter.func2();
+    }
+
+    public static void main2(String[] args) {
+        Person t1 = new Person();
+        t1.a++;//1
+        Person.count++;//1
+        System.out.println(t1.a);//11
+        System.out.println(Person.count);//1
+        System.out.println("================");
+        Person t2 = new Person();
+        t2.a++;//1
+        Person.count++;
+        System.out.println(t2.a);//1
+        System.out.println(Person.count);//2
+    }
+
+    public static void main1(String[] args) {
+        Person person = new Person();
+        person.num1 = 18;
+        person.num2 = "123";
+        person.func();
+    }
+}
+
+
+
+class Person4 {
+    private String name;//实例成员变量
+    private int age;
+    private String sex;
+
+    //默认构造函数 构造对象
+    public Person4() {
+        //this调用构造函数
+        this("bit", 12, "man");//必须放在第一行进行显示
+    }
+
+    //这两个构造函数之间的关系为重载。
+    public Person4(String name,int age,String sex) {
+        this.name = name;
+        this.age = age;
+        this.sex = sex;
+    }
+    public void show() {
+        System.out.println("name: "+name+" age: "+age+" sex: "+sex);
+    }
+}
+
+
+
+class Person3 {
+
+    private String name;//实例成员变量
+    private int age;
+    private String sex;
+    //默认构造函数 构造对象
+    public Person3() {
+        this.name = "caocao";
+        this.age = 10;
+        this.sex = "男";
+    }
+    //带有3个参数的构造函数
+    public Person3(String name,int age,String sex) {
+        this.name = name;
+        this.age = age;
+        this.sex = sex;
+    }
+    public void show(){
+        System.out.println("name: "+name+" age: "+age+" sex: "+sex);
+    }
+
+}
+
+class  Person2 {
+    public int a ;
+    public int num1 ;
+    public String num2;
+    private int age;//实例变量   存放在对象内
+    private String name;//实例变量
+    public String sex;//实例变量
+    public static int count;//类变量也叫静态变量，编译时已经产生，属于类本身，且只有一份。存放在方法区
+    public final int SIZE = 10;//被final修饰的叫常量，也属于对象。 被final修饰，后续不可更改
+    public static final int COUNT = 99;//静态的常量，属于类本身，只有一份 被final修饰，后续不可更
+    //改实例成员函数
+
+    public void eat() {
+        int a = 10;//局部变量
+        System.out.println("eat()!");
+    }
+    //实例成员函数
+    public void sleep() {
+        System.out.println("sleep()!");
+    }
+    //静态成员函数
+    public static void staticTest(){
+        //不能访问非静态成员
+        //sex = "man"; error
+        System.out.println("StaticTest()");
+    }
+    public static void change () {
+        count = 100 ;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return this.name;
+    }
+    public void show () {
+        System.out.println("name:" +name+ " age:" + age);
+    }
+
+    //实例代码块
+    {
+        this.name = "bit";
+        this.age = 12;
+        this.sex = "man";
+        System.out.println("实力代码块 + I am instance init()!");
+    }
+
+    public void show1(){
+        System.out.println("name: "+name+" age: "+age+" sex: "+sex);
+    }
+    static {
+        count = 10;//只能访问静态数据成员
+        System.out.println("静态代码块 + I am static init()!");
+    }
+
+}
+
+public class Test {
+
+
+
+    //实例代码块
+    public static void main(String[] args) {
+        Person2 p1 = new Person2();
+        p1.show();
+    }
+
+    //普通代码块
+    public static void main5(String[] args) {
+        { //直接使用{}定义，普通方法块
+            int x = 10 ;
+            System.out.println("x1 = " +x);
+        }
+        int x = 100 ;
+        System.out.println("x2 = " +x);
+    }
+
+    public static void main4(String[] args) {
+        Person4 person = new Person4();//调用不带参数的构造函数
+        person.show();
+    }
+
+
+    public static void main3(String[] args) {
+        Person3 p1 = new Person3();//调用不带参数的构造函数 如果程序没有提供会调用不带参数的构造函数
+        p1.show();
+        Person3 p2 = new Person3("zhangfei",80,"男");//调用带有3个参数的构造函数
+        p2.show();
+    }
+
+    public static void main2(String[] args) {
+        Person2 person = new Person2();
+        person.setName("caocao");
+        String name = person.getName();
+        System.out.println(name);
+        person.show();
+    }
+
+    public static void main1(String[] args) {
+        //产生对象 实例化对象
+        Person2 person = new Person2();//person为对象的引用
+        System.out.println(person.num1);//默认值为0
+        System.out.println(person.num2);//默认值为null
+        //System.out.println(person.count);//会有警告!
+        //正确访问方式：
+        System.out.println(Person2.count);
+        System.out.println(Person2.COUNT);
+        Person2.staticTest();
+        //总结：所有被static所修饰的方法或者属性，全部不依赖于对象。
+        person.eat();
+        person.sleep();
+        person.change();
+        System.out.println(Person2.count);
+    }
+
+}
