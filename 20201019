@@ -1,0 +1,185 @@
+class Calculator{
+
+    public int val;
+    private int num1;
+    private int num2;
+    public int sub () {
+        return this.num1 - this.num2;
+    }
+    public int add (){
+        return this.num1 + this.num2;
+    }
+    public double dev () {
+        return this.num1*1.0/this.num2;
+    }
+
+    public void setNum1(int num1) {
+        this.num1 = num1;
+    }
+
+    public int getNum1() {
+        return this.num1;
+    }
+
+    public int getNum2() {
+        return this.num2;
+    }
+
+    public void setNum2(int num2) {
+        this.num2 = num2;
+    }
+}
+
+
+public class TestDemo {
+
+    //交换实参
+    public static void swap1(Calculator calculator,Calculator calculator1) { //  ?????
+        int tmp = calculator.val;
+        calculator.val = calculator1.val;
+        calculator1.val = tmp;
+    }
+    public static void main6(String[] args) {
+        Calculator calculator = new Calculator();
+        calculator.val = 10;
+        Calculator calculator1 = new Calculator();
+        calculator1.val = 20;
+        System.out.println(calculator.val + " " + calculator1.val);
+        swap1(calculator,calculator1);
+        System.out.println(calculator.val + " " + calculator1.val);
+    }
+
+
+    public static void swap (int a, int b) {
+        int tmp = a;
+        a = b;
+        b = tmp;
+    }
+
+    public static void main4(String[] args) {
+        int a = 10 ;
+        int b = 20;
+        System.out.println(a + " " + b);
+        swap(a,b);
+        System.out.println(a + " " + b);
+    }
+
+    public static void main3(String[] args) {
+        Calculator calculator = new Calculator();
+        calculator.setNum1(10);
+        calculator.setNum2(20);
+        System.out.println(calculator.add());
+        System.out.println(calculator.sub());
+        System.out.println(calculator.dev());
+    }
+
+    public static void main(String[] args) {
+        MyArrayList myArrayList = new MyArrayList(10);
+        myArrayList.add(0,1);
+        myArrayList.add(1,2);
+        myArrayList.add(2,3);
+        myArrayList.add(3,4);
+        myArrayList.add(4,19);
+        myArrayList.add(5,5);
+        myArrayList.display();
+    }
+
+    public static int fun (int n) {
+        if (n == 0 ) {
+            return 2;
+        }
+        int a = 2 * fun(n-1) + 1;
+        return a;
+    }
+
+    public static void main1(String[] args) {
+        System.out.println(fun(7));
+    }
+}
+
+import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
+
+public class MyArrayList {
+    public int[] elem;
+    public int usedSize;
+
+    public  MyArrayList() {
+        this.elem = new int[10];
+        this.usedSize = 0 ;
+    }
+
+    public MyArrayList(int capcity) {
+        this.elem = new int[capcity];
+        this.usedSize = 0;
+    }
+    public void add (int pos,int data){
+        if (pos < 0 || pos > this.usedSize) {
+            System.out.println("pos位置不合法");
+            return;
+        }
+        if (this.usedSize == this.elem.length) {
+            System.out.println("顺序表列表位满");
+            return;
+        }
+        for (int i = this.usedSize-1; i >= pos ; i-- ) {
+            this.elem[i+1] = this.elem[i];
+        }
+        this.elem[pos] = data;
+        this.usedSize++;
+    }
+    //显示顺序表
+    public void display() {
+        for (int i = 0; i < this.usedSize ; i++) {
+            System.out.print(this.elem[i] + " ");
+        }
+        System.out.println();
+    }
+    //判断是否包含某个元素
+    public  boolean contains(int toFind) {
+        for (int i = 0; i <this.usedSize ; i++) {
+            if (this.elem[i] == toFind) {
+                return true;
+            }
+        }
+        return false;
+    }
+    //查找某个元素对应的位置
+    public int search (int toFind) {
+        for (int i = 0; i < this.usedSize ; i++) {
+            if (elem[i] == toFind) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    //获取pos的位置
+    public int getPos (int pos) {
+        if(pos < 0 || pos >= this.usedSize) {
+            System.out.println("pos位置不合法");
+            return -1;
+        }
+        return this.elem[pos];
+    }
+    //删除第一次出现的关键字key
+    public void remove(int toRemove) {
+        if( this.search(toRemove) == -1){
+            System.out.println("没有这个数字！");
+            return;
+        };
+        int index = search(toRemove);
+        for (int i = index; i < this.usedSize-1 ; i++) {
+            if(elem[i] == toRemove) {
+                elem[i] = elem[i + 1];
+            }
+        }
+        this.usedSize--;
+    }
+    //获取顺序表长度
+    public int size() {
+        return this.usedSize;
+    }
+    //清空顺序表
+    public void claer() {
+        this.usedSize = 0;
+    }
+}
