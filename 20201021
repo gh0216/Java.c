@@ -1,0 +1,444 @@
+import org.omg.CORBA.NO_IMPLEMENT;
+
+class Node {
+    public int data;
+    public Node next;//存储对象的引用      Node
+
+
+    public Node (int data) {
+        
+        this.data = data;//这里没有初始化Next的引用是 不知道Next当前指向哪一个节点
+    }
+
+}
+
+
+public class MySingleList {
+
+    public Node head;//作用是定位一个头节点的引用
+
+    //头插法
+    public void addFirst(int data) {
+        //1.通过构造一个Node对象
+        Node node = new Node(data);
+        //2.
+        if (this.head == null) {
+            //
+            this.head = node;
+        } else {
+            node.next = this.head;
+            this.head = node;     //让this.head 指向/引用 了node指向/引用的 引用
+        }
+    }
+
+    //尾插法
+    public void addLast(int data) {
+        Node node = new Node(data);
+        Node cur = this.head;
+        if (this.head == null) {
+            node = this.head;
+            return;
+        }
+        while (cur.next != null) {
+            cur = cur.next;
+        }
+        cur.next = node;
+    }
+
+    //寻找需要插入数据的前一个数据的引用
+    public Node searchPrev(int index) {
+        int count = 0;
+        Node cur = this.head;//创建一个引用引用头文件的引用
+        while (count < index - 1) {  //定义一个计数器小于需要插入的位置时返回cur
+            cur = cur.next; //cur引用cur所引用的对象  cur下边的域存的是下一个应用的地址
+            count++;
+        }
+        return cur;
+    }
+
+    //得到单链表的长度
+    public int ListSize() {
+        int count = 0;
+        Node cur = this.head;
+        while (cur != null) {
+            cur = cur.next;
+            count++;
+        }
+        return count;
+    }
+
+    //任意位置插入,第一个数据节点为0号下标
+    public void addIndex(int index, int data) {
+        Node node = new Node(data);
+        if (index < 0 && index > ListSize()) {
+            System.out.println("不合法");
+            return;
+        }
+        if (index == 0) {
+            addFirst(data);
+            return;
+        }
+        Node cur = searchPrev(index);
+        node.next = cur.next;
+        cur.next = node;
+    }
+
+    //查找是否包含关键字key是否在单链表当中
+    public boolean contains(int key) {
+        Node cur = this.head;
+        while (cur != null) {
+            if (cur.data == key) {
+                return true;
+            }
+            cur = cur.next;
+        }
+        return false;
+    }
+
+    //寻找key的前驱
+    public Node searchPrevNode(int key) {
+        Node cur = this.head;        //头节点
+        while (cur.next != null) {    //判断key是否存在于单链表中
+            if (cur.next.data == key) {
+                return cur;
+            }
+            cur = cur.next;
+        }
+        //在单链表中不存在key
+        return null;
+    }
+
+    //删除第一次出现关键字为key的节点  1.判断是否为头节点 2.找到删除节点的前驱
+    public void remove(int key) {
+        Node cur = this.head;  //
+        //1.头节点
+        if (this.head.data == key) {
+            this.head = this.head.next;
+            return;
+        }
+        //2.找需要删除节点的前驱
+        Node pre = searchPrevNode(key);
+        if (pre == null) {
+            return;
+        }
+        Node del = pre.next;//就是要删除的节点的引用
+        pre.next = del.next;
+    }
+
+    //删除所有值为key的节点
+    public void removeAllKey(int key) {
+        while (contains(key) == true) {
+            remove(key);
+        }
+    }
+
+    //删除所有的关键字key
+    public void removeallkey(int key) {
+        Node cur = this.head.next;
+        Node prev = this.head;
+        while (cur != null) {
+            if (cur.data == key) {
+                prev.next = cur.next;
+                //cur = cur.next;
+            } else {
+                prev = cur;
+                //cur = cur.next;
+                //cur = cur.next
+                //prev= prev.next
+            }
+            cur = cur.next;
+        }
+        if (head.data == key) {
+            this.head = this.head.next;
+        }
+    }
+
+    //得到单链表的长度
+    public int size() {
+        int count = 0;
+        Node cur = this.head;
+        while (cur != null) {
+
+            count++;
+            cur = cur.next;
+        }
+        return count;
+    }
+
+    //打印单链表
+    public void display() {
+        Node cur = this.head;
+        while (cur != null) {
+            System.out.print(cur.data + " ");
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+
+    //清空单链表
+    public void clear() {
+        this.head = null;
+    }
+
+
+    //打印单链表  从指定位置开始打印
+    public void display2(Node newHead) {
+        Node cur = newHead;
+        while (cur != null) {
+            System.out.print(cur.data + " ");
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+
+    //反转单链表
+    public Node reverseList() {
+        Node cur = this.head;
+        Node prev = null;
+        Node newHead = null;
+        while (cur != null) {
+            Node curNext = cur.next;
+            if (curNext == null) {
+                cur = newHead;
+            }
+            cur.next = prev;
+            prev = cur;
+            cur = curNext;
+        }
+        return newHead;
+    }
+    //找一个单链表的最中间值
+    //fast = 2*slow     当引用fast到达最后一个单链表引用时  slow到达单链表中间的引用
+    public Node middleNode() {
+        Node fast = this.head; //
+        Node slow = this.head; //同时从头节点开始
+        while (fast != null && fast.next != null) {
+            Node Fast = fast.next; //定义一个引用是fast与下一个fast之间的引用
+            slow = slow.next;
+            fast = Fast.next;
+        }
+        return slow;
+    }
+
+    //输出单链表中倒数第k数
+    //定义两个引用  fast   slow    fast与slow的差值为key - 1   当fast到达单链表的最后一个引用时 slow到达倒数第key个引用
+    public Node FindKthTotail (int key) {
+        if (key <= 0 ) {
+            return null;
+        }
+        Node slow = this.head;
+        Node fast = this.head;
+//        int count = 0;
+//        while (count < key-1){
+//            fast = fast.next;   //定义一个计数器
+//            count++;
+//        }
+        while(key-1>0){            //判断key是否大于单链表的长度
+            if (fast.next != null) {
+                fast = fast.next;
+                key--;
+            }else{                 //key > 单链表的长度
+                System.out.println("输入的key不合法！");
+                return null;
+            }
+        }
+        while (fast.next != null) {  //循环条件
+            fast = fast.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+
+    //删除所有关键字为key的引用
+    public void removeall(int key) {
+        Node cur = this.head.next;
+        Node pre = this.head;
+        while (cur != null){
+            if (cur.data == key) {
+                pre.next = cur.next;//前驱节点的引用指向将要删除的节点的引用
+                //cur = cur.next;
+            }else{
+                pre = cur;
+                //cur = cur.next;
+            }
+            cur = cur.next;
+        }
+        if (this.head.data == key) {
+            this.head = this.head.next;
+        }
+    }
+
+    //反转单链表
+    public Node reversrlist () {
+        Node cur = this.head;
+        Node newHead = null;
+        Node pre = null;
+        while (cur != null) {
+            Node curNext = cur.next;
+            if (curNext == null) {
+                newHead = cur;
+            }
+            cur.next = pre;
+            pre = cur;
+            cur = curNext;
+        }
+        return newHead;
+    }
+
+    //找出一个单链表中的中间值
+    public Node middle () {
+        Node fast = this.head;
+        Node slow = this.head;
+        while (fast != null && fast.next != null) {
+            Node Fast = fast.next;
+            slow = slow.next;
+            fast = Fast.next;
+        }
+        return slow;
+    }
+
+    //寻找单链表中的倒数第k个值
+    public Node find(int k){
+        if(k <= 0 ){
+            System.out.println("输入的k值不合法！！！！！！！！！！！！！！！！！！！！！");
+            return null;
+        }
+        Node fast = this.head;
+        Node slow = this.head;
+        while ( k-1 > 0 ){
+            if (fast.next != null){
+                fast = fast.next;
+                k--;
+            }else{
+                System.out.println("输入的k值不合法！！！！！！！！！！！！！！！！！！！！！！");
+                return null;
+            }
+        }
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+}
+
+
+
+
+
+
+
+public class TestDwmo {
+
+    public static int 
+
+
+
+    public static void main5(String[] args) {
+        MySingleList mySingleList = new MySingleList();
+        mySingleList.addFirst(1);
+        mySingleList.addFirst(1);
+        mySingleList.addFirst(2);
+        mySingleList.addIndex(3,1);
+        mySingleList.addIndex(2,2);
+        mySingleList.addLast(1);
+        mySingleList.addLast(2);
+        mySingleList.display();
+//        mySingleList.removeall(2);
+//        mySingleList.display();
+//        Node ret0 = mySingleList.reversrlist();
+//        mySingleList.display2(ret0);
+//        System.out.println("=========================");
+//        Node ret2 = mySingleList.reverseList();
+//        mySingleList.display2(ret2);
+//        System.out.println("张艺衡，你给爷爬！！！！！！！！！！！！！！！！！！！！！！！！！");
+//        System.out.println("=========================");
+//        Node ret = mySingleList.middleNode();
+//        System.out.println(ret.data);
+//        System.out.println("=========================");
+//        Node ret1 = mySingleList.middle();
+//        System.out.println(ret1.data);
+        Node ret2 = mySingleList.find(7);
+        System.out.println(ret2.data);
+    }
+
+    public static void main4(String[] args) {
+
+        System.out.println(sum(4));
+    }
+    public static int sum(int n) {
+        int sum = 0;
+        for (int i = 0; i <= n ; i++) {
+            sum += fib(i);
+        }
+        return sum;
+    }
+    public static int fib( int n) {
+        int f1 = 1 ;
+        int f2 = 1;
+        int f3 = 0;
+        if (n == 1) {
+            return f1;
+        }
+        if(n == 2) {
+            return f2;
+        }
+        for (int i = 3; i <= n; i++) {
+            f3 =  f1 + f2;
+            f1 = f2 ;
+            f2 = f3;
+        }
+        return f3;
+    }
+
+    public static int fibor (int n) {
+        if (n == 1 || n == 2){
+            return 1;
+        }else {
+            int d = fibor(n - 1) + fibor(n - 2);
+            return d;
+        }
+    }
+
+    public static void main3(String[] args) {
+
+        System.out.println(fibor(5));
+    }
+
+    public static void main2(String[] args) {
+
+        System.out.println(fib(4));
+    }
+    public static void main1(String[] args) {
+        MySingleList mySingleList = new MySingleList();
+        mySingleList.addFirst(1);
+        mySingleList.addFirst(1);
+        mySingleList.addFirst(3);
+        mySingleList.addFirst(1);
+        mySingleList.addFirst(5);
+        mySingleList.addFirst(1);
+        mySingleList.addFirst(1);
+        mySingleList.addIndex(2,6);
+        mySingleList.addFirst(1);
+        mySingleList.display();
+//        mySingleList.reverseList();
+//        mySingleList.remove(6);
+//        mySingleList.remove(7);
+//        mySingleList.remove(1);
+//        mySingleList.display();
+//        mySingleList.removeAllKey(1);
+//        mySingleList.removeallkey(1);
+//        mySingleList.display2(Node );
+        Node ret = mySingleList.middleNode();
+        System.out.println(ret.data);
+        Node ret1 = mySingleList.FindKthTotail(2);
+        Node ret2 = mySingleList.FindKthTotail(1);
+        Node ret3 = mySingleList.FindKthTotail(9);
+//        Node ret4 = mySingleList.FindKthTotail(10);
+        System.out.println(ret1.data);
+        System.out.println(ret2.data);
+        System.out.println(ret3.data);
+//        System.out.println(ret4.data);
+    }
+
+}
