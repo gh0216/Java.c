@@ -1,0 +1,487 @@
+import org.omg.CORBA.NO_IMPLEMENT;
+
+import java.net.NetworkInterface;
+
+//单链表
+
+class Node {
+    public int data;
+    public Node next;
+
+    public Node(int data) {
+
+        this.data = data;
+    }
+}
+
+public class MySignleList {
+    public Node head;
+    //头插法
+    public void addFirst(int data) {
+        Node node = new Node(data);
+        if (this.head == null) {
+            this.head = node;
+        }else{
+            node.next = this.head;
+            this.head = node;
+        }
+    }
+    //尾插法
+    public void addLast (int data){
+        Node node = new Node(data);
+        Node cur = this.head;
+        if (this.head == null){
+            this.head = node;
+            return;
+        }
+        while (cur.next != null){
+            cur = cur.next;
+        }
+        cur.next = node;
+    }
+
+    //删除一个单链表作中相同数据的引用
+    public Node deleteDuplication() {
+        Node cur = this.head;
+        Node newHead = new Node(-1);
+        Node tmp = newHead;
+        while (cur != null) {
+            if(cur.next != null && cur.data == cur.next.data) {
+                while (cur.next != null && cur.data == cur.next.data) {
+                    cur = cur.next;
+                }
+                cur = cur.next;
+            }else {
+                tmp.next = cur;
+                tmp = tmp.next;
+                cur = cur.next;
+            }
+        }
+        tmp.next = null;
+        return newHead.next;
+    }
+
+    //定义一个x   让小于x的值位于前边  大于x的值位于后边
+    public Node partition (int x) {
+        Node bs = null;
+        Node be = null;
+        Node as = null;
+        Node ae = null;
+        Node cur= this.head;
+        while(cur != null) {
+            if (cur.data < x){
+                if (bs == null){
+                    bs = cur;
+                    be = cur;
+                }else{
+                    be.next = cur;
+                    be = cur;
+                }
+            }else {
+                if (as == null){
+                    as = cur;
+                    ae = cur;
+                }else{
+                    ae.next = cur;
+                    ae = cur;
+                }
+            }
+            cur = cur.next;
+        }
+//        if (bs == null){
+//            return as;
+//        }
+//        be.next = as;
+//        if (as != null){
+//            ae.next= null;
+//        }
+//        return bs;
+        if (bs == null || as == null){
+            return  this.head;
+        }else{
+            be.next = as;
+            ae.next =null;
+        }
+        return bs;
+    }
+
+    //7   判断回文结构
+    public boolean chkPalindrome() {
+        if (this.head == null){
+            return false;
+        }if (this.head.next == null){
+            return true;
+        }
+        //回文结构
+        //1、找到中间位置
+        Node fast = this.head;
+        Node slow = this.head;
+
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        //slow就是中间位置。开始进行第2步
+        //2、进行反转
+        Node pre = slow;  //定义一个引用等于中间位置的引用
+        Node cur = slow.next;
+        while (cur != null ) {
+            Node curNext = cur.next;
+            cur.next = slow ;
+            slow = cur ;
+            cur = curNext;
+        }
+        //3、开始判断
+        while (this.head != pre){  //判断this.head是否到达中间引用
+            if (this.head.data == slow.data){
+                this.head = this.head.next;
+                slow = slow.next;
+                return true;
+            }
+        }
+//        while (this.head != slow) {
+//            if(this.head.data != slow.data) {
+//                return false;
+//            }
+//            if(this.head.next == slow) {
+//                //偶数情况下
+//                return true;
+//            }
+//            this.head = this.head.next;
+//            slow = slow.next;
+//        }
+        return false;
+    }
+
+    //判断是否为环形链表
+    public boolean hasCycle() {
+        Node fast = this.head;
+        Node slow = this.head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if(fast == slow) {
+                break;
+            }
+        }
+        if(fast == null || fast.next == null) {
+            return false;
+        }
+        return true;
+    }
+
+
+    //找环的入口
+    public Node detectCycle() {
+        Node fast = this.head;
+        Node slow = this.head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if(fast == slow) {
+                break;
+            }
+        }
+        if(fast == null || fast.next == null) {
+            return null;
+        }
+        slow = this.head;
+        while (slow != fast) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+
+    //得到单链表的长度
+    public int ListSize(Node list) {
+        int count = 0;
+        Node cur = this.head;
+        while (cur != null) {
+            cur = cur.next;
+            count++;
+        }
+        return count;
+    }
+
+//合并两个单链表
+    public Node megreTwoLists(Node headA ,Node headB ){
+        Node newHead = new Node(-1);  //创建傀儡节点
+        Node tmp = newHead;   //
+
+        while (headA != null && headB != null) {
+            if(headA.data < headB.data) {
+                tmp.next = headA;
+                tmp = tmp.next;
+                headA = headA.next;
+            }else {
+                tmp.next = headB;
+                tmp = tmp.next;
+                headB = headB.next;
+            }
+        }
+        if(headA != null) {   //判断链表A是否被读取完
+            tmp.next = headA;
+        }else {
+            tmp.next = headB;
+        }
+        return newHead.next;
+    }
+
+
+    //找两个单链表的公共节点
+    public Node findSameTwoLists(Node headA ,Node headB ) {
+        MySignleList mySignleList = new MySignleList();
+        Node pl = headA;
+        Node ps = headB;
+        //1.求单链表的长度     pl指向长的单链表   ps指向短的单链表
+        int lenA = mySignleList.ListSize(headA);
+        int lenB = mySignleList.ListSize(headB);//调用Listsize函数
+        int len = lenA - lenB;
+        if (len > 0) {
+            pl = headA;
+            ps = headB;
+            len = lenA - lenB;
+        } else {
+            pl = headB;
+            ps = headA;
+            len = lenB - lenA;
+        }
+        //2.让pl先走len步
+        while (len > 0) {
+            pl = pl.next;
+            len--;
+        }
+        while (pl != ps && pl != null && ps != null) {
+            ps = ps.next;
+            pl = pl.next;
+        }
+        if (pl == ps && pl != null) {
+            return pl;
+        }
+        return null;
+    }
+
+    //求两个单链表的公共节点
+    public Node findSameTwoList(Node headA ,Node headB ) {
+        if(headA == null || headB == null) {
+            return null;
+        }
+        Node pl = headA;
+        Node ps = headB;
+        //1.判断 A he B 的长度
+        Node cur = headA;
+        int lenA = 0;
+        while(cur != null) {
+            lenA++;
+            cur = cur.next;
+        }
+        Node pre = headA;
+        int lenB = 0;
+        while(cur != null) {
+            lenB++;
+            pre = pre.next;
+        }
+        //判断A和B那个是长链表
+        int len = lenA - lenB;
+        if (len < 0) {
+            pl = headB;
+            ps = headA;
+            len = lenB - lenA;
+        }
+        //先让长链表走len
+        while (len > 0 ){
+            pl = pl.next;
+            len--;
+        }
+        //判断是否有节点
+        while (pl != ps && pl != null && ps != null) {
+            ps = ps.next;
+            pl = pl.next;
+        }
+        if (pl != ps && pl != null) {
+            return pl;
+        }
+        return null;
+    }
+}
+
+//双向链表
+class ListNode {
+    public int val;
+    public ListNode next;
+    public ListNode prev;
+
+    public  ListNode (int val){
+        this.val = val;
+    }
+
+}
+
+
+public class DoubleList {
+
+    public static void main(String[] args) {
+        DoubleList doubleList = new DoubleList();
+        doubleList.addFirst(1);
+        doubleList.addFirst(2);
+        doubleList.addFirst(3);
+        doubleList.addFirst(4);
+        doubleList.addLast(5);
+        doubleList.display();
+        doubleList.addIndex(4,66);
+        doubleList.display();
+        }
+
+
+    public ListNode head;
+    public ListNode last;
+
+    //头插法
+    public void addFirst(int val){
+        ListNode node =new ListNode(val);
+        if(this.head == null){
+            this.head = node;
+            this.last = node;
+        }else{
+            node.next = this.head;
+            head.prev = node;
+            this.head = node;
+        }
+    }
+
+    //尾插法
+    public void addLast(int val) {
+        ListNode node =new ListNode(val);
+        if(this.head == null){
+            this.last = node;
+            this.head = node;
+        }else{
+            this.last.next = node;
+            node.prev = this.last;
+            this.last = node;
+        }
+    }
+
+    //得到双链表的长度
+    public int size () {
+        int count = 0 ;
+        ListNode cur = this.head;
+        while (cur != null){
+            cur = cur.next;
+            count++;
+        }
+        return count;
+    }
+
+    //查找是否包含关键字k在双链表当中
+    public boolean contains (int k){
+        ListNode cur = this.head;
+        while (cur != null){
+            if (cur.val == k){
+                return true;
+            }
+            cur = cur.next;
+        }
+        return false;
+    }
+
+    //打印双链表
+    public void  display() {
+        ListNode cur = this.head;
+        while(cur != null) {
+            System.out.print(cur.val+" ");
+            cur = cur.next;
+        }
+        System.out.println();
+    }
+
+    //在第k个位置插入
+    public ListNode searchIndex(int k) {
+        if (k < 0 || k > size()){
+            System.out.println("输入位置不合法！！！");
+            return null;
+        }
+        ListNode cur = this.head;
+        while (k != 0) {
+            cur = cur.next;
+            k--;
+        }
+        return cur;
+//        while (cur != null){
+//            cur = cur.next;
+//            k--;
+//        }
+//        return cur;
+    }
+    //任意位置插入,第一个数据节点为0号下标
+    public void addIndex(int k,int data){
+        if(k == 0) {
+            addFirst(data);
+            return;
+        }
+        if(k == size()) {
+            addLast(data);
+            return;
+        }
+        ListNode node = new ListNode(data);
+        ListNode cur = searchIndex(k);
+        if (cur == null){
+            return;
+        }
+        node.next = cur;
+        cur.prev.next = node;
+        node.prev = cur.prev;
+        cur.prev = node;
+    }
+
+    //  删除第一次出现关键字为key的节点
+    //  返回值代表你要删除的数字
+    public void remove(int key){
+        ListNode cur = this.head;
+        while (cur != null){
+            if (cur.val == key){
+                if (this.head.val == key){
+                    this.head = this.head.next;
+                    this.head.prev = null;
+                }else{
+                    cur.prev.next = cur.next;
+                    if(cur.next != null){
+                        cur.next.prev = cur.prev;
+                    }else{
+                        this.last = this.last.prev;
+                    }
+                }
+                return;
+            }else{
+                cur = cur.next;
+            }
+        }
+    }
+
+    //删除所有值为key的节点
+    public void removeAllKey(int key){
+        ListNode cur = this.head;
+        while (cur != null) {
+            if(cur.val == key) {
+                if(this.head.val == key) {
+                    if(this.head.next == null) {
+                        this.head = null;
+                        return;
+                    }
+                    this.head = this.head.next;
+                    this.head.prev = null;
+                }else {
+                    cur.prev.next = cur.next;
+                    if(cur.next!=null) {
+                        //当前的cur不是最后一个节点
+                        cur.next.prev = cur.prev;
+                    }else {
+                        this.last = this.last.prev;
+                    }
+                }
+            }
+            cur = cur.next;
+        }
+    }
+}
