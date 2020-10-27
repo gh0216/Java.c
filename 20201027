@@ -1,0 +1,225 @@
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+
+
+public class TestDemo {
+
+    public static void main(String[] args) {
+//        String str = "hello\\world\\Java";
+//        String[] ret = str.split("\\\\");
+//        for (String s : ret) {
+//            System.out.println(s);
+//        }
+//        String str="Java30-split#world";
+//        String[] ret = str.split(" |-|#");
+//        for (String s : ret) {
+//            System.out.println(s);
+//        }
+//        String str = "name=zhangsan&age=18";
+//        String[] ret1 = str.split("&"); // name=zhangsan  age=18
+//        for (String s1 : ret1) {
+//            String[] ret2 = s1.split("=");
+//            for (String s2 :ret2) {
+//                System.out.println(s2);
+//            }
+//        }
+        String str = "bhi%abokn#njvs*bd%mlf#dld&b*";
+        String[] ret = str.split("%|#|&|\\*");
+        for (String s:ret) {
+            System.out.println(s);
+        }
+    }
+
+    //字符串替换
+    public static void main12(String[] args) {
+        String str = "123456789";
+        System.out.println(str.replaceAll("3", "9"));
+        System.out.println(str.replaceFirst("1", "6"));
+    }
+
+    //字符串查找
+    public static void main11(String[] args) {
+        String str = "helloworldorldrldldd";
+        System.out.println(str.startsWith("he"));//true
+        System.out.println(str.startsWith("he", 8));//false
+        System.out.println(str.lastIndexOf("l",16));
+        System.out.println(str.indexOf("o", 6));//6
+    }
+
+    public static void main10(String[] args) {
+        String str = "abcdef";
+        String str1 = "Abcd";
+        String str2 = "abcd";
+        System.out.println(str.equals(str1));  //  false
+        System.out.println(str.equalsIgnoreCase(str1)); // false  忽略大小写比较
+        System.out.println(str1.compareTo(str2));
+        System.out.println("A".compareTo("a")); // -32
+        System.out.println("a".compareTo("A")); // 32
+        System.out.println("A".compareTo("A")); // 0
+        System.out.println("AB".compareTo("AC")); // -1
+        System.out.println("刘".compareTo("杨"));
+    }
+
+    //字节与字符串
+    public static void main9(String[] args) {
+        byte[] bytes = {97,98,99,100};
+        String str =new String(bytes);
+        String str1 =new String(bytes,0,3);
+        System.out.println(str1);  // abc
+        System.out.println(str); // abcd
+        String str2 = "abcd";
+        byte[] byte2 = str2.getBytes();
+        System.out.println(Arrays.toString(byte2));// 97  98  99  100
+    }
+
+    //给定一个字符串 判定其是否全部由数字组成
+//    public static void main(String[] args) {
+//        String str = "1a23456" ;
+//        System.out.println(isNumber(str)? "字符串由数字所组成！" : "字符串中有非数字成员！");
+//    }
+//    public static boolean isNumber(String str) {
+//        char[] data = str.toCharArray() ;
+//        for (int i = 0; i < data.length; i++) {
+//            if (data[i]<'0' || data[i]>'9') {
+//                return false ;
+//            }
+//        }
+//        return true ;
+//    }
+    public static boolean isNumber (String str) {
+        char[] array = str.toCharArray();
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] < '0' || array[i] > '9') {
+                System.out.println("该字符串中存在非数字");
+                return false;
+            }
+        }
+        System.out.println("该字符串是由数字组成的");
+        return true;
+    }
+    public static void main8(String[] args) {
+        String str = "123456";
+        boolean tmp = isNumber(str);
+    }
+
+    //字符  字符串  相互转换
+    public static void main7(String[] args) {
+//        char[] array = {'a','b','c','d','e'};
+//        String str1 = new String(array,0,5);//第0个位置到第5个  offset: 开始位置 count：结束位置
+//        System.out.println(str1);  //a b c d e
+//        String str = new String(array);   //将字符数组中的所有内容变为字符串
+//        System.out.println(str);    // abcde
+        String str2 = "abcdef";
+        int a = str2.charAt(2);
+        char ch = str2.charAt(2);  //将字符串中的部分位置转换为字符
+        char[] array = str2.toCharArray();   //将字符串中的所有内容转换为字符
+        System.out.println(a);// 99
+        System.out.println(ch);// c
+        System.out.println(Arrays.toString(array));// [a,b,c,d,e,f]
+        System.out.println(str2.length()); // 6
+        System.out.println(str2.codePointAt(2));//  99
+        System.out.println(str2.substring(2, 4));//2  4
+    }
+
+    //会产生大量的临时对象，效率较低
+    public static void main6(String[] args) {
+        String str = "hello";
+        for (int i = 0; i <10 ; i++) {
+            str += i;
+        }
+        System.out.println(str); // hello0123456789
+    }
+
+    //修改字符串中的值   反射
+    //反射是面向对象编程的一种重要特性, 有些编程语言也称为 "自省".
+    //指的是程序运行过程中, 获取/修改某个对象的详细信息(类型信息, 属性信息等), 相当于让一个对象更好的 "认清
+    //自己" .
+    public static void main5(String[] args) throws NoSuchFieldException, IllegalAccessException {   ///????
+        String str = "hello";
+        Class cl = String.class;
+        Field field = cl.getDeclaredField("value");
+        field.setAccessible(true);
+
+        char[] value = (char[]) field.get(str);
+        // 修改 value 的值
+        value[0] = 'H';
+        System.out.println(str); // Hello
+
+        String str1 = "Hello";
+        str1 = "h" + str1.substring(1);//substring(1)：改变字符串的第一个字符
+        System.out.println(str1); // Hello
+//        String str = "hello" ;
+//        str = str + " world" ;
+//        str += "!!!" ;
+//        System.out.println(str);
+//        String str1 = "Hello";
+//        String str2 = str1;
+//        System.out.println(str1); // Hello
+//        System.out.println(str2); // Hello
+//        str1 = "world";
+//        System.out.println(str1); // Hello
+//        System.out.println(str2); // world
+    }
+
+    //intern方法
+    public static void main4(String[] args) {
+        String str1 = "hello";
+        String str = new String("hello");
+        System.out.println(str1 == str);//false
+
+        String str2 = "hello";
+        String str3 = new String("hello").intern();//把字符常量池中的值直接拉到str3栈中所存的引用
+        System.out.println(str2 == str3);//true
+
+
+//        String str = null;
+//        //str跟hello作比较  str有可能为空
+//        //System.out.println(str.equals("Hello"));  // 执行结果 抛出 java.lang.NullPointerException 异 常
+//        System.out.println("Hello".equals("hello"));//执行结果 false
+    }
+
+
+    //字符串构造方法
+    public static void main3(String[] args) {
+//        String str1 = "hello";
+//        String str2 = new String("hello");
+//        char[] array = {'h','e','l','l','o'};
+//        String str3 = new String(array);//???怎么构造？
+//        System.out.println(str3);
+        String str1 = "hello";
+        String str2 = str1;
+        str2 = "world";
+        System.out.println(str1);
+    }
+
+    //字符串比较大小
+    public static void main2(String[] args) {
+        String str = "hello";
+        String str1 = new String("hello");
+        System.out.println(str == str1);//false
+        System.out.println(str.equals(str1));//true
+
+        String str2 = "he" + "llo";
+        System.out.println(str == str2);//true
+
+        String str3 = "he";
+        String str4 = str3 + "llo";
+        System.out.println(str == str4);//false
+
+        String str5 = new String("he") + "llo";
+        System.out.println(str == str5);//false
+    }
+
+
+    //字符串转换为字符数组
+    public static void main1(String[] args) {
+        String str = "abcdef";
+        int ret = str.charAt(2);
+        char[] array = str.toCharArray();
+        System.out.println(Arrays.toString(array));
+        System.out.println(str.charAt(2));
+        System.out.println(ret);
+    }
+}
