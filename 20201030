@@ -1,0 +1,219 @@
+package demo;
+import java.util.Date;
+import java.util.*;//是java提供的工具开发包
+import static java.lang.Math.*; //静态导入的方式
+import java.lang.*;//系统常用基础类
+import java.lang.reflect.*;//反射编程包
+import java.net.*;//进行网络编程开发包
+import java.sql.*;//进行数据库开发的开发包
+import java.io.*;//I/O编程开发包
+
+
+//import static java.lang.Math.pow;
+//import static java.lang.Math.sqrt;
+
+//Java 中对于字段和方法共有四种访问权限
+//private: 类内部能访问, 类外部不能访问默认(也叫包访问权限): 类内部能访问, 同一个包中的类可以访问, 其他类不能访问.
+//protected: 类内部能访问, 子类和同一个包中的类可以访问, 其他类不能访问.
+//public : 类内部和类的调用者都能访问
+//final 关键字也能修饰类, 此时表示被修饰的类就不能被继承
+//     final 关键字的功能是 限制 类被继承
+//"限制" 这件事情意味着 "不灵活". 在编程中, 灵活往往不见得是一件好事. 灵活可能意味着更容易出错.
+//是用 final 修饰的类被继承的时候, 就会编译报错, 此时就可以提示我们这样的继承是有悖这个类设计的初衷的.
+class Animal {
+    protected String name ;
+
+    public Animal(String name) {
+        this.name = name;
+    }
+
+    public void eat(){
+        System.out.println(this.name+"正在吃....");
+    }
+    public void eat1(Animal animal){
+        System.out.println(this.name+"正在吃....");
+    }
+
+    public static Animal eat3(){
+        Bird bird = new Bird("123");
+        System.out.println("正在吃...");
+        return bird;
+    }
+}
+
+class Cat extends Animal {
+
+    public Cat(String name){
+        super(name);
+    }
+//    public  String  name;
+//
+//    public  Cat(String name){
+//        this.name = name;
+//    }
+//
+//    public void eat(){
+//        System.out.println("正在吃....");
+//    }
+}
+class Bird extends Animal{
+
+    public Bird(String name) {
+        //使用super调用父类的构造方法
+        super(name);//带参的构造方法
+    }
+
+//    public  String name;
+//
+//    public  Bird(String name){
+//        this.name = name;
+//    }
+    @Override
+    public void eat(){
+        super.eat();
+        System.out.println(this.name+"正在吃....!!!");
+    }
+
+    public void fly(){
+        System.out.println(this.name+"正在飞︿(￣︶￣)︿....");
+    }
+}
+
+public class Tset {
+
+    public static void main(String[] args) {
+        Animal animal = new Animal("PANPAN");
+        animal.eat();
+        Animal bird = new Bird("PANPAN1");
+        bird.eat();
+        Animal animal1 = new Bird("panpan");
+        animal1.eat();
+    }
+
+
+    public static void main4(String[] args) {
+        Animal bird = new Bird("PANPAN");//发生向上转型   父类的引用 引用子类的引用
+        bird.eat();// 直接赋值
+        Bird bird1 = new Bird("圆圆");
+        bird1.eat1(bird1);//  方法传参
+        Animal animal = Animal.eat3();
+    }
+
+    public static void main3(String[] args) {
+        Cat cat = new Cat("mimi");
+        cat.eat();
+        Bird bird = new Bird("panpan");
+        bird.eat();
+        bird.fly();
+    }
+
+    public static void main2(String[] args) {
+        Test1 test1 = new Test1();
+        double x = 30;
+        double y = 40;
+        //静态导入写起来更方便一些
+        double tmp = sqrt(pow(x,2)) + sqrt(pow(y,2));
+        System.out.println(tmp);
+        System.out.println(test1.value);//可以访问到value的值
+    }
+
+    public static void main1(String[] args) {
+        Date date = new Date();
+        //得到一个毫秒级别的时间戳
+        System.out.println(date.getTime());
+        java.util.Date date1 = new java.util.Date();
+        //得到一个毫秒级别的时间戳
+        System.out.println(date1.getTime());
+    }
+}
+
+package demo;
+
+public class Test1 {
+    int value = 3000;
+}
+
+package demo;
+
+
+//多态
+class Shape {
+    public void draw(){
+
+    }
+}
+
+class Cycle extends Shape {
+    @Override
+    public void draw() {
+        System.out.println("○");
+    }
+}
+
+class Rect extends Shape {
+    @Override
+    public void draw() {
+        System.out.println("♦");
+    }
+}
+
+class Flower extends Shape {
+    @Override
+    public void draw() {
+        System.out.println("❀");
+    }
+}
+class Triangle extends Shape {
+    @Override
+    public void draw() {
+        System.out.println("△");
+    }
+}
+
+public class Test2 {
+
+    public static void main(String[] args) {
+        drawShapes1();
+        System.out.println("===========================");
+        drawShapes();
+    }
+
+    public static void drawShapes1() {
+        // 创建了一个 Shape 对象的数组
+        Shape[] shapes = {new Cycle(), new Rect(),new Triangle(), new Cycle(),
+                new Rect(), new Flower(),new Triangle()};
+        for (Shape shape : shapes) {
+            shape.draw();
+        }
+    }
+
+    public static void drawMap (Shape shape){
+        shape.draw();
+    }
+
+    public static void main1(String[] args) {
+        Shape shape = new Cycle();
+        Shape shape1 = new Rect();
+        Shape shape2 = new Flower();
+        drawMap(shape);
+        drawMap(shape1);
+        drawMap(shape2);
+    }
+
+    public static void drawShapes() {
+        Rect rect = new Rect();
+        Cycle cycle = new Cycle();
+        Flower flower = new Flower();
+        String[] shapes = {"cycle", "rect", "cycle", "rect", "flower"};
+
+        for (String shape : shapes) {
+            if (shape.equals("cycle")) {
+                cycle.draw();
+            } else if (shape.equals("rect")) {
+                rect.draw();
+            } else if (shape.equals("flower")) {
+                flower.draw();
+            }
+        }
+    }
+}
