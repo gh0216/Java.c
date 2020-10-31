@@ -1,0 +1,473 @@
+package demo2;
+
+public class Test {
+
+    // 实现方法 replace, 能够替换字符串中的某个部分
+    public static String replace(String str,int k,String str1){
+        char[] array = str.toCharArray();
+        char[] array1 = str1.toCharArray();
+        if (k < 0 || k >= array.length || (k+array1.length) > array.length){
+            System.out.println("输入位置有误！！！！！！！！！！！！！！！");
+            return null;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (i >= k && (i-k) < array1.length){
+                array[i] = array1[i-k];
+            }
+        }
+        return new String(array);
+    }
+
+    //实现方法 compareTo, 能够实现按照字典序比较字符串大小
+    public static int compareTo(String str,String str1){
+        char[] array = str.toCharArray();
+        char[] array1 = str1.toCharArray();
+        if (array.length != array1.length){
+            System.out.print("str比str1长");
+            return (array.length-array1.length);
+        }
+        int i = 0;
+        while(array[i] == array1[i]){
+            i++;
+            if(i==array.length){
+                System.out.println("str和str1一样大");
+                return 0;
+            }
+        }
+        int A = Integer.valueOf(array[i]) ;
+        int B = Integer.valueOf(array1[i]) ;
+        System.out.print("str比str2大");
+        return (A-B);
+    }
+
+    //实现方法 contains, 能够判定字符串中是否包含子串
+    public static int First (String str,String str1) {
+        char[] array = str.toCharArray();
+        char[] array1 = str1.toCharArray();
+        for (int j = 0; j < array.length ; j++) {
+            if (array[j] == array1[0]){
+                return j;
+            }
+        }
+        return -1;
+    }
+    public static boolean contains (String str,String str1) {
+        int count = First(str,str1);
+        char[] array = str.toCharArray();
+        char[] array1 = str1.toCharArray();
+        if (count == -1){
+            return false;
+        }
+        int i = 0 ;
+        int j = 0 ;
+        while (i < array.length){
+            if (array[i] == array1[j] && (i-j) == count ) {
+                j++;
+                if(j == array1.length){
+                    return true;
+                }
+            }
+            i++;
+        }
+        return false;
+    }
+    public static void main(String[] args) {
+        String str = "fggfgjghsdjklgddsfjgdsfhjgfdjdfks";
+        String str1 = "asdghsag";
+//        System.out.println(First(str, str1));
+//       System.out.println(compareTo(str, str1));
+//        System.out.println(contains(str, str1));
+        System.out.println(replace(str, 26, str1));
+    }
+}
+
+//抽象类不能实例化
+//抽象方法不能是pravite的
+
+//interface IShape {
+//    void draw() ; // 即便不写public，也是public
+//}
+//class Rect implements IShape {
+//    void draw() {
+//        System.out.println("□") ; //权限更加严格了，所以无法覆写。
+//    }
+//}
+
+abstract class Shape {
+    abstract public void draw();
+
+    void func() {
+        System.out.println("func()");
+    }
+}
+
+class Rect extends Shape {
+
+    @Override
+    public void draw() {
+
+    }
+}
+interface  Ishape {
+    abstract void draw();
+    public static final int num = 10;//静态常量
+}
+class Cycle implements Ishape{
+
+    @Override
+    public void draw() {
+        System.out.println("○");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Ishape shape = new Cycle();
+        shape.draw();
+    }
+    public static void main1(String[] args) {
+        Shape shape = new Rect();
+        shape.func();
+    }
+}
+
+package demo1;
+
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
+interface IA{
+    void func();
+}
+abstract class A implements IA  {  //抽象类不能进行实例化
+    public void func() {
+        System.out.println("A:func()");
+    }
+}
+class B extends A {
+    public void func(){
+        System.out.println("B:func()");
+    }
+}
+interface IB extends IA{
+    void func2();
+}
+class C implements IB {
+
+    @Override
+    public void func() {
+
+    }
+
+    @Override
+    public void func2() {
+
+    }
+}
+interface ID {
+    void func3();
+}
+interface IC extends IB,ID{
+
+}
+class IE implements IC{
+
+    @Override
+    public void func() {
+
+    }
+
+    @Override
+    public void func2() {
+
+    }
+
+    @Override
+    public void func3() {
+
+    }
+}
+
+class Animal {
+    protected String name;
+    public Animal(String name){
+        this.name = name ;
+    }
+}
+interface IFlying {
+    void fly();
+}
+interface IRunning {
+    void run();
+}
+interface ISwimming {
+    void swim();
+}
+
+class Cat extends Animal implements IRunning {
+
+    public Cat(String name) {
+        super(name);
+    }
+
+    @Override
+    public void run() {
+        System.out.println(this.name+ "正在跑......");
+    }
+}
+
+class Fish extends Animal implements ISwimming {
+    public Fish(String name) {
+        super(name);
+    }
+    @Override
+    public void swim() {
+        System.out.println(this.name + "正在用尾巴游泳");
+    }
+}
+
+class Frog extends Animal implements IRunning, ISwimming {
+    public Frog(String name) {
+        super(name);
+    }
+    @Override
+    public void run() {
+        System.out.println(this.name + "正在往前跳");
+    }
+    @Override
+    public void swim() {
+        System.out.println(this.name + "正在蹬腿游泳");
+    }
+}
+
+class Duck extends Animal implements IRunning, ISwimming, IFlying {
+    public Duck(String name) {
+        super(name);
+    }
+    @Override
+    public void fly() {
+        System.out.println(this.name + "正在用翅膀飞");
+    }
+    @Override
+    public void run() {
+        System.out.println(this.name + "正在用两条腿跑");
+    }
+    @Override
+    public void swim() {
+        System.out.println(this.name + "正在漂在水上");
+    }
+}
+class Robot implements IRunning {
+
+    @Override
+    public void run() {
+        System.out.println("机器人在跑.........");
+    }
+}
+
+public class Test {
+
+    public static void function1(IRunning iRunning) {
+        iRunning.run();
+    }
+
+    public static void function2(IFlying iFlying) {
+        iFlying.fly();
+    }
+    public static void function3(ISwimming iSwimming) {
+        iSwimming.swim();
+    }
+
+    //？？？？？？？？？
+    public static void main(String[] args) {
+        Animal animal = new Duck("哈哈哈哈");
+        IRunning iRunning =  new Duck("哈哈哈哈");
+        ISwimming iSwimming = new Duck("哈哈哈哈");
+        IFlying iFlying = new Duck("哈哈哈哈");
+    }
+    public static void main2(String[] args) {
+        function1(new Robot());
+        function1(new Duck("bobo"));
+        function1(new Duck("哈哈哈哈"));
+        function1(new Frog("fsdfa"));
+        function1(new Robot());
+
+    }
+
+    public static void main1(String[] args) {
+        A a = new B();  // 向上转型
+        a.func();
+    }
+}
+
+package demo;
+
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
+import java.util.Arrays;
+import java.lang.*;
+
+class Animal {
+    protected String name;
+
+    public Animal(String name){
+        this.name = name;
+    }
+}
+
+interface IFlying {
+    void fly();
+}
+
+interface IRunning {
+    void run();
+}
+
+interface ISwimming {
+    void swim();
+}
+
+class Cat extends Animal implements IRunning{
+
+    public Cat(String name) {
+        super(name);
+    }
+
+    @Override
+    public void run() {
+        System.out.println(this.name + "正在跑......");
+    }
+}
+class Fish extends Animal implements ISwimming{
+
+    public Fish(String name) {
+        super(name);
+    }
+
+    @Override
+    public void swim() {
+        System.out.println(this.name + "正在游.......");
+    }
+}
+
+class Frog extends Animal implements ISwimming,IRunning{
+
+    public Frog(String name) {
+        super(name);
+    }
+
+    @Override
+    public void run() {
+        System.out.println(this.name + "正在跑......");
+    }
+
+    @Override
+    public void swim() {
+        System.out.println(this.name + "正在游.......");
+    }
+}
+
+class Duck extends Animal implements ISwimming,IRunning,IFlying{
+
+    public Duck(String name) {
+        super(name);
+    }
+
+    @Override
+    public void fly() {
+        System.out.println(this.name + "正在飞.......");
+    }
+
+    @Override
+    public void run() {
+        System.out.println(this.name + "正在跑.......");
+    }
+
+    @Override
+    public void swim() {
+        System.out.println(this.name + "正在游.......");
+    }
+}
+
+class Robot implements IRunning{
+    private String name;
+
+    public Robot(String  name){
+        this.name = name;
+    }
+    @Override
+    public void run() {
+        System.out.println(this.name + "正在用轮子跑.......");
+    }
+}
+
+class Student {
+    private final String name;
+    private final int score;
+    public Student(String name,int score){
+        this.name = name ;
+        this.score = score;
+    }
+    @Override
+    public String toString() {
+        return "[" + this.name + ":" + this.score + "]";
+    }
+}
+public class Test {
+
+    public static void sort(Comparable[] array) {
+        for (int bound = 0; bound < array.length; bound++) {
+            for (int cur = array.length - 1; cur > bound; cur--) {
+                if (array[cur - 1].compareTo(array[cur]) > 0) {
+                    // 说明顺序不符合要求, 交换两个变量的位置
+                    Comparable tmp = array[cur - 1];
+                    array[cur - 1] = array[cur];
+                    array[cur] = tmp;
+                }
+            }
+        }
+    }
+
+
+     static class Student implements Comparable {
+        private final String name;
+        private final int score;
+        public Student(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
+        @Override
+        public String toString() {
+            return "[" + this.name + ":" + this.score + "]";
+        }
+        @Override
+        public int compareTo(Object o) {
+            Student s = (Student)o;
+            return Integer.compare(s.score, this.score);
+        }
+    }
+
+    public static void main(String[] args) {
+        Student[] students = new Student[] {
+                new Student("张三", 56),
+                new Student("李四", 68),
+                new Student("王五", 95),
+                new Student("赵柳", 25)
+        };
+        sort(students);
+        System.out.println(Arrays.toString(students));
+    }
+
+    public static void walk(IRunning running) {
+        System.out.println("我带着伙伴去散步");
+        running.run();
+    }
+
+    public static void main1(String[] args) {
+        Cat cat = new Cat("小猫");
+        walk(cat);
+        Frog frog = new Frog("小青蛙");
+        walk(frog);
+        Robot robot = new Robot("机器人");
+        walk(robot);
+    }
+}
