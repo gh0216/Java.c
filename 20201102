@@ -1,0 +1,203 @@
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import jdk.internal.org.objectweb.asm.tree.MultiANewArrayInsnNode;
+
+import java.util.*;
+
+class Student {
+    protected String name;
+    protected String cla;
+    protected Double sorce;
+
+    public Student (String name, String cla ,Double sorce){
+        this.name = name;
+        this.cla = cla;
+        this.sorce = sorce;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", cla='" + cla + '\'' +
+                ", sorce=" + sorce +
+                '}';
+    }
+}
+
+class A<T> {
+    T value;
+
+    A(T value) {
+        this.value = value;
+    }
+
+    T get() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return "A{" +
+                "value=" + value +
+                '}';
+    }
+}
+class MyArrayList <T> {
+    public T[] elem;
+    public int usedSize;
+    public MyArrayList() {
+        this.elem = (T[])new Object[10];
+    }
+    public void add(T data) {
+        this.elem[this.usedSize++]=data;
+    }
+    public T getPos(int pos) {
+        if (pos < 0 || pos >= this.elem.length ){
+            System.out.println("输入位置不合法！");
+        }
+        return this.elem[pos];
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+        MyArrayList myArrayList = new MyArrayList();
+        myArrayList.add(23);
+        myArrayList.add(62);
+        myArrayList.add(56);
+        System.out.println(Arrays.toString(new MyArrayList[]{myArrayList}));
+
+    }
+
+    public List<List<Integer>> generate(int numRows) {
+        if(numRows == 0) {
+            return null;
+        }
+        List<List<Integer>> ret = new ArrayList<>();
+
+        //第一行
+        List<Integer> one = new ArrayList<>();
+        one.add(1);
+        ret.add(one);
+        //从第2行开始放
+        for (int i = 1; i < numRows ; i++) {
+            //每一行进来 都要一个list  --》 curRow
+            List<Integer> curRow = new ArrayList<>();
+            //当前行的 第0列 放一个1
+            curRow.add(1);
+            //前一行
+            List<Integer> preRow = ret.get(i-1);
+            //从当前行的第1列开始
+            for (int j = 1; j < i; j++) {
+                int tmp = preRow.get(j)+preRow.get(j-1);
+                curRow.add(tmp);
+            }
+            curRow.add(1);
+            //当前行都添加完了
+            ret.add(curRow);
+        }
+        return ret;
+    }
+
+    public static void main7(String[] args) {
+        List<A> list = new ArrayList<>();
+        list.add(new A(23));
+        list.add(new A(56));
+        list.add(new A(25));
+        //System.out.println(Arrays.toString(new List[]{list});
+        for (A s:list) {
+            System.out.println(s);
+        }
+    }
+
+    public static void main6(String[] args) {
+        Map<String, Integer> map1 = new HashMap<>();
+        map1.put("张三", 123456);
+        map1.put("李四", 145263);
+        map1.put("王五", 132457);
+        System.out.println("电话本");
+        //System.out.println(map1);//{李四=145263, 张三=123456, 王五=132457}
+        for (Map.Entry<String, Integer> entry : map1.entrySet()) {
+            System.out.print(entry.getKey() + " ");
+            System.out.println(entry.getValue() + " "); //李四 145263
+                                                        //张三 123456
+                                                        //王五 132457
+        }
+    }
+
+    public static void main5(String[] args) {
+        Map<String,String> map = new HashMap<>();
+        map.put("乌兹","Uzi");
+        map.put("厂长","Clearlove");
+        map.put("左手","Knight");
+        map.put("雷达哥","karsa");
+        map.put("永远的神","乌兹");
+        System.out.println(map);  //{永远的神=乌兹, 乌兹=Uzi, 雷达哥=karsa, 厂长=Clearlove, 左手=Knight}
+        System.out.println(map.get("左手"));//Knight
+        System.out.println(map.getOrDefault("电十一的神", "虎牙小黑猫"));//虎牙小黑猫
+        System.out.println(map.getOrDefault("永远的神", "Uzi"));//乌兹
+        System.out.println(map.containsKey("乌兹"));//true
+        System.out.println(map.containsValue("虎牙小黑猫"));//false
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            System.out.print("///"+entry.getKey()+ " ");
+            System.out.print(entry.getValue()+ " ");//  ///永远的神 乌兹 ///乌兹 Uzi ///雷达哥 karsa ///厂长 Clearlove ///左手 Knight
+        }
+
+    }
+
+    public static void main4(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("hello");
+        list.add("world");
+        list.add("!!!!!");
+        list.add(2,"beautiful");
+        System.out.println(list.size());//4
+        System.out.println(list);//[hello, world, beautiful, !!!!!]
+        System.out.println(list.remove("!!!!!"));//true
+        System.out.println(list);//[hello, world, beautiful]
+        System.out.println(list.size());//3
+        System.out.println(Arrays.toString(list.toArray()));//[hello, world, beautiful]
+    }
+
+    public static void main3(String[] args) {
+        List<Integer> list= new ArrayList<>();
+        list.add(15);
+        list.add(56);
+        list.add(12);
+        Collections.sort(list);
+        System.out.println(list);//[12,15,56]
+        for (Integer s:list) {
+            System.out.print(s+" ");//12 15 56
+        }
+    }
+
+    public static List<String> func(String str,String str1) {
+        List<String> list  = new ArrayList<>();
+        for (int i = 0; i < str.length() ; i++) {
+            char tmp = str.charAt(i);
+            if (!str1.contains(tmp+"")){  //str1不包含字符tmp
+                list.add(tmp+"");
+            }
+        }
+        return list;
+    }
+
+    public static void main2(String[] args) {
+        List<String> ret = func("welcome to world", "world");
+        for (String s:ret) {
+            System.out.print(s);//ecme t
+        }
+        //System.out.println(func("welcome to world", "world"));
+    }
+
+    public static void main1(String[] args) {
+        List<Student> list = new ArrayList<>();
+        list.add(new Student("a","12",65.1));
+        list.add(new Student("ab","12",65.1));
+        list.add(new Student("abc","12",65.1));
+        for (Student s: list) {
+            System.out.print(s + "  ");//Student{name='a', cla='12', sorce=65.1}  Student{name='ab', cla='12', sorce=65.1}  Student{name='abc', cla='12', sorce=65.1}
+        }
+    }
+}
