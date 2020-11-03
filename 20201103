@@ -1,0 +1,339 @@
+package demo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+class Card {
+    public int rank;//数字
+    public String suit;//花色
+
+    public Card(int rank, String suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+
+    @Override
+    public String toString() {
+        return "Card{" + suit +
+               rank  +
+                '}';
+    }
+}
+
+class CardDemo {
+
+    public String[] suits = {"♥","♦","♣","♠"};
+    public List<Card> buyDeck() {
+        List<Card> cards = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 1; j <= 13; j++) {
+                int rank = j;
+                String suit = suits[i];
+                Card card = new Card(rank,suit);
+                cards.add(card);
+            }
+        }
+        return cards;
+    }
+
+    public void swap(List<Card> cards,int i,int j) {
+        Card tmp = cards.get(i);
+        Card card = cards.get(j);
+        cards.set(i,card);
+        cards.set(j,tmp);
+    }
+
+    public void shuffle(List<Card> cards) {
+        Random random = new Random();
+        int size = cards.size();
+        for (int i = size-1; i > 0 ; i--) {
+            int j = random.nextInt(i);
+            swap(cards,i,j);
+        }
+    }
+}
+
+
+public class TestDemo {
+    public static void main(String[] args) {
+        CardDemo cardDemo = new CardDemo();
+        List<Card> cardList = cardDemo.buyDeck();
+        System.out.println(cardList);
+        System.out.println("========shuffle=====");
+        cardDemo.shuffle(cardList);
+        System.out.println(cardList);
+        System.out.println("========揭牌=========");
+
+
+        List<List<Card>> hands = new ArrayList<>();
+        List<Card> hands1 = new ArrayList<>();
+        List<Card> hands2 = new ArrayList<>();
+        List<Card> hands3 = new ArrayList<>();
+        hands.add(hands1);
+        hands.add(hands2);
+        hands.add(hands3);
+        //3个人，每个人一次揭牌1张，总共揭牌5次
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 3; j++) {
+                Card cardTmp = cardList.remove(0);
+                hands.get(j).add(cardTmp);
+            }
+        }
+
+        System.out.println("第1个人："+hands1);
+        System.out.println("第2个人："+hands2);
+        System.out.println("第3个人："+hands3);
+
+        System.out.println("剩余的牌：");
+        System.out.println(cardList);
+
+    }
+}
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+class Stack {
+    public int[] elem;
+    public int usedSize;//top
+
+    public Stack() {
+        this.elem = new int[5];
+    }
+    public void push(int item) {
+        if (isFull()){
+            return;
+        }
+        this.elem[this.usedSize] =item;
+        this.usedSize++;
+    }
+    public int pop() {
+        if (isEmpty()){
+            //return  -1;
+            throw new RuntimeException("栈为空！");
+        }
+        int ret = this.elem[this.usedSize-1];
+        this.usedSize--;
+        return ret;
+    }
+    public int peek(){
+        if (isEmpty()){
+            throw new RuntimeException("栈为空！");
+        }
+        int ret = this.elem[this.usedSize-1];
+        return ret;
+    }
+    public boolean isEmpty() {
+        if(this.usedSize == 0){
+            return true;
+        }
+        return false;
+        //return this.usedsize == 0;
+    }
+
+    public boolean isFull() {
+        if(this.usedSize == this.elem.length){
+            return true;
+        }
+        return false;
+        //return this.usedSize = this.elem.length;
+    }
+}
+class Mystack{
+    public static void main(String[] args) {
+        Stack stack = new Stack();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        stack.push(4);
+        System.out.println(stack.pop());
+        System.out.println(stack.peek());
+    }
+
+    public static void main1(String[] args) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(1);
+        queue.add(2);
+        queue.add(3);
+        queue.offer(4);
+        queue.offer(5);
+        System.out.println(queue.poll());
+        System.out.println(queue.peek());
+        System.out.println(queue);
+        System.out.println(queue.isEmpty());
+    }
+}
+
+
+package demo;
+
+
+class Node {
+    public int val;
+    public Node next;
+
+    public Node(int val) {
+        this.val = val;
+    }
+}
+
+class MyQueue {
+    public Node head;
+    public Node tail;
+
+    public void offer(int val) {
+        Node node = new Node(val);
+        if (this.head == null){
+            this.head = node;
+            this.tail = node;
+            return;
+        }
+        this.tail.next = node;
+        this.tail = node; //this.tail = this.tail.next;
+    }
+
+    public int poll() {
+        if (this.head == null){
+            throw new RuntimeException("队列为空！");
+        }
+        int data = this.head.val;
+        if (this.head.next == null){
+            this.head = null;
+            this.tail = null;
+        }else{
+            this.head = this.head.next;
+        }
+        return data;
+    }
+
+    public int peek() {
+        if (this.head == null){
+            throw new RuntimeException("队列为空！");
+        }
+        return this.head.val;
+    }
+
+    public boolean isEmpty() {
+        return this.head == null;
+    }
+    public void display(){
+        Node cur = this.head;
+        while (cur.next != null){
+            System.out.print(cur.val + " ");
+            cur = cur.next;
+        }
+    }
+
+}
+public class TestDemo1 {
+    public static void main(String[] args) {
+        MyQueue myQueue = new MyQueue();
+        myQueue.offer(1);
+        myQueue.offer(2);
+        myQueue.offer(3);
+        myQueue.offer(4);
+        System.out.println(myQueue.peek());
+        System.out.println(myQueue.poll());
+        System.out.println(myQueue.poll());
+        System.out.println(myQueue.poll());
+        System.out.println(myQueue.poll());
+    }
+}
+
+package demo;
+
+class MyCircularQueue {
+
+
+    public int[] elem;
+    //public int usedSize;
+    public int front;
+    public int rear;
+
+    /** Initialize your data structure here. Set the size of the queue to be k. */
+    public MyCircularQueue(int k) {
+        this.elem = new int[k];
+    }
+
+    /** Insert an element into the circular queue. Return true if the operation is successful. */
+    public boolean enQueue(int value) {
+        //1、判断是否为满的
+        if(isFull()) {
+            return false;
+        }
+        //2、rear -->
+        this.elem[this.rear] = value;
+        this.rear = (this.rear+1) % this.elem.length;
+        return true;
+    }
+
+    /** Delete an element from the circular queue. Return true if the operation is successful. */
+    public boolean deQueue() {
+        //1、是否为空   front和rear相遇的时候
+        if(isEmpty()) {
+            return false;
+        }
+        this.front = (this.front+1)%this.elem.length;
+        return true;
+    }
+
+    /** Get the front item from the queue. */
+    public int Front() {
+        if(isEmpty()) {
+            return -1;
+        }
+        return this.elem[this.front];
+    }
+
+    /** Get the last item from the queue. */
+    public int Rear() {
+        if(isEmpty()) {
+            return -1;
+        }
+        /*int index = this.rear==0 ? this.elem.length-1 :  this.rear-1;
+        return this.elem[index];
+        */
+        int index = 0;
+        if(this.rear == 0) {
+            index = this.elem.length-1;
+        }else {
+            index = this.rear-1;
+        }
+        return this.elem[index];
+    }
+
+    /*Checks whether the circular queue is empty or not. */
+    public boolean isEmpty() {
+        if(front == rear) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Checks whether the circular queue is full or not. */
+    public boolean isFull() {
+        if( (this.rear+1) % this.elem.length == this.front){
+            return true;
+        }
+        return false;
+    }
+    public void display(){
+        for (int i = 0; i < this.rear ; i++) {
+            System.out.print(elem[i] + "  ");
+        }
+    }
+}
+
+public class TestDemo4 {
+    public static void main(String[] args) {
+        MyCircularQueue myCircularQueue = new MyCircularQueue(10);
+        myCircularQueue.enQueue(2);
+        myCircularQueue.enQueue(3);
+        myCircularQueue.enQueue(56);
+        myCircularQueue.enQueue(12);
+        myCircularQueue.display();//2  3  56  12
+        System.out.println(myCircularQueue.Front());//2
+        System.out.println(myCircularQueue.deQueue());//true
+    }
+}
