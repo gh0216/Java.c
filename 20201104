@@ -1,0 +1,539 @@
+import javax.xml.soap.Node;
+import java.util.*;
+
+
+class Solution2 {
+    public int findJudge(int N, int[][] trust) {
+        int[] degree = new int[N + 1];    // 总票数
+
+        for (int[] relation : trust) {
+            degree[relation[1]]++;          // 获得投票
+            degree[relation[0]]--;          // 投出一票
+        }
+
+        int judge = -1;
+        for (int i = 1; i <= N; i++) {
+            // 没有给其他人投过票
+            if (degree[i] == N - 1) {
+                judge = i;
+                break;
+            }
+        }
+        return judge;
+    }
+}
+
+
+//单链表
+class ListNode{
+    int val;
+    ListNode next;
+    ListNode(int val){
+        this.val = val;
+    }
+}
+
+class MyLinkedList {
+    ListNode head; //头节点
+    public int size() {
+        ListNode cur = this.head;
+        int count = 0;
+        while (cur != null) {
+            count++;
+            cur = cur.next;
+        }
+        return count;
+    }
+
+    /** Initialize your data structure here. */
+    public MyLinkedList(int val) {
+        this.head = new ListNode(val);
+    }
+
+    /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+    public int get(int index) {
+        int d =size();
+        if (this.head == null){
+            return -1;
+        }
+        if (index < 0 ||index > d){
+            return -1;
+        }
+        ListNode cur = this.head;
+        while (index != 0){
+            cur = cur.next;
+            index--;
+        }
+        return cur.val;
+    }
+
+    /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+    public void addAtHead(int val) {
+        ListNode node = new ListNode(val);
+        if (this.head == null){
+          this.head = node ;
+        }
+        node.next = this.head;
+        this.head = node;
+    }
+
+    /** Append a node of value val to the last element of the linked list. */
+    public void addAtTail(int val) {
+        ListNode node = new ListNode(val);
+        if(this.head == null) {
+            this.head = node;
+            return;
+        }
+        ListNode cur = this.head;
+        while (cur.next != null) {
+            cur = cur.next;
+        }
+        cur.next = node;
+    }
+
+    /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+    public void addAtIndex(int index, int val) {
+        int count = 0;
+        ListNode cur = this.head;
+        while (count < index-1) {
+            cur = cur.next;
+            count++;
+        }
+        ListNode node = new ListNode(val);
+        if(index < 0 || index > size()) {
+            System.out.println("index不合法");
+            return;
+        }
+        if(index == 0) {
+            addAtHead(val);
+            return;
+        }
+        node.next = cur.next;
+        cur.next = node;
+    }
+
+    /** Delete the index-th node in the linked list, if the index is valid. */
+    public ListNode searchPrevNode(int index) {
+        ListNode cur = this.head;
+        while (cur.next != null) {
+            if(cur.next.val == index) {
+                return cur;
+            }
+            cur = cur.next;
+        }
+        return null;
+    }
+    public void deleteAtIndex(int index) {
+        ListNode prev = this.head;
+        ListNode cur = this.head.next;
+        while (cur != null) {
+            if(cur.val == index) {
+                prev.next = cur.next;
+            }else {
+                prev = cur;
+            }
+            cur = cur.next;
+        }
+        if(this.head.val == index) {
+            this.head = this.head.next;
+        }
+    }
+}
+
+//二维网格
+class Solution1 {
+    public List<List<Integer>> shiftGrid(int[][] grid, int k) {
+
+//        List<List<Integer>> ret = new ArrayList<>();
+//        List<Integer> one = new ArrayList<>();
+//        for (int i = 0; i < grid.length; i++) {
+//            for (int j = 0; j < grid[0].length ; j++) {
+//                one.add(grid[i][j]);
+//            }
+//        }
+//        ret.add(one);
+        for (int i= k;i > 0; i--) {
+            int previous = grid[grid.length - 1][grid[0].length - 1]; //找到原始数组最后一个数据
+            for (int row = 0; row < grid.length; row++) {   //二维数组的行
+                for (int col = 0; col < grid[0].length; col++) { // 列
+                    int temp = grid[row][col];   //将前一个数与后一个数据进行交换
+                    grid[row][col] = previous;
+                    previous = temp;  //先将第一个数和最后一个数交换
+                }
+            }
+        }
+        List<List<Integer>> result = new ArrayList<>();
+        for (int[] row : grid) { // 行
+            List<Integer> listRow = new ArrayList<>();
+            result.add(listRow); //
+            for (int v : row) listRow.add(v); //列
+        }
+        return result;
+    }
+}
+
+//法官
+class judge {
+    public int findJudge(int N, int[][] trust) {
+        return 1;
+    }
+}
+
+//员工重要度
+class Employee {
+    public int id;   //员工id
+    public int importance;  // 员工重要度
+    public List<Integer> subordinates;  //员工附属下属
+}
+
+class Solution{
+    public int getImportance(List<Employee> employees, int id){
+        if(employees.size() == 0 ) {  //判断是否有员工id
+            return 0;
+        }
+        Queue<Integer> i = new LinkedList<>(); //创建一个队列将所有员工id进行排列
+        i.offer(id);    //输入单个员工id
+        int sum = 0;     //定义重要度之和
+        while (i.size() != 0){    //当队列的长度不为0，即为了将已知所有员工的id都遍历一遍
+            int tmp = i.poll();    //将一个员工的id弹出去寻找该员工的附属下属
+            for (Employee e:employees) {   //遍历所有employees
+                if (tmp == e.id){          //当弹出的员工与对应的id一致
+                    sum += e.importance;   //加自己的重要度
+                    for (int each : e.subordinates) {
+                        i.offer(each);      //将该员工的附属下属id加到队列中
+                    }
+                }
+            }
+        }
+        return sum;
+    }
+}
+
+
+//用栈实现队列
+class MyQueue {
+
+    private Stack<Integer> s1;
+    private Stack<Integer> s2;
+
+    /** Initialize your data structure here. */
+    public MyQueue() {
+        s1 = new Stack<>();//入
+        s2 = new Stack<>();//出
+    }
+
+    /** Push element x to the back of queue. */
+    public void push(int x) {
+        s1.push(x);
+    }
+
+    /** Removes the element from in front of queue and returns that element. */
+    public int pop() {
+        if(s2.empty()) {
+            while (!s1.empty()){
+                s2.push(s1.pop());
+            }
+        }
+        if(!s2.empty()) {
+            return s2.pop();
+        }
+        return -1;
+    }
+
+    /** Get the front element. */
+    public int peek() {
+        if(s2.empty()) {
+            while (!s1.empty()){
+                s2.push(s1.pop());
+            }
+        }
+        if(!s2.empty()) {
+            return s2.peek();
+        }
+        return -1;
+    }
+
+    /** Returns whether the queue is empty. */
+    public boolean empty() {
+        if(s1.empty() && s2.empty()) {
+            return true;
+        }
+        return false;
+    }
+}
+
+//最小栈
+class MinStack {
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;
+    /** initialize your data structure here. */
+    public MinStack() {
+        stack = new Stack<>();//入
+        minStack = new Stack<>();//出
+    }
+
+    public void push(int x) {
+        //1、stack是一定需要放元素的
+        //2、最小栈当中 是否存放数据   x<= 最小栈的栈顶元素
+        stack.push(x);
+        if ( minStack.empty()){
+            minStack.push(x);
+        }
+        if ( x <= minStack.peek()){
+            minStack.push(x);
+        }
+    }
+
+    public void pop() {
+        //1、stack是一定需要弹出元素的
+        //2、最小栈当中 是否弹出数据    x  ==  最小栈的栈顶元素
+        if (stack.empty() && minStack.empty()){
+            return ;
+        }
+        stack.pop();
+        if ( stack.pop() == minStack.peek()){
+            minStack.pop();
+        }
+    }
+
+    public int top() {
+        //跟最小栈没有关系
+        return stack.peek();
+    }
+
+    public int getMin() {
+        //每次返回最小栈的栈顶元素
+        return minStack.peek();
+    }
+}
+
+//用队列实现栈
+class MyStack {
+
+    private Queue<Integer> qu1;
+    private Queue<Integer> qu2;
+    public int usedsize;
+
+    /** Initialize your data structure here. */
+    public MyStack() {
+        qu1 = new LinkedList<>();
+        qu2 = new LinkedList<>();
+    }
+
+    /** Push element x onto stack. */
+    public void push(int x) {
+        //1、谁不为空  入到哪个队列就好了
+        //2、两个都为空   放到第一个qu1当中
+        if (!qu1.isEmpty()){
+            qu1.offer(x);
+        }else if (!qu2.isEmpty()){
+            qu2.offer(x);
+        }else {
+            qu1.offer(x);
+        }
+        usedsize++;
+    }
+
+    /** Removes the element on top of the stack and returns that element. */
+    public int pop() {
+        if(empty()) {
+            return -1;
+        }
+        int size = usedsize;
+//        int a = 0;
+        if (!qu1.isEmpty()) {
+            for (int i = 0; i < size - 1; i++) {
+//                int tmp = qu1.poll();
+//                qu2.offer(tmp);
+                qu2.offer(qu1.poll());
+            }
+            usedsize--;
+            return  qu1.poll();
+        }else{
+            for (int i = 0; i < size-1 ; i++) {
+                qu1.offer(qu2.poll());
+            }
+            usedsize--;
+            return  qu2.poll();
+        }
+//        if(!qu1.isEmpty()) {
+//            while (size != 0){
+//                qu2.offer(qu1.poll());
+//                size--;
+//            }
+//            a = qu1.poll();
+//        }else {
+//            while (size != 0){
+//                qu1.offer(qu2.poll());
+//                size--;
+//            }
+//            a = qu2.poll();
+//        }
+//        return a;
+    }
+
+    /** Get the top element. */
+    public int top() {
+        if(empty()) {
+            return -1;
+        }
+        int tmp = -1;
+        int size = usedsize;
+        if (!qu1.isEmpty()) {
+            for (int i = 0; i < size - 1; i++) {
+//                int tmp = qu1.poll();
+//                qu2.offer(tmp);
+                tmp = qu1.poll();
+                qu2.offer(qu1.poll());
+            }
+        }else{
+            for (int i = 0; i < size-1 ; i++) {
+                tmp = qu1.poll();
+                qu1.offer(qu2.poll());
+            }
+        }
+        return tmp;
+    }
+
+    /** Returns whether the stack is empty. */
+    public boolean empty() {
+        if (qu2.isEmpty() && qu1.isEmpty()){
+            return true;
+        }
+        return false;
+    }
+}
+
+//括号数组
+public class TestDemo {
+
+
+    //一个数组分成相等的三部分
+    public boolean canThreePartsEqualSum(int[] A) {
+        int sum = 0;
+        for (int k : A) {
+            sum += k;         //求该数组的总和；
+        }
+        if (sum%3 != 0){
+            return false;    //判断该数组和是否被3整除
+        }
+        int taget = 0;       //定义一个变量接受第一个1/3总和
+        int i = 0;
+        while (i < A.length){
+            taget += A[i];
+            if (taget == sum/3){
+                break;          //跳出循环
+            }
+            i++;
+        }
+        int j = i+1;            //j为第而部分和开始的第一个下标
+        while (j + 1 < A.length){   //判断最后一个1/3中是否为空元素  当j满足2/3 sum时j的下一个坐标仍然小于数组的长度
+            taget += A[j];
+            if (taget == (2*sum/3)){  //前两个1/3的总和
+                return true;
+            }
+            j++;
+        }
+        return false;
+    }
+
+
+    public static boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        //只要再以下过程当中 发现不匹配  直接return
+        for (int i = 0; i < s.length(); i++) {
+            //1、左括号进行入栈
+            char tmp = s.charAt(i);
+            if(tmp == '(' || tmp == '[' || tmp == '{') {
+                stack.push(tmp);
+            }else {
+                //2、判断栈是否为空
+                if(stack.empty()) {
+                    System.out.println("右括号多！");
+                    return  false;
+                }else{
+                    //3、判断栈顶元素的字符左括号和当前的字符 右括号是否匹配
+                    char cur = s.charAt(i);//在遍历字符串右括号
+                    char topChar = stack.peek();//栈内的
+                    if(cur==')' && topChar == '(' ||
+                            cur == ']' && topChar=='['
+                            || cur=='}' && topChar == '{') {
+                        stack.pop();
+                    }else {
+                        System.out.println("右括号不匹配左括号");
+                        return false;
+                    }
+                }
+            }
+        }
+        //4、判断栈是否为空
+        if (!stack.empty()){
+            System.out.println("左括号多");
+            return false;
+        }
+        System.out.println("括号匹配!");
+        return true;
+    }
+
+    public static int func1(String str, String str1){
+        char[] array = str.toCharArray();
+        char[] array1 = str1.toCharArray();
+        for (int i = 0; i <array.length ; i++) {
+            if (array[i] == array1[0]){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int func(String str, String str1){
+        char[] array = str.toCharArray();
+        char[] array1 = str1.toCharArray();
+        int tmp = func1(str,str1);
+        if (tmp == -1){
+            return -1;
+        }
+        int i = 0 ;
+        int j = 0 ;
+        while (i < array.length){
+            if (array[i] == array1[j] && (i-j) == tmp ) {
+                j++;
+                if(j == array1.length){
+                    return 1;
+                }
+            }
+            i++;
+        }
+        return -1;
+    }
+
+
+    public static String LCS (String str1, String str2) {
+        // write code herechar[] array = str.toCharArray();
+        char[] array = str1.toCharArray();
+        char[] array1 = str2.toCharArray();
+        char[] pre = new char[array1.length];
+        int tmp = func1(str1,str2);
+        if (tmp == -1){
+            return null;
+        }
+        int i = 0 ;
+        int j = 0 ;
+        while (i < array.length){
+            if (array[i] == array1[j] && (i-j) == tmp ) {
+                pre[j] = array1[j];
+                j++;
+                if(j == array1.length){
+                    return new String(pre);
+                }
+            }
+            i++;
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        //System.out.println(func("asdfghjkl", "fgfgh"));
+        System.out.println(LCS("asdfghjkl", "fdhfghj"));
+    }
+}
