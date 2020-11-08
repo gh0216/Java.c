@@ -1,0 +1,428 @@
+import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+class Node{
+    int val;
+    Node left;
+    Node right;
+
+    public Node (char val){
+        this.val = val;
+    }
+}
+
+
+//前序遍历
+class TreesNode{
+    int val;
+    TreesNode left;
+    TreesNode right;
+
+    TreesNode(){}
+
+    TreesNode (int val){
+        this.val = val;
+    }
+
+    TreesNode (int val,TreesNode left,TreesNode right){
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+//中序遍历
+class Solution {
+    public List<Integer> preOederTraversal(TreesNode root){
+        List<Integer> ret = new ArrayList<>();
+        if (root == null) return ret;
+
+        List<Integer> treeleft = preOederTraversal(root.left);
+        ret.addAll(treeleft);
+
+        ret.add(root.val);
+
+        List<Integer> treeright = preOederTraversal(root.right);
+        ret.addAll(treeright);
+        return  ret;
+    }
+}
+
+
+//后序遍历
+class Solution1 {
+    public List<Integer> preOederTraversal(TreesNode root){
+        List<Integer> ret = new ArrayList<>();
+        if (root == null) return ret;
+
+        List<Integer> treeleft = preOederTraversal(root.left);
+        ret.addAll(treeleft);
+
+        List<Integer> treeright = preOederTraversal(root.right);
+        ret.addAll(treeright);
+
+        ret.add(root.val);
+        return  ret;
+    }
+}
+
+class Solution2 {
+    public List<Integer> preOederTraversal(TreesNode root){
+        List<Integer> ret = new ArrayList<>();
+        if (root == null) return ret;
+        ret.add(root.val);
+        List<Integer> treeleft = preOederTraversal(root.left);
+        ret.addAll(treeleft);
+
+        List<Integer> treeright = preOederTraversal(root.right);
+        ret.addAll(treeright);
+        return  ret;
+    }
+}
+
+public class BinaryTree {
+
+    public Node creatTree(){
+        Node A = new Node('A');
+        Node B = new Node('B');
+        Node C = new Node('C');
+        Node D = new Node('D');
+        Node E = new Node('E');
+        Node F = new Node('F');
+        Node G = new Node('G');
+        Node H = new Node('H');
+        A.left = B;
+        A.right = C;
+        B.left = D;
+        B.right = E;
+        E.right = H;
+        C.left = F;
+        C.right = G;
+        return A;
+    }
+
+    //前序遍历
+    void preOederTraversal(Node root){
+        if (root == null) return;
+        System.out.print(root.val+" ");
+        preOederTraversal(root.left);
+        preOederTraversal(root.right);
+    }
+
+    //中序遍历
+    void inOederTraversal(Node root){
+        if (root == null) return;
+        preOederTraversal(root.left);
+        System.out.print(root.val+" ");
+        preOederTraversal(root.right);
+    }
+
+    //后序遍历
+    void postOederTraversal(Node root){
+        if (root == null) return;
+        preOederTraversal(root.left);
+        preOederTraversal(root.right);
+        System.out.print(root.val+" ");
+    }
+}
+
+public class TestDemo {
+    public static void main(String[] args) {
+        BinaryTree binaryTree = new BinaryTree();
+        Node root = binaryTree.creatTree();
+        binaryTree.preOederTraversal(root);
+        System.out.println();
+        binaryTree.inOederTraversal(root);
+        System.out.println();
+        binaryTree.postOederTraversal(root);
+    }
+}
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+
+//退格删除
+class Solution5 {
+    public boolean backspaceCompare(String S, String T) {
+        LinkedList l1 = new LinkedList(),l2 = new LinkedList();
+        for(char a : S.toCharArray()){
+            if(a == '#'){
+                if(!l1.isEmpty()){
+                    l1.pop();
+                }
+            }else{
+                l1.push(a);
+            }
+        }
+        for(char a : T.toCharArray()){
+            if(a == '#'){
+                if(!l2.isEmpty()){
+                    l2.pop();
+                }
+            }else{
+                l2.push(a);
+            }
+        }
+        return l1.equals(l2);
+    }
+}
+
+class Solution4 {
+
+
+    public boolean backspaceCompare(String S, String T) {
+        LinkedList l1 = new LinkedList();
+        LinkedList l2 = new LinkedList();
+        for(char a : S.toCharArray()){
+            if(a == '#'){
+                if(!l1.isEmpty()){
+                    l1.pop();
+                }
+            }else{
+                l1.push(a);
+            }
+        }
+        for(char a : S.toCharArray()){
+            if(a == '#'){
+                if(!l2.isEmpty()){
+                    l2.pop();
+                }
+            }else{
+                l1.push(a);
+            }
+        }
+        return l1.equals(l2);
+    }
+}
+
+class MyCircularDeque {
+    int[] myqueue ;
+    int front;//队头指针
+    int rear;//队尾指针
+    int size;//队列当前的大小
+    int capacity;//队列的容量
+
+    /** Initialize your data structure here. Set the size of the deque to be k. */
+    public MyCircularDeque(int k) {
+        this.myqueue = new int[k];
+        this.front = 0;
+        this.rear = 0;
+        this.size = 0;
+        this.capacity = k;
+    }
+
+    /** Adds an item at the front of Deque. Return true if the operation is successful. */
+    public boolean insertFront(int value) {
+        if(rear==front && size == capacity) return  false;//如果队列满，插入失败
+        else {
+            front = (front + capacity -1)% capacity;
+            myqueue[front] = value;
+            size++;
+            return true;
+        }
+    }
+
+    /** Adds an item at the rear of Deque. Return true if the operation is successful. */
+    public boolean insertLast(int value) {
+        if(rear==front && size == capacity) return  false;//如果队列满，插入失败
+        else {
+            myqueue[rear] = value;
+            rear = (rear+1+capacity)%capacity;
+            size++;
+            return true;
+        }
+
+    }
+
+    /** Deletes an item from the front of Deque. Return true if the operation is successful. */
+    public boolean deleteFront() {
+        if( rear == front && size == 0) return false;
+        else {
+            front = (front+1) % capacity;
+            size--;
+            return true;
+        }
+
+    }
+
+    /** Deletes an item from the rear of Deque. Return true if the operation is successful. */
+    public boolean deleteLast() {
+        if( rear == front && size == 0) return false;
+        else {
+            rear = (rear - 1 + capacity) % capacity;
+            size--;
+            return true;
+        }
+
+    }
+
+    /** Get the front item from the deque. */
+    public int getFront() {
+        if((rear == front) && size==0) return -1;
+        else {
+            int frontE = myqueue[front];
+            //front = (front + 1) % capacity;
+            //size--;
+            return frontE;
+        }
+    }
+
+    /** Get the last item from the deque. */
+    public int getRear() {
+        if((rear == front) && size==0) return -1;
+        else {
+            int rearE = myqueue[(rear-1+capacity)%capacity];
+            // rear = (rear - 1 +capacity)%capacity;
+            //size--;
+            return rearE;
+        }
+
+    }
+
+    /** Checks whether the circular deque is empty or not. */
+    public boolean isEmpty() {
+        return (rear == front) && size==0;
+    }
+
+    /** Checks whether the circular deque is full or not. */
+    public boolean isFull() {
+        return rear==front && size == capacity;
+
+    }
+}
+
+
+class Solution3{
+
+//    public int evalRPN1(String[] tokens){
+//        Stack <Integer> num = new Stack<>();
+//        Stack <Integer> eval = new Stack<>();
+//        for(int i = 0;i < tokens.length;i++){
+//            String str = tokens[i];
+//            if ()
+//        }
+//        return 1;
+//    }
+    public int evalRPN(String[] tokens) {
+        Stack <Integer> stack = new Stack<>();
+        int left,right;//left放左操作数，right放右操作数    依次遍历逆波兰式字符串，数字进栈，运算符，从栈中弹俩次
+        for(int i = 0;i < tokens.length;i++){
+            String str = tokens[i];
+            //按照*/+-的优先级顺序
+            if (str.equals("*")){
+                right = stack.pop();
+                left = stack.pop();
+                stack.push(left * right);//新运算数入栈
+            }else if (str.equals("/")){
+                right = stack.pop();
+                left = stack.pop();
+                stack.push(left / right);//新操作数入栈
+            }else if (str.equals("+")){
+                right = stack.pop();
+                left = stack.pop();
+                stack.push(left + right);//新操作数入栈
+            }else if (str.equals("-")){
+                right = stack.pop();
+                left = stack.pop();
+                stack.push(left - right);//新操作数入栈
+            }else{
+                stack.push(Integer.valueOf(str));
+            }
+        }
+        return stack.pop();
+    }
+}
+
+class StockSpanner {
+
+    Stack<Integer> prices, weights; //定义两个栈
+
+    public StockSpanner() {
+        prices = new Stack();  //价格栈
+        weights = new Stack(); // 跨度栈
+    }
+
+    public int next(int price) {
+        int w = 1;
+        while (!prices.isEmpty() && prices.peek() <= price) {  //判断价格栈中是否有元素 且输入的价格与栈顶元素住址大小比较
+            prices.pop();   //
+            w += weights.pop();
+        }
+
+        prices.push(price);  //输入第一个价格
+        weights.push(w);   //第一个跨度
+        return w;  //返回跨度数值
+    }
+}
+
+class Solution1 {
+    public boolean IsPopOrder(int [] pushA,int [] popA) {
+        Stack<Integer> stack = new Stack<>();
+        int idx = 0;   //定义第二个数组的下标
+        for(int i = 0; i < pushA.length; i++){
+            stack.push(pushA[i]);  //入栈
+            while(!stack.isEmpty() && popA[idx] == stack.peek()){  //判断弹出数组的第一个数值是否等于栈里的最上边数值
+                stack.pop();  // 弹出栈中最上边的数值
+                idx ++;
+            }
+        }
+        return stack.isEmpty();//栈为空 返回true  反之为false
+    }
+}
+
+class Solution {
+    public int calPoints(String[] ops) {
+        Stack<Integer> p = new Stack<>();
+        for (String s:ops) {
+            if (s.equals("+")){
+                int top = p.pop();//记录最上边的值
+                int newtop = top + p.peek();//将两个值之和记录下来
+                p.push(top);
+                p.push(newtop);//将两个数值放入栈中
+            }else if (s.equals("C")){
+                p.pop();     //弹出最上边的值
+            }else if (s.equals("D")){
+                p.push(2*p.peek());   //*2操作
+            }else {
+                p.push(Integer.valueOf(s));  //输入分数值
+            }
+        }
+        int  num = 0 ;
+        for (int num1:p){
+            num += num1;  //将所得和逐个加起来
+        }
+        return num;
+    }
+}
+
+public class TestDemo {
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        String[] ops ={"5","2","C","D","+"};
+        System.out.println(solution.calPoints(ops));
+    }
+}
+
+class Solution6{
+    public int getResult(int n)
+    {
+        return ysf(n,2);
+
+
+    }
+    public  int ysf(int n,int m){
+        int temp = n%m ==0 ? n/m : n/m+1;
+        if(temp <= m+1){
+            return (temp-1)* m + 1;
+        }
+        int path=ysf(temp,m + 1);
+        return (path-2)*m+1;
+    }
+}
