@@ -1,0 +1,313 @@
+import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+class Node{
+    char val;
+    Node left;
+    Node right;
+
+    public Node(char val){
+        this.val = val;
+    }
+}
+
+
+
+public class BinaryTree {
+    public Node creatTree(){
+        Node A = new Node('A');
+        Node B = new Node('B');
+        Node C = new Node('C');
+        Node D = new Node('D');
+        Node E = new Node('E');
+        Node F = new Node('F');
+        Node G = new Node('G');
+        Node H = new Node('G');
+        A.left = B;
+        A.right = C;
+        B.left = D;
+        B.right = E;
+        E.right = H;
+        C.left = F;
+        C.right = G;
+        return A;
+    }
+    // 前序遍历
+    void preOrderTraversal(Node root){
+        if (root == null) return;
+        System.out.println(root.val + " ");
+        preOrderTraversal(root.left);
+        preOrderTraversal(root.right);
+    }
+    // 中序遍历
+    void inOrderTraversal(Node root){
+        if (root == null) return;
+        preOrderTraversal(root.left);
+        System.out.println(root.val + " ");
+        preOrderTraversal(root.right);
+    }
+    // 后序遍历
+    void postOrderTraversal(Node root){
+        if (root == null) return;
+        preOrderTraversal(root.left);
+        preOrderTraversal(root.right);
+        System.out.println(root.val + " ");
+    }
+    // 遍历思路-求结点个数
+    static int size = 0;
+    void getsize (Node root){
+        if (root == null) return;
+        size++;
+        getsize(root.left);
+        getsize(root.right);
+    }
+    // 子问题思路-求结点个数
+    int getSize2(Node root){
+        if (root == null) return 0;
+        return getSize2(root.left) + getSize2(root.right) + 1;
+    }
+    // 遍历思路-求叶子结点个数
+    static int leafSize = 0;
+    void getLeafSize1(Node root){
+        if (root == null) return;
+        if (root.left == null && root.right == null){
+            leafSize++;
+        }
+        getLeafSize1(root.left);
+        getLeafSize1(root.right);
+    }
+    // 子问题思路-求叶子结点个数
+    int getLeafSize2(Node root){
+        if (root == null) return 0;
+        if (root.left == null  && root.right == null) {
+            return 1;
+        }
+        return getLeafSize2(root.left) + getLeafSize2(root.right);
+    }
+    // 子问题思路-求第 k 层结点个数
+    int getKLevelSize(Node root,int k){
+        if (root == null) return 0;
+        if (k == 1){
+            return 1;
+        }
+        return getKLevelSize(root.left,k-1)  //
+                +getKLevelSize(root.right,k-1);  //
+    }
+
+
+    // 获取二叉树的高度
+    int getHeight(Node root){
+        if (root == null) return 0;
+        int leftHight = getHeight(root.left);
+        int rightHight = getHeight(root.right);
+        return leftHight > rightHight ?
+                leftHight + 1  : rightHight + 1;
+    }
+
+
+    // 查找 val 所在结点，没有找到返回 null
+    Node find(Node root, char val) {
+        if (root == null) return null;
+        //根
+        if (root.val == val) return root;
+        //左
+        Node ret1 = find(root.left,val);
+        if (ret1.val == val) return ret1;
+        //右
+        Node ret2 = find(root.right,val);
+        if (ret2.val == val) return ret2;
+        return null;
+    }
+
+    //判断两个树是否一样
+    public boolean isSameTree(Node p, Node q) {
+        if(p == null && q != null || p != null && q == null) {
+            return false;
+        }
+        if(p == null && q == null) {
+            return true;
+        }
+        if(p.val != q.val) {
+            return false;
+        }
+        return isSameTree(p.left,q.left)
+                && isSameTree(p.right,q.right);
+    }
+
+    //判断是否为有序树
+    public boolean isSubtree(Node s, Node t) {
+        if(s == null || t == null) return false;
+        if(isSameTree(s,t)) return true;
+        if(isSubtree(s.left,t)) return true;
+        if(isSubtree(s.right,t)) return true;
+        return false;
+    }
+
+    public boolean isSymmetricChild(Node leftTree,Node rightTree) {
+        if(leftTree == null && rightTree != null || leftTree != null
+                && rightTree == null) {
+            return false;
+        }
+        if(leftTree == null && rightTree == null) {
+            return true;
+        }
+        if(leftTree.val != rightTree.val) {
+            return false;
+        }
+        return isSymmetricChild(leftTree.left,rightTree.right) &&
+                isSymmetricChild(leftTree.right,rightTree.left);
+    }
+
+    public boolean isSymmetric(Node root) {
+        if(root == null) return true;
+        return isSymmetricChild(root.left,root.right);
+    }
+
+    void levelOrderTraversal(Node root) {
+        if(root == null) {
+            return;
+        }
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            Node cur = queue.poll();
+            System.out.print(cur.val+" ");
+            if(cur.left != null) {
+                queue.offer(cur.left);
+            }
+            if(cur.right != null) {
+                queue.offer(cur.right);
+            }
+        }
+    }
+
+    public List<List<Character>> levelOrder(Node root) {
+        List<List<Character>> ret = new ArrayList<>();
+        if(root == null) {
+            return ret;
+        }
+        //queue:保证顺序
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            //rowList:每一行的数据
+            List<Character> rowList = new ArrayList<>();
+            int count = queue.size();//1
+            while (count != 0) {//2->1
+                Node cur = queue.poll();
+                if(cur != null) {
+                    rowList.add(cur.val);
+                    if(cur.left != null) {
+                        queue.offer(cur.left);
+                    }
+                    if(cur.right != null) {
+                        queue.offer(cur.right);
+                    }
+                }
+                count--;//0
+            }
+            ret.add(rowList);
+        }
+        return ret;
+    }
+    public Node mergeTrees(Node t1, Node t2) {
+        if(t1==null || t2==null) {
+            return t1==null? t2 : t1;
+        }
+        return dfs(t1,t2);
+    }
+
+    Node dfs(Node r1, Node r2) {
+        // 如果 r1和r2中，只要有一个是null，函数就直接返回
+        if(r1==null || r2==null) {
+            return r1==null? r2 : r1;
+        }
+        //让r1的值 等于  r1和r2的值累加，再递归的计算两颗树的左节点、右节点
+        r1.val += r2.val;
+        r1.left = dfs(r1.left,r2.left);
+        r1.right = dfs(r1.right,r2.right);
+        return r1;
+    }
+
+
+
+    public Node increasingBST(Node root) {
+        //1.创建一个新动态数组
+        List<Character> vals = new ArrayList();
+        //2.调用方法
+        inorder(root,vals);
+        //3.定义一个树结点ans，以及cur指针
+        Node ans = new Node('0');
+        Node cur = ans;
+        for(Character v : vals) {
+            //4.遍历生成
+            cur.right = new Node(v);
+            cur = cur.right;
+        }
+        return ans.right;
+    }
+
+    public void inorder(Node root, List<Character> vals) {
+        //1.判断树/引入结点是否为空
+        if(root == null) {
+            return;
+        }
+        //先左后右
+        //2.递归调用该结点的左结点，并在动态数组中加入新结点
+        inorder(root.left,vals);
+        vals.add(root.val);
+        //2.递归调用该结点的右结点，并在动态数组中加入新结点
+        inorder(root.right,vals);
+    }
+
+
+    public int widthOfBinaryTree(Node root) {
+        if(root == null) return 0;
+        Queue<Node> q = new LinkedList<>();
+        LinkedList<Integer> list = new LinkedList<>();
+        q.offer(root);
+        list.add(1);
+        int res = 1;
+        while (!q.isEmpty()) {
+            int count = q.size();
+            for(int i =count; i> 0; i--) {
+                Node cur = q.poll();
+                Integer curIndex = list.removeFirst();
+                if(cur.left != null) {
+                    q.offer(cur.left);
+                    list.add(curIndex * 2);
+                }
+                if(cur.right != null) {
+                    q.offer(cur.right);
+                    list.add(curIndex * 2 +1);
+                }
+            }
+            // list 中 size 为 1 的情况下，宽度也为 1，没有必要计算。
+            if(list.size() >= 2) {
+                res = Math.max(res, list.getLast() - list.getFirst() + 1);
+            }
+        }
+        return res;
+    }
+
+
+    public boolean isCompleteTree(Node root) {
+        Queue<Node> queue = new LinkedList<>();
+        Node prev = root;
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            Node node = queue.remove();
+            if (prev == null && node != null)
+                return false;
+            if (node != null) {
+                queue.add(node.left);
+                queue.add(node.right);
+            }
+            prev = node;
+        }
+        return true;
+    }
+}
