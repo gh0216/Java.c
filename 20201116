@@ -1,0 +1,411 @@
+package Generic;
+
+
+import java.awt.image.Kernel;
+
+//class BinarySearchTree{
+//    static class Node{
+//        public int data;
+//        public Node left;
+//        public Node right;
+//
+//        public Node(int data){
+//           this.data = data;
+//        }
+//    }
+//
+//    Node root = null;
+//
+//    public void put(int key){
+//        Node node = new Node(key);
+//        if (root == null) {
+//          root = node;
+//        }
+//        Node parent = null;
+//        Node cur = root;
+//        while (cur != null){
+//            if (cur.data < key){
+//                parent = cur;
+//                cur = cur.right;
+//            }else if (cur.data < data){
+//                parent =cur;
+//                cur = cur.left;
+//            }else{
+//                cur.data = key;
+//                return;
+//            }
+//        }
+//        //cur == null parent = cur的父亲
+//        if (parent.data < key){
+//            parent.right = node;
+//        }else {
+//            parent.left = node;
+//        }
+//    }
+//    public void inorder (Node root){
+//        if (root == null) return;
+//        inorder(root.left);
+//        System.out.println(root.data);
+//        inorder(root.right);
+//    }
+//
+//}
+//
+//public class FindTree {
+//
+//    public static void main(String[] args) {
+//        BinarySearchTree binarySearchTree =new BinarySearchTree();
+//        int[] array = {15,3,56,16,6,15,59,12,15};
+//        for (int i = 0; i <array.length ; i++) {
+//            binarySearchTree.put(array[i]);
+//        }
+//    }
+//
+//}
+public class BinarySearchTree {
+    static class Node {
+        public int data;
+        public Node left;
+        public Node right;
+
+        public Node(int data) {
+            this.data = data;
+        }
+    }
+    static Node root = null;
+    public static void put(int key) {
+        Node node = new Node(key);
+        if(root == null) {
+            root = node;
+            return;
+        }
+        Node parent = null;
+        Node cur = root;
+        while (cur != null) {
+            if(cur.data < key) {
+                parent = cur;
+                cur = cur.right;
+            }else if(cur.data > key) {
+                parent = cur;
+                cur = cur.left;
+            }else {
+                cur.data = key;
+                return;
+            }
+        }
+        //cur == null parent = cur的父亲
+        if(parent.data < key) {
+            parent.right = node;
+        }else {
+            parent.left = node;
+        }
+    }
+
+
+    public static Node findVal(int val) {
+        if(root == null) return null;
+        Node cur = root;
+        while (cur != null) {
+            if(cur.data == val) {
+                return cur;
+            }else if(cur.data < val){
+                cur = cur.right;
+            }else {
+                cur = cur.left;
+            }
+        }
+        return null;
+    }
+
+    public static void inorder(Node root) {
+        if(root == null) return;
+        inorder(root.left);
+        System.out.print(root.data+" ");
+        inorder(root.right);
+    }
+
+    public static void preorder(Node root) {
+        if(root == null) return;
+        System.out.print(root.data+" ");
+        preorder(root.left);
+        preorder(root.right);
+    }
+
+    public static void main(String[] args) {
+
+        int[] array = {15,3,56,16,6,15,59,12,15};
+
+        for (int i = 0; i < array.length; i++) {
+            put(array[i]);
+        }
+        put(15);
+        inorder(root);
+        System.out.println("=====================");
+        preorder(root);
+        System.out.println("===================");
+        try {
+            System.out.println(findVal(159).data);
+        }catch (NullPointerException e) {
+            e.printStackTrace();
+            System.out.println("没有这个节点!!!!!!!!");
+        }
+    }
+}
+
+package Generic;
+
+
+//泛型的意义：
+//1.自动进行类型检查
+//2.自动进行类型转换
+//泛型重点：
+//1.泛型怎么编译？   擦除机制  -》 Object
+//2.泛型的类型  不参与类型的组成
+//3.泛型的参数   不能是简单类型
+class MyArrayList<T> {
+
+    public T[] elem;
+    public int usedSize;
+
+
+    public MyArrayList () {
+        this.elem = (T[])new Object[10];
+    }
+
+    public void push(T val){
+        this.elem[this.usedSize] = val;
+        this.usedSize++;
+    }
+
+    public T get(){
+        return  this.elem[0];
+    }
+
+}
+
+public class TestDemo {
+    public static void main(String[] args) {
+        MyArrayList<Integer> myArrayList = new MyArrayList<>();
+        myArrayList.push(1);
+        myArrayList.push(0);
+        System.out.println(myArrayList.get());
+    }
+
+}
+
+
+//内部类
+//1.实例内部类
+//
+//2.静态内部类
+
+//3.匿名内部类
+//4.本地内部类
+
+
+
+//    一.实例内部类
+//    1.拿到实例内部类对象的方式：
+//           OuterClass.InnerClass innerClass =
+//                  outerClass.new InnerClass();
+//    2.不能在实例内部类当中定义一个静态的变量
+//        非要定义呢？   在编译时期能够确定的值
+//                     eg;public static final int data5 = 5;
+//    3.实例内部类是否有额外的开销？   有
+//       额外的开销  外部类的成员变量
+//    4.this  静态的  可以通过外部类的类名.出来    OuterClass.this
+//    5.注意: 内部类 产生的字节码文件  外部类名$内部类名.class
+class OuterClass{
+
+    public int data1 = 98;
+    private int data2 = 56;
+    public static int data3;
+
+
+//    内部类相当于外部类的实例成员
+    class InnerClass{
+
+        public int data1 = 100;
+        public int data4 = 4;
+        public static final int data5 = 5;
+
+        public void test(){
+            System.out.println(data4);
+            System.out.println(OuterClass.this.data1);
+            System.out.println(this.data1);
+            System.out.println(data1);
+        }
+
+    }
+}
+
+
+//二.静态内部类
+//1.如何拿到静态内部类的实例对象？
+// OuterClass.InnerClass innerClass =new outerClass.InnerClass();
+//2.静态内部类当中是不可以访问外部类的非静态数据成员的
+
+class OuterClass2 {
+
+    public int data1 = 1;
+    private int data2 = 2;
+    public static int data3 = 3;
+
+    //静态数据成员
+    static class InnerClass{
+        public int data4 = 4;
+        private int data5 = 5;
+        public static int data6 = 6;
+
+
+        //非要访问外部类非静态成员变量
+        OuterClass2 outerClass;
+        public InnerClass(OuterClass2 out){
+            this.outerClass = out;
+        }
+
+        //静态内部类当中是不可以访问外部类非静态数据成员的
+        public void test(){
+            System.out.println(data4);
+            System.out.println(data3);
+        }
+    }
+
+}
+
+
+//匿名内部类
+class OuterClass1 {
+    public void test() {
+        System.out.println("test()");
+    }
+}
+
+public class TestDemo {
+
+    public void func(){
+        class A{
+            //本地内部类
+        }
+    }
+
+
+    //匿名内部类相当于子类
+    public static void main2(String[] args) {
+        new OuterClass1() {
+            @Override
+            public void test() {
+                System.out.println("hjafhas");
+            }
+        }.test();
+    }
+
+    public static void main(String[] args) {
+        OuterClass2 out = new OuterClass2();
+        OuterClass2.InnerClass innerClass = new OuterClass2.InnerClass(out);
+        innerClass.test();
+    }
+
+
+    public static void main1(String[] args) {
+        OuterClass outerClass = new OuterClass();
+        //通过外部类的引用new一个对象
+        OuterClass.InnerClass innerClass = outerClass.new InnerClass();
+        innerClass.test();
+        System.out.println(innerClass.data4);
+        System.out.println(innerClass.data5);
+    }
+}
+
+import java.util.Arrays;
+
+class Soultion {
+    String name;
+    int age;
+
+    public Soultion(String name,int age){
+        this.age = age;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "solution{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+}
+
+
+
+public class TestDeno {
+
+    //归并非递归排序  稳定排序：归并  冒泡  插入排序
+    public static void mergeNor (int[] array,int gap){
+        int len = array.length;
+        int s1 = 0;
+        int e1 = s1+gap-1;
+        int s2 = e1+1;
+        int e2 = s2+gap-1 < len ? s2+gap-1 : len-1;
+        int[] tmpArr = new int[len];
+        int k= 0;
+        //先判断是否与两个归并段
+        while (s2 < len){
+
+            while (s1<=e1 && s2<=e2){
+                if (array[s1] <= array[s2]){
+                    tmpArr[k] = array[s1];
+                    k++;
+                    s1++;
+                }else {
+                    tmpArr[k] = array[s2];
+                    k++;
+                    s2++;
+                }
+            }
+            while (s1 <= e1){
+                tmpArr[k] = array[s1];
+                k++;
+                s1++;
+            }
+            while (s2 <= e2){
+                tmpArr[k] = array[s2];
+                k++;
+                s2++;
+            }
+            //一组比较已经完了
+            s1 = e2+1;
+            e1 = s1+gap-1;
+            s2 = e1+1;
+            e2 = s2+gap-1 < len ? s2+gap-1 : len-1;
+        }
+        //不够两个归并段
+        while (s1 <= len-1){
+            tmpArr[k] = array[s1];
+            k++;
+            s1++;
+        }
+
+        for (int i = 0; i <array.length ; i++) {
+            array[i] = tmpArr[i];
+        }
+    }
+
+    public static void mergeSortNor (int[] array){
+
+        for (int i = 0; i < array.length; i *= 2) {
+            mergeNor(array,i);
+        }
+
+    }
+
+    public static void main(String[] args) {
+        int[] num1 = {2,6,5,2,9,53,45};
+        int[] num2 = {66,36,15,326,45};
+        System.out.println(Arrays.toString(num1));
+        mergeSortNor(num1);
+        System.out.println(Arrays.toString(num1));
+    }
+}
