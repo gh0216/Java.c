@@ -1,0 +1,351 @@
+import java.util.HashMap;
+
+//哈希桶
+class HashBuck {
+
+    static class  Node {
+
+        public int data; // key  map.put(key,value)
+        public int value;
+        public Node next;
+
+        public Node(int data,int value){
+            this.data = data;
+            this.value = value;
+        }
+    }
+
+    public Node[] array;
+    public int usedSize;
+
+    public HashBuck(){
+        this.array = new Node[10];
+        this.usedSize = 0;
+    }
+
+    public void put(int key,int value){
+        //位置
+        int index = key % this.array.length;
+
+        //遍历这个位置下的链表
+        for (Node cur = array[index];cur != null ; cur = cur.next){
+            if(cur.data == key){
+                cur.value = value;
+                return;
+            }
+        }
+        //该链表当中 有和当前key值一样的元素  就要头插法
+        Node node = new Node(key,value);
+        node.next = array[index];
+        array[index] = node;
+        this.usedSize++;
+
+        //判断负载因子大小  如果大于负载因子  则要重新哈希
+        if (loadFactor() > 0.75){
+            resize();
+        }
+    }
+
+    //计算负载因子
+    public double loadFactor(){
+
+        return this.usedSize * 1.0/this.array.length;
+    }
+
+    //重新计算哈希
+    public void resize(){
+        Node[] newArray = new Node[2*this.array.length];
+
+        for (int i = 0; i <array.length ; i++) {
+            Node curNext = null;
+            for (Node cur = array[i] ; cur != null ; cur = curNext){
+                curNext = cur.next;
+                //array[i] 是数组的的下标
+                //cur 是头结点
+                int index = cur.data % newArray.length;
+                cur.next = newArray[index];
+                newArray[index] = cur;
+            }
+
+        }
+        this.array = newArray;
+    }
+
+    //得到key对应得value值
+    public int getValue(int key){
+        //现寻找下标
+        int index = key % this.array.length;
+        //遍历index下标中的链表  找与key所对应的data的节点
+        for (Node cur = array[index];cur != null;cur = cur.next){
+            if (cur.data == key){
+                return cur.value;
+            }
+        }
+        return -1;
+//        for (int i = 0; i < array.length; i++) {
+//            if ( key % this.array.length == array[i].data){
+//                for (Node pre = array[i];pre != null;pre =pre.next){
+//                    if (pre.data == key){
+//                        return pre.value;
+//                    }
+//                }
+//            }
+//        }
+//        return -1;
+    }
+
+}
+
+class HashBuck1{
+
+    static class Node {
+        public int data;
+        public int value;
+        public Node next;
+
+        public Node(int data,int value){
+            this.data = data;
+            this.value = value;
+        }
+    }
+
+    public Node[] array;
+    public int usedSize;
+
+    public HashBuck1(){
+        this.array = new Node[10];
+        this.usedSize =0;
+    }
+
+    public void put1 (int key, int value){
+        //先找在数组中的位置
+        int index = key % this.array.length ;
+        //遍历index位置下的链表
+        for (Node cur = array[index] ; cur != null ; cur = cur.next) {
+            //第一次进入该链表时将改动其 key 和 value
+            if (cur.data == key) {
+                cur.value = value;
+                return;
+            }
+        }
+            //该链表中不含有和key一样的值 就要使用头插法
+            Node node = new Node(key,value);
+            node.next = array[index] ;
+            array[index] = node;
+            this.usedSize++;
+        //判断是否要重写哈希
+        if ( loadFactor() >0.75){
+                resize();
+
+        }
+    }
+    //计算负载因子
+    public float loadFactor(){
+        return this.usedSize * 1.0f/this.array.length;
+    }
+    //重新计算哈希
+    public void resize() {
+
+        Node[] newArray1 = new Node[2*this.array.length];
+
+        for (int i = 0; i <array.length ; i++) {
+            Node curNext = null;
+            for (Node cur = array[i];cur != null;cur = curNext){
+                curNext = cur.next;
+                //array[i] 是数组的的下标
+                //cur 是头结点
+                int index = cur.data % newArray1.length;
+                cur.next = newArray1[index];
+                newArray1[index] = cur;
+            }
+        }
+        this.array = newArray1;
+    }
+
+    //得到value值
+    public int getValue(int key){
+
+         int index = key % this.array.length;
+
+         for (Node cur = array[index]; cur != null; cur = cur.next){
+             if (cur.data == key){
+                 return cur.value;
+             }
+         }
+         return -1;
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+        HashBuck1 hashBuck = new HashBuck1();
+        hashBuck.put1(1,2);
+        hashBuck.put1(2,65);
+        hashBuck.put1(3,23);
+        hashBuck.put1(4,95);
+        hashBuck.put1(5,24);
+        hashBuck.put1(6,29);
+        hashBuck.put1(7,987);
+        hashBuck.put1(8,25);
+        System.out.println(hashBuck.getValue(7));
+    }
+
+    public static void main1(String[] args) {
+        HashMap<Integer,String> hashMap = new HashMap<>();
+        HashBuck hashBuck = new HashBuck();
+        hashBuck.put(1,2);
+        hashBuck.put(2,65);
+        hashBuck.put(3,23);
+        hashBuck.put(4,95);
+        hashBuck.put(5,24);
+        hashBuck.put(6,29);
+        hashBuck.put(7,987);
+        hashBuck.put(8,25);
+        System.out.println(hashBuck.getValue(5));
+    }
+}
+
+package hashback;
+
+import java.util.Objects;
+
+class Person{
+    public int id;
+
+    public Person(int id){
+        this.id = id;
+    }
+
+    //比较自己创建的类时需要重写equals方法 和 hashCode
+    //重写hashcode 和 equals方法
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return id == person.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
+
+//泛型哈希桶
+class HashBuck<K,V> {
+
+    static class Node<K,V> {
+
+        public K data; // key  map.put(key,value)
+        public V value;
+        public Node<K,V> next;
+
+        public Node(K data, V value) {
+            this.data = data;
+            this.value = value;
+        }
+    }
+
+    public Node<K,V>[] array;
+    public int usedSize;
+
+    public HashBuck() {
+        this.array = new Node[10];
+        this.usedSize = 0;
+    }
+    /**
+     *Object:
+     *      hashCode
+     *      equals
+     *     为什么需要重写？
+     *       1、hashCode：找到位置
+     *       2、equals 比较key是否相同
+     */
+    public void put(K key,V value){
+        //位置
+        int hash =  key.hashCode(); //找位置
+        int index = hash % this.array.length;  //合法的下标
+        //int index = key % this.array.length;
+        //遍历这个位置下的链表
+        for (Node<K,V> cur = array[index]; cur != null; cur = cur.next){
+            if(cur.data == key){
+                cur.value = value;
+                return;
+            }
+        }
+        //该链表当中 没有和当前key值一样的元素  就要头插法
+
+        Node<K,V> node = new Node<K,V>(key,value);
+        node.next = array[index];
+        array[index] = node;
+        this.usedSize++;
+
+        //判断负载因子大小  如果大于负载因子  则要重新哈希
+        if (loadFactor() > 0.75){
+            resize();
+        }
+    }
+
+    //计算负载因子
+    public double loadFactor(){
+
+        return this.usedSize * 1.0/this.array.length;
+    }
+
+    //重新计算哈希
+    public void resize(){
+        Node<K,V>[] newArray = new Node[2*this.array.length];
+
+        for (int i = 0; i <array.length ; i++) {
+            Node<K,V> curNext = null;
+            for (Node<K,V> cur = array[i]; cur != null ; cur = curNext){
+                curNext = cur.next;
+                //array[i] 是数组的的下标
+                //cur 是头结点
+                int hash =  cur.data.hashCode(); //找位置
+                int index = hash % this.array.length;  //合法的下标
+                //int index = cur.data % newArray.length;
+                cur.next = newArray[index];
+                newArray[index] = cur;
+            }
+
+        }
+        this.array = newArray;
+    }
+
+    public V getValue(K key) {
+        int hash = key.hashCode();
+        int index = hash%array.length;
+        for (Node<K,V>cur = array[index]; cur != null; cur = cur.next) {
+            if(cur.data .equals(key)) {
+                return cur.value;
+            }
+        }
+        return null;
+    }
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+        Person person1 = new Person(1234);
+        Person person2 = new Person(457);
+        Person person3 = new Person(1234);
+        HashBuck<Person,String> hashBuck = new HashBuck<>();
+        hashBuck.put(person1,"孙悟空");
+        System.out.println(hashBuck.getValue(person3));
+    }
+
+    public static void main1(String[] args) {
+        Person person1 = new Person(1234);
+        Person person2 = new Person(457);
+        Person person3 = new Person(1234);
+
+        System.out.println(person1.hashCode());
+        System.out.println(person3.hashCode());
+        System.out.println(person2.hashCode());
+    }
+
+}
