@@ -1,0 +1,207 @@
+import java.util.Scanner;
+
+class animal{
+    private int age;
+    private double weight;
+
+    @Override
+    public String toString() {
+        return "animal{" +
+                "age=" + age +
+                ", weight=" + weight +
+                '}';
+    }
+
+    public animal(int age, double weight){
+        this.age = age;
+        this.weight = weight;
+    }
+
+    public void swimming(){
+        System.out.println("swimming"+this.age);
+    }
+}
+
+class dog extends animal{
+
+    public dog(int age, double weight) {
+        super(age, weight);
+    }
+
+    public void swimming(){
+        System.out.println("dog  swimming");
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+}
+
+class Test{
+    private int data;
+    int result = 0;
+    public void  m (){
+        data += 2;
+        result +=2;
+        System.out.println(result + " " + data);
+    }
+}
+
+class ThreadExampple extends Thread {
+
+    private  Test mv;
+    public ThreadExampple(Test mv){
+        this.mv = mv;
+    }
+    public void run() {
+        synchronized (mv){
+            mv.m();
+        }
+    }
+}
+class Solution1 {
+
+    public int findKth(int[] a, int n, int K) {
+
+        return 1;
+    }
+
+}
+
+class Solution {
+    public boolean canPermutePalindrome(String s) {
+        char[] chars = s.toCharArray();
+        int[] target = new int[128];
+        for (char c : chars) {
+            target[c] += 1;
+        }
+        int count = 0;
+        for (int i : target) {
+            if(i % 2 != 0) {
+                count++;
+            }
+            if(count > 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+public class TestDemo {
+    //判断是否为回文
+    public static boolean isHuiWen(String s) {
+        int i = 0;
+        int j = s.length() - 1;
+        while (i < j) {
+            if (s.charAt(i) != s.charAt(j)) {
+                return false;
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String str1 = sc.nextLine();
+        String str2 = sc.nextLine();
+        int count = 0;
+        for (int i = 0; i <= str1.length(); i++) {
+            StringBuilder sb = new StringBuilder(str1);
+            sb.insert(i, str2);//从0号位置开始插入
+            if (isHuiWen(sb.toString())) {
+                //说明是回文，计数+1
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+
+    public static void main4(String[] args) {
+        String s = "ASDFGHJKL";
+        System.out.println(s.substring(2, 3));
+        System.out.println(s.indexOf("L", 0));
+        System.out.println((s.codePointAt(2)));
+        int a =Integer.valueOf(s.codePointAt(2));
+        System.out.println(Character.valueOf('d'));
+        System.out.println(s.indexOf("A"));
+        System.out.println(s.indexOf(5));
+    }
+
+    public static void main3(String[] args) {
+        Solution solution = new Solution();
+        System.out.println(solution.canPermutePalindrome("abab"));
+//        String s = "aabbccdd";
+//        char[] chars = s.toCharArray();
+//        int[] target = new int[128];
+//        for (char c : chars) {
+//            target[c] += 1;
+//        }
+//        System.out.println(Arrays.toString(target));
+    }
+
+    public static void main2(String[] args) {
+        Test mv = new Test();
+        Thread t1 = new ThreadExampple(mv);
+        Thread t2 = new ThreadExampple(mv);
+        Thread t3 = new ThreadExampple(mv);
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+
+    public static void main1(String[] args) {
+        animal dog = new dog(561,20);
+        animal animal = new animal(23,20);
+        animal.swimming();
+        dog.swimming();
+        System.out.println(Math.round(11.5));
+        System.out.println(Math.round(-11.5));
+
+    }
+
+}
+public static void quick(int[] array,int low,int high) {
+        if(low >= high) {
+            return;
+        }
+
+        //1、优化   当 low  high  之间的数据个数  小于 某个值的时候   采用直接插入排序
+        if(high-low+1 <= 100) {
+            insertSort2(array,low,high);
+            return;
+        }
+        //2、优化方式   三数取中
+        medianOfThree(array,low,high);
+
+        int par = partion(array,low,high);
+
+        quick(array,low,par-1);
+        quick(array,par+1,high);
+    }
+    public static void swap(int[] array,int low,int high) {
+        int tmp = array[low];
+        array[low] = array[high];
+        array[high] = tmp;
+    }
+    public static void medianOfThree(int[] array,int low,int high) {
+        int mid = (low+high)/2;
+        //array[mid] < array[low] < array[high]
+        if(array[low] >= array[high]) {
+            swap(array,low,high);
+        }
+        if(array[low] <= array[mid]) {
+            swap(array,low,mid);
+        }
+
+        if(array[mid] >= array[high]) {
+            swap(array,low,mid);
+        }
+    }
+
+    public static void quickSort(int[] array) {
+        //quick(array,0,array.length-1);
+        quickNor(array,0,array.length-1);
+    }
