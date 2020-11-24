@@ -1,0 +1,279 @@
+class Solution1 {
+
+    public void swap(int[] a,int low,int high){
+        int tmp = a[low];
+        a[low] = a[high];
+        a[high] = tmp;
+    }
+
+    public int findKey(int[] a,int low,int high){
+        int mid = (high+low)/2;
+        if(a[low] >= a[high]) {
+            swap(a,low,high);
+        }
+        if(a[low] <= a[mid]) {
+            swap(a,low,mid);
+        }
+
+        if(a[mid] >= a[high]) {
+            swap(a,low,mid);
+        }
+        return mid;
+    }
+    public int partion(int[] array,int start,int end) {
+        int tmp = array[start];
+        while (start < end) {
+            while (start < end && array[end] >= tmp) {
+                end--;
+            }
+            if(start >= end) {
+                //array[start] = tmp;
+                break;
+            }else {
+                array[start] = array[end];
+            }
+
+            while (start < end && array[start] <= tmp) {
+                start++;
+            }
+            if(start >= end) {
+                //array[start] = tmp;
+                break;
+            }else {
+                array[end] = array[start];
+            }
+
+        }
+        array[start] = tmp;
+        return start;
+    }
+    public void quick(int[] a,int low,int high) {
+        if(low >= high) {
+            return;
+        }
+        //2、优化方式   三数取中
+        findKey(a,low,high);
+
+        int par = partion(a,low,high);
+
+        quick(a,low,par-1);
+        quick(a,par+1,high);
+    }
+
+    public int findKth(int[] a, int n, int K) {
+        // write code here
+        quick(a,0,a.length-1);
+        return a[n-K];
+    }
+}
+
+class Solution5 {
+    public boolean chkParenthesis(String A, int n) {
+        int l = 0; //左括号数
+        for (int i = 0; i < A.length(); i++) {
+            char c = A.charAt(i);
+            if (c == '(') {
+                l++;
+            } else if (c == ')') {
+                if (l > 0) {
+                    l--;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        return l == 0;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while(scanner.hasNext()){
+            String str = scanner.nextLine();
+            int max = 0,count = 0, end=0;
+            for(int i=0;i<str.length();i++){
+                if(str.charAt(i)>='0' && str.charAt(i)<='9'){
+                    count++;
+                    if(max<count){
+                        max= count;
+                        end = i;
+                    }
+                }else{
+                    count = 0;
+                }
+            }
+            System.out.println(str.substring(end-max+1,end+1));
+        }
+    }
+}
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.Stack;
+
+class Parenthesis {
+    public boolean chkParenthesis(String A, int n) {
+        // write code here
+        n = A.length();
+        int i = 0;
+        Stack<Character> stack = new Stack<>();
+        return false;
+    }
+}
+
+class Person{
+    private String name = "Person";
+    int age = 0;
+}
+class TestDemo1 extends Person{
+    public  String grade;
+
+    public static void main(String[] args) {
+        Person p = new TestDemo1();
+    }
+}
+
+//请从字符串中找出一个最长的不包含重复字符的子字符串，计算该最长子字符串的长度。
+class Solution1 {
+    public int lengthOfLongestSubstring(String s) {
+        Set<Character> set = new HashSet<>();
+        int left = 0, right = 0, res = 0;
+        while(right < s.length()){
+            char c = s.charAt(right++);
+            //存在重复的字符，则移动左指针，直到滑动窗口中不含有该字符
+            while(set.contains(c)){
+                set.remove(s.charAt(left++));
+            }
+            set.add(c);
+            res = Math.max(res, right-left);
+        }
+        return res;
+    }
+    public int LengthOfLongestSubstring(String s){
+        HashSet<Character> hashSet = new HashSet<>();
+        int left = 0 ,right = 0,res = 0;
+        while (right < s.length()){
+            char c = s.charAt(right++);
+            if (hashSet.contains(c)){
+                hashSet.clear();
+                left = right-1;
+            }
+            hashSet.add(c);
+            res = Math.max(res,right-left);
+        }
+        return res;
+    }
+}
+
+class Solution{
+    public void maxLong(String str){
+        int one = 0;
+        int two = 0;
+        HashSet<Character> hashSet = new HashSet<>();
+        for (Character val:str.toCharArray()) {
+            if (!hashSet.contains(val)){
+                hashSet.add(val);
+                one++;
+            }else {
+                hashSet.clear();
+                hashSet.add(val);
+            }
+        }
+        System.out.println(hashSet);
+    }
+}
+
+class TestDemo {
+    public static void main(String[] args) {
+        Solution1 solution1 =new Solution1();
+        System.out.println(solution1.
+                lengthOfLongestSubstring("bbbbb"));
+        System.out.println(solution1.
+                LengthOfLongestSubstring("bbbbb"));
+    }
+
+    public static void main7(String[] args) {
+        Solution solution = new Solution();
+        solution.maxLong("abcd12345ed125ss12");
+    }
+
+    public static void main6(String[] args) {
+        String str = "hello";
+        String str1 = "he" + new String("llo");
+        System.out.println(str == str1);
+    }
+    public static void main4(String[] args) {
+        Scanner in = new Scanner(System.in);
+        while (in.hasNextInt()) {// 注意，如果输入是多个测试用例，请通过while循环处理多个测试用例
+            int a = in.nextInt();
+            int b = in.nextInt();
+            System.out.println(a + b);
+        }
+    }
+
+    public static void main5(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int count = 0;
+        HashSet<String> hashSet = new HashSet<>();
+        while (sc.hasNextLine()) {// 注意，如果输入是多个测试用例，请通过while循环处理多个测试用例
+            String str2 = sc.nextLine();
+            String str1 = sc.nextLine();
+            String str = str1+" "+str2;
+            for (String val:str.toLowerCase().split(" ")) {
+                if (!hashSet.contains(val)){
+                    hashSet.add(val);
+                    count++;
+                }
+            }
+            System.out.println(count);
+        }
+    }
+
+    public static int fib(int n){
+        if (n == 1) return 0;
+        if (n == 2) return 1;
+        return fib(n-1)+fib(n-2);
+    }
+    public static int fib1(int K){
+        int f1 = 0;
+        int f2 = 1;
+        int f3 = 0;
+        if (K <= 0) return 0;
+        if (K == 1) return f1;
+        if (K == 2) return f2;
+        if (K >= 3){
+            f3 = f2+ f1;
+            f1 = f2;
+            f2 = f3;
+        }
+        return f3;
+    }
+    public static int RET(int K){
+        int tmp = fib(K/2+1);
+        return tmp;
+    }
+
+    public static void main2(String[] args) {
+        String str = "BUTTER FLOUR\n" +
+                "HONEY FLOUR EGG";
+        System.out.println((str.toLowerCase()));
+    }
+
+    public static void main1(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int n = sc.nextInt();
+        int a = 0,b = 1,c = 1;
+        while(c < n){
+            a = b;
+            b = c;
+            c = a + b;
+        }
+        int n1 = n - b;
+        int n2 = c - n;
+        System.out.println(Math.min(n1, n2));
+    }
+}
