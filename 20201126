@@ -1,0 +1,286 @@
+import java.util.*;
+
+class Solution8 {
+    Stack<Integer> stack1 = new Stack<Integer>();
+    Stack<Integer> stack2 = new Stack<Integer>();
+
+    public void push(int node) {
+        if (stack1 == null && stack2  == null){
+            stack1.push(node);
+            stack2.push(stack1.pop());
+        }
+    }
+
+    public int pop() {
+
+    }
+}
+
+class Solution7{
+
+    //删除字符串1中 的字符串   如果字符串1中包含字符串2的字符  删掉该字符
+    public String delString(String str1,String str2){
+        HashSet<Character> hashSet =new HashSet<>();
+        List<Character> list = new ArrayList<>();
+        for (Character val: str2.toLowerCase().toCharArray()) {
+            hashSet.add(val);
+        }
+        for (int i = 0; i < str1.toCharArray().length ; i++) {
+            if (!hashSet.contains(str1.charAt(i))){
+                list.add(str1.charAt(i));
+            }
+        }
+        char[] tmp = new char[list.size()];
+        for (int i = 0; i < tmp.length ; i++) {
+            tmp[i] = list.get(i);
+        }
+        return new String(tmp);
+    }
+}
+
+class Solution6{
+
+    //逆串
+    public void count(int[] A, int n) {
+        int count = 0;
+        // write code here
+        for (int i = 0; i < n ; i++) {
+            for (int j = i + 1; j < n ; j++) {
+                if (A[i] > A[j]){
+                    count = count+ 1;
+                }
+            }
+        }
+        System.out.println(count);
+    }
+
+}
+
+public class Main{
+
+    public static void main8(String[] args) {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        System.out.println(stringBuilder.append(2));
+        String s = "afdasfas";
+        System.out.println("s="+s);
+    }
+
+
+    //买糖果
+    public static int count(int n){
+        if(n%2!=0||n==10||n<6) return -1;//一定是偶数（6，8都是）,最小是6，10以上偶数都可以；
+        if(n%8==0) return n/8;//如果拿八个拿完最好
+        return 1+n/8;//对于10以上的偶数，只要对8取余数不为0，就要从前面的1或者2个8中拿出2个，把余数补为6（本来余数就是6，就不用拿）。所以+1；
+    }
+
+    public static void main7(String[] args) {
+        Scanner in = new Scanner(System.in);
+        while(in.hasNextInt()){
+            int n = in.nextInt();
+            System.out.println(count(n));
+        }
+    }
+
+    public static void main5(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String str1 = sc.nextLine();
+        String str2 = sc.nextLine();
+        HashSet<Character> hashSet =new HashSet<>();
+        List<Character> list = new ArrayList<>();
+        for (Character val: str2.toLowerCase().toCharArray()) {
+            hashSet.add(val);
+        }
+        for (int i = 0; i < str1.toCharArray().length ; i++) {
+            if (!hashSet.contains(str1.charAt(i))){
+                list.add(str1.charAt(i));
+            }
+        }
+        char[] tmp = new char[list.size()];
+        for (int i = 0; i < tmp.length ; i++) {
+            tmp[i] = list.get(i);
+        }
+        System.out.println((new String(tmp)));
+    }
+
+    public static void main4(String[] args) {
+        Solution7 solution7 = new Solution7();
+        System.out.println(solution7.delString("They are students", "aeiou"));
+    }
+
+    //买糖果  打包 不能拆分   一包只有6个或者8个  并且买的糖果总数要用袋子装满
+    public static void main6(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int count = 0, tmp = 0;
+        if (n == 0) {
+            count = -1;
+        }else {
+            for (int i = (n / 6) + 1 ; i >= 0 ; i--) {
+                if ((n - 8 * i) % 6 == 0) {
+                    count = i;
+                    n = n - 8 * count;
+                    if (n >= 0) {
+                        tmp = n / 6;
+                    }
+                    count = count + tmp;
+                    break;
+                }else if ((n - 6 * i) % 8 == 0) {
+                    count = i;
+                    n = n - 6 * count;
+                    if (n >= 0) {
+                        tmp = n / 8;
+                    }
+                    count = count + tmp;
+                    break;
+                } else {
+                    count = -1;
+                }
+            }
+        }
+        System.out.println(count);
+    }
+
+
+    public static void main3(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int count = 0, tmp = 0;
+        if (n % 8 == 0 ){
+            count = n / 8;
+        }else {
+            for (int i = (n / 8) + 1 ; i >= 0 ; i--) {
+                if ((n - 8 * i) % 6 == 0) {
+                    count = i;
+                    n = n - 8 * count;
+                    if (n >= 0) {
+                        tmp = n / 6;
+                    }
+                    count = count + tmp;
+                    break;
+                }else if ((n - 6 * i) % 8 == 0) {
+                    count = i;
+                    n = n - 6 * count;
+                    if (n >= 0) {
+                        tmp = n / 8;
+                    }
+                    count = count + tmp;
+                    break;
+                } else {
+                    count = -1;
+                }
+            }
+
+        }
+        System.out.println(count);
+    }
+
+//    public static void main(String[] args) {
+//        int count = 0;
+//        // write code here
+//        for (int i = 0; i < A.length ; i++) {
+//            for (int j = i + 1; j < A.length ; j++) {
+//                if (A[i] > A[j]){
+//                    count = count+ 1;
+//                }
+//            }
+//        }
+//        System.out.println(count);
+//    }
+
+    public static void main2(String[] args) {
+        Solution6 solution6 = new Solution6();
+        int[] array = {1,2,3,4,5,6};
+        solution6.count(array,array.length);
+    }
+
+    public static void main1(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextInt()) {
+            int n = scanner.nextInt();
+            int count = 0;
+            if (n < 2){
+                break;
+            }
+            while (n >= 3){
+                n = n - 2;
+                count++;
+            }
+            if (n + 1 == 3){
+                count++;
+            }
+            System.out.println(count);
+        }
+    }
+}
+
+abstract class hou{
+    public int i= 5;
+    public abstract void method(int j);
+    public void method(){
+
+    }
+}
+
+//  括号判断
+class Solution5 {
+//    public Solution5(){
+//        return 1;
+//    }
+    public boolean chkParenthesis(String A, int n) {
+        int l = 0; //左括号数
+        for (int i = 0; i < A.length(); i++) {
+            char c = A.charAt(i);
+            if (c == '(') {
+                l++;
+            } else if (c == ')') {
+                if (l > 0) {
+                    l--;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        return l == 0;
+    }
+}
+
+
+class Main1 {
+    public static boolean isAdmin(String  str){
+        return str.toLowerCase() == "isadmin";
+    }
+
+    public static void main(String[] args) {
+        String str = "isAdmin";
+        System.out.println(isAdmin(str));
+    }
+
+//    public static void main2(String[] args) {
+//        Solution5 solution =new  Solution5();
+//        System.out.println(solution.Solution5());
+//    }
+
+    //最长字符串
+    public static void main1(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while(scanner.hasNext()){
+            String str = scanner.nextLine();
+            int max = 0,count = 0, end=0;
+            for(int i=0;i<str.length();i++){
+                if(str.charAt(i)>='0' && str.charAt(i)<='9'){
+                    count++;
+                    if(max<count){
+                        max= count;
+                        end = i;
+                    }
+                }else{
+                    count = 0;
+                }
+            }
+            System.out.println(str.substring(end-max+1,end+1));
+        }
+    }
+}
