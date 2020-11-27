@@ -1,0 +1,179 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+//用两个栈来实现一个队列， 完成队列的Push和Pop操作。队列中的元素为int类型。
+class Solution {
+    Stack<Integer> stack1 = new Stack<Integer>();
+    Stack<Integer> stack2 = new Stack<Integer>();
+
+    public void push(int node) {
+        if(!stack1.isEmpty() && stack2.isEmpty()){
+            while(!stack1.isEmpty()){
+                //将stack1中的数据取出放入stack2中
+                stack2.push(stack1.pop());
+            }
+            stack1.push(node);
+            while(!stack2.isEmpty()){
+                //将stack2中的数据取出放入stack1中
+                stack1.push(stack2.pop());
+            }
+
+        }else{
+            stack1.push(node);//存储数据
+        }
+
+    }
+
+    public int pop() {
+        if(!stack1.isEmpty()){
+            return stack1.pop();
+        }else{
+            return 0;
+        }
+
+
+    }
+}
+
+
+//有一个神奇的口袋，总的容积是40,用这个口袋可以变出一些物品，这些物品的
+//总体积必须是40。John现在有n个想要得到的物品，每个物品的体积分别是a1,a2.... .an。John可以从这些物品中选择些， 如果选出的物体的总体积是40，那么利用这个神奇的口袋，John就可以得到这些物品。现在的问题是，John有多少种不同的选择物品的方式。
+class Main {
+    public void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextInt()) {
+            int kinds = scanner.nextInt();
+            int[] arr = new int[kinds];
+            for (int i = 0; i < kinds; i++) {
+                arr[i] = scanner.nextInt();
+            }
+            System.out.println(differentkinds(arr, kinds, 40,0));
+        }
+    }
+
+    public int differentkinds(int[] arr, int n, int v,int index) {
+        if (v == 0) {
+            return 1;
+        }
+        if (n == 0) {
+            return 0;
+        }else {
+            //从后往前装，最后一个开始，装上n个后，体积减少，继续往前
+            //装上n个后，如果无解。删除该包。然后从n-1开始继续往前装
+            return differentkinds(arr,n-1,v-arr[index],index+1)
+                    +differentkinds(arr,n-1,v,index+1);
+        }
+    }
+}
+
+
+public class TestDemo {
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+     <p>芝麻开门</p>
+     <h1>测试</h1>
+     <h6>一下</h6>
+
+     <form method="post" action="login" >
+         账号：<input type="text" name="username"><br>
+         密码：<input type="password" name="password"><br>
+         <input type="submit" value="登陆">
+     </form>
+</body>
+</html>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>202011201</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <properties>
+
+    <maven.compiler.source>1.8</maven.compiler.source>
+
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    </properties>
+
+    <!-- 依赖包 -->
+    <dependencies>
+        <dependency>
+            <!--组织名，一般是使用公司的域名-->
+            <groupId>mysql</groupId>
+            <!-- 产品名 -->
+            <artifactId>mysql-connector-java</artifactId>
+            <!-- 版本号 -->
+            <version>5.1.49</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+
+</project>
+
+
+import java.math.BigDecimal;
+import java.sql.*;
+
+public class Main {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            // 加载JDBC驱动程序：反射，这样调用初始化com.mysql.jdbc.Driver类，即将该类加载到JVM方法区，并执行该类的静态方法块、静态属性。
+            Class.forName("com.mysql.jdbc.Driver");
+            // 第一步： 创建数据库连接
+            connection = DriverManager.getConnection
+                    ("jdbc:mysql://localhost:3306/chong?user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+            System.out.println(connection);
+
+            //第二步：创建操作命令对象
+            statement = connection.createStatement();
+
+            //第三步：执行sql
+            resultSet = statement.executeQuery("select book_name,book_author,price,type from book");
+
+            //第四步：处理结果集 ResultSet（类似List<Map<String,字段属性>>）
+            while(resultSet.next()){  //遍历每一行数据
+                String book_name = resultSet.getString("book_name");
+                String book_author = resultSet.getString("book_author");
+                BigDecimal price = resultSet.getBigDecimal("price");
+                String type = resultSet.getString("type");
+                System.out.printf("book_name=%s,book_author=%s,price=%s,type=%s", book_name,book_author,price,type);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+        } finally {
+            //第五步：释放资源
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+}
