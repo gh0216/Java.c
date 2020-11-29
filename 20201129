@@ -1,0 +1,307 @@
+import java.util.*;
+
+
+//用两个栈来实现一个队列， 完成队列的Push和Pop操作。队列中的元素为int类型。
+class Solution {
+    Stack<Integer> stack1 = new Stack<Integer>();
+    Stack<Integer> stack2 = new Stack<Integer>();
+
+    public void push(int node) {
+        if(!stack1.isEmpty() && stack2.isEmpty()){
+            while(!stack1.isEmpty()){
+                //将stack1中的数据取出放入stack2中
+                stack2.push(stack1.pop());
+            }
+            stack1.push(node);
+            while(!stack2.isEmpty()){
+                //将stack2中的数据取出放入stack1中
+                stack1.push(stack2.pop());
+            }
+
+        }else{
+            stack1.push(node);//存储数据
+        }
+
+    }
+
+    public int pop() {
+        if(!stack1.isEmpty()){
+            return stack1.pop();
+        }else{
+            return 0;
+        }
+    }
+}
+
+
+//有一个神奇的口袋，总的容积是40,用这个口袋可以变出一些物品，这些物品的
+//总体积必须是40。John现在有n个想要得到的物品，每个物品的体积分别是a1,a2.... .an。John可以从这些物品中选择些， 如果选出的物体的总体积是40，那么利用这个神奇的口袋，John就可以得到这些物品。现在的问题是，John有多少种不同的选择物品的方式。
+class Main {
+    public void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextInt()) {
+            int kinds = scanner.nextInt();
+            int[] arr = new int[kinds];
+            for (int i = 0; i < kinds; i++) {
+                arr[i] = scanner.nextInt();
+            }
+            System.out.println(differentkinds(arr, kinds, 40,0));
+        }
+    }
+
+    public int differentkinds(int[] arr, int n, int v,int index) {
+        if (v == 0) {
+            return 1;
+        }
+        if (n == 0) {
+            return 0;
+        }else {
+            //从后往前装，最后一个开始，装上n个后，体积减少，继续往前
+            //装上n个后，如果无解。删除该包。然后从n-1开始继续往前装
+            return differentkinds(arr,n-1,v-arr[index],index+1)
+                    +differentkinds(arr,n-1,v,index+1);
+        }
+    }
+}
+
+class Solution2{
+    public void twoPercent(){
+        Scanner sc = new Scanner(System.in);
+        HashMap<Integer,Integer> hashMap = new HashMap<>();
+        int n = sc.nextInt(),i = 0;
+        int val = sc.nextInt();
+        while (i < n){
+            hashMap.put(val,hashMap.getOrDefault(val,1));
+            i++;
+        }
+        for (Integer num : hashMap.values()){
+            if (num > hashMap.size()/2){
+                System.out.println(hashMap.get(num));
+            }
+        }
+    }
+}
+
+class Solution1{
+    public void childTang(){
+        Scanner scanner = new Scanner(System.in);
+//        while (scanner.hasNextInt()){
+//            int s = scanner.nextInt();
+//        }
+        int num = scanner.nextInt();
+        Stack<Integer> stack = new Stack<>();
+        stack.push(num);
+        System.out.println(stack.size());
+    }
+}
+
+class Solution3{
+
+    public int twicePercent(int[] array){
+        int[] arr = new int[10];
+        for (int i = 0; i < array.length ; i++) {
+            for (int j = 0; j <=9 ; j++) {
+                if (array[i] == j) {
+                    arr[j]++;
+                }
+            }
+        }
+        int tmp = 0;
+        for (int i = 0; i <arr.length ; i++) {
+            if (arr[i]>=array.length/2){
+                tmp = i;
+                break;
+            }
+        }
+        return tmp;
+//        int[] arr = new int[9];
+//        for(int j = 0;j<array.length;j++){
+//            for(int i = 0;i<=9;i++){
+//                if(array[j] == i){
+//                    arr[i]++;
+//                }
+//            }
+//        }
+
+    }
+
+}
+
+public class TestDemo {
+
+    public static int bigThanHalf1(int[] array,int n){
+        int[] tmp = new int[10];
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j <= 9 ; j++) {
+                if (array[i] == j){
+                    tmp[j]++;
+                }
+            }
+        }
+        int result = 0;
+        for (int i = 0; i < tmp.length ; i++) {
+            if (tmp[i] >= n/2){
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()){
+            String s=scanner.nextLine();
+            String[] str=s.split(" ");
+            int[] arr= new int[str.length];
+            for(int i=0;i<str.length;i++){
+                arr[i]=Integer.parseInt(str[i]);
+            }
+            System.out.println(bigThanHalf1(arr,arr.length));
+        }
+    }
+
+    public static int bigThanHalf(Integer [] arr,int n){
+        List<Integer> list=Arrays.asList(arr);//注意arr必须不能是int，需要传对象的包装类Integer
+        HashSet<Integer> set = new HashSet<>(list);
+        for(Integer i:set){
+            int count=0;
+            for(int j:list){
+                if(j==i){
+                    count++;
+                }
+            }
+            if(count>=(n/2)){
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public static void main8(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()){
+            String s=scanner.nextLine();
+            String [] str=s.split(" ");
+            Integer [] arr= new Integer[str.length];
+            for(int i=0;i<str.length;i++){
+                arr[i]=Integer.parseInt(str[i]);
+            }
+            System.out.println(bigThanHalf(arr,arr.length));
+        }
+    }
+
+
+    public static void main7(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int[] array= new int[20];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = sc.nextInt();
+        }
+        int[] tmp = new int[10];
+        for (int i = 0; i < array.length ; i++) {
+            for (int j = 0; j <= 9 ; j++) {
+                if (array[i] == j ){
+                    tmp[j]++;
+                }
+            }
+        }
+        int val = 0;
+        for (int i = 0; i <tmp.length ; i++) {
+            if (tmp[i] >= tmp.length/2){
+                val = i;
+                break;
+            }
+        }
+        System.out.println(val);
+    }
+
+    public static void main6(String[] args) {
+        Solution3 solution3 =new Solution3();
+        int[] array ={3,9,3,2,5,6,7,3,2,3,3,3};
+        System.out.println(solution3.twicePercent(array));
+    }
+
+    public static void main5(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        HashMap<Integer,Integer> hashMap = new HashMap<>();
+        int[] numbers = new int[10];
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = sc.nextInt();
+        }
+        System.out.println(Arrays.toString(numbers));
+//        while (i <= 10){
+//            hashMap.put(val,hashMap.getOrDefault(val,0)+1);
+//            i++;
+//        }
+//        for (Integer pre:hashMap.keySet()) {
+//            System.out.print(pre+" ");
+//        }
+//        System.out.println( );
+//        for (Integer tmp:hashMap.values()) {
+//            System.out.print(tmp + " ");
+//        }
+//        for(Map.Entry<Integer, Integer> entry : hashMap.entrySet()){
+//            System.out.println(entry.getKey() + "--->" + entry.getValue());
+//        }
+//        System.out.println(hashMap.size());
+
+    }
+
+    public static void main4(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+//        while (scanner.hasNextInt()){
+//            int s = scanner.nextInt();
+//        }
+        int num = scanner.nextInt();
+        int n = 0;
+        Stack<Integer> stack = new Stack<>();
+        while ( n < 10){
+            stack.push(num);
+            n++;
+        }
+        System.out.println(stack.size());
+    }
+
+    public static void main3(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int[] numbers = new int[4];
+        int A = 0,B = 0,C = 0;
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = input.nextInt();
+        }
+        int max = numbers[0],min = numbers[0];
+        for (int i = 1; i <numbers.length; i++) {
+            max = Math.max(max, numbers[i]);
+            min = Math.min(max, numbers[i]);
+        }
+        if (max > 30 || min < -30){
+            System.out.println("No");
+        } else if ((numbers[0]+numbers[2])%2 ==0 && (numbers[1]+numbers[3])%2 == 0) {
+            A = (numbers[0] + numbers[2]) / 2;
+            B = (numbers[1] + numbers[3]) / 2;
+            C = B - numbers[1];
+            System.out.println(A + " " + B + " " + C);
+        }else {
+            System.out.println("No");
+        }
+    }
+
+    public static void main2(String[] args){
+        int ARRAYLENGTH = 8;  //指定数组长度
+        int a[] = new int[ARRAYLENGTH];
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入数组，并以回车结束：");
+        for(int i = 0; i < a.length; i++){
+            a[i] = sc.nextInt();
+        }
+        //直接打印数组a出来的是数组的首地址，必须用toString方法
+        System.out.println("数组a为:" + Arrays.toString(a));
+    }
+
+    public static void main1(String[] args) {
+        boolean a = false;
+        System.out.println(a);
+    }
+}
