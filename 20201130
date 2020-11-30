@@ -1,0 +1,211 @@
+package tset.jdbc;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.*;
+
+public class Main2 {
+    public static void main(String[] args) {
+
+        //加载JDBC驱动程序：反射，这样调用初始化com.mysql.jdbc.Driver类，即将该类加载到JVM方法
+        //区，并执行该类的静态方法块、静态属性。
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+
+            //创建数据库连接池
+            DataSource dataSource = new MysqlDataSource();
+            ((MysqlDataSource)dataSource).setURL("jdbc:mysql://localhost:3306/chong? user=root&password=ghz0216&useUnicode=true&characterEncoding=UTF-8");
+            connection = dataSource.getConnection();
+            //System.out.println(connection);
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery(
+                    "select book_name, book_author, price, type  from book");
+
+            while (resultSet.next()) {
+                String book_name = resultSet.getString("book_name");
+                String book_author = resultSet.getString("book_author");
+                BigDecimal price = resultSet.getBigDecimal("price");
+                String type = resultSet.getString("type");
+                System.out.println(String.format("book: book_name=%s, book_author = %s , price = %s , type = %s", book_name, book_author, price, type));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+}
+
+
+package tset.jdbc;
+
+import java.math.BigDecimal;
+import java.sql.*;
+
+public class Main1 {
+    public static void main(String[] args) {
+
+        //加载JDBC驱动程序：反射，这样调用初始化com.mysql.jdbc.Driver类，即将该类加载到JVM方法
+        //区，并执行该类的静态方法块、静态属性。
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/chong? user=root&password=ghz0216&useUnicode=true&characterEncoding=UTF-8");
+            //System.out.println(connection);
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery(
+                    "select book_name, book_author, price, type  from book");
+
+            while (resultSet.next()){
+                String book_name = resultSet.getString("book_name");
+                String book_author = resultSet.getString("book_author");
+                BigDecimal price = resultSet.getBigDecimal("price");
+                String type = resultSet.getString("type");
+                System.out.println(String.format("book: book_name=%s, book_author = %s , price = %s , type = %s",book_name,book_author,price,type));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+
+//        Connection connection = null;
+//        Statement statement = null;
+//        ResultSet resultSet= null;
+//        try {
+//            // 加载JDBC驱动程序：反射，这样调用初始化com.mysql.jdbc.Driver类，即将该类加载到JVM方法
+//            //区，并执行该类的静态方法块、静态属性。
+//            Class.forName("com.mysql.jdbc.Driver");
+//
+//            // 第一步：创建数据库连接
+//            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/chong ? user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+//            //System.out.println(connection);
+//            //第二步：创建操作命令对象
+//            statement = connection.createStatement();
+//
+//            //第三步: 执行SQL语句
+//            resultSet = statement.executeQuery(
+//                    "select book_name, book_author, price, type  from book");
+//
+//            //第四步：处理结果集ResultSet(类似List<Map<String,字段类型>>)
+//            while (resultSet.next()) {
+//                String book_name = resultSet.getString("book_name");
+//                String book_author = resultSet.getString("book_author");
+//                BigDecimal price = resultSet.getBigDecimal("price");
+//                String type = resultSet.getString("type");
+//                System.out.printf(String.format("book: book_name=%s, book_author=%s, price=%s, type=%s%n", book_name, book_author, price, type));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }  finally {
+//            //第五步：释放资源
+//            try {
+//                if (resultSet != null){
+//                    resultSet.close();
+//                }
+//                if (statement != null) {
+//                    statement.close();
+//                }
+//                if (connection != null){
+//                    connection.close();
+//                }
+//            } catch (SQLException throwables) {
+//                throwables.printStackTrace();
+//            }
+//        }
+    }
+}
+
+
+
+//        // 关闭结果集
+//        if (resultSet != null) {
+//            try {
+//                resultSet.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        //关闭命令
+//        if (statement != null) {
+//            try {
+//                statement.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        //关闭连接命令
+//        if (connection != null) {
+//            try {
+//                connection.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+import java.util.Scanner;
+
+public class Main {
+
+    //最大公约数
+    public static int commonDivisor(int a,int b){
+        int min = Math.min(a,b),tmp = 0;
+        if (a == 0 ||b == 0 ) return 0;
+        for (int i = min; i > 1 ; i--) {
+            if (a % i == 0 && b % i == 0){
+                tmp = i;
+                break;
+            }
+        }
+        return tmp;
+    }
+    //最大公倍数
+    public static int commonMmultiple(int a,int b){
+        int tmp = 0;
+        if (a == b) return a*b;
+        int val = commonDivisor(a,b);
+        if (val == 0){
+            tmp = a*b;
+        }else {
+            tmp = Math.max(a/val,b/val)*val;
+        }
+        return tmp;
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            int a =sc.nextInt();
+            int b =sc.nextInt();
+            System.out.println(commonMmultiple(a, b));
+        }
+//        System.out.println(commonDivisor(0, 0));
+//        System.out.println(commonMmultiple(0,48));
+    }
+}
