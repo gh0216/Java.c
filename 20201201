@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+    <p>我爱自己，芝麻开门</p>
+    <p>吴永攀</p>
+    <h1>测试</h1>
+    <h6>小憨憨</h6>
+    <form method="post" action="login">
+        账号:<input type="text" name="username"><br>
+        密码:<input type="password" name="password"><br>
+        <input type="submit" val="提交">
+    </form>
+</body>
+</html>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>20201201</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <!-- 依赖包 -->
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.49</version>
+        </dependency>
+    </dependencies>
+
+
+</project>
+
+public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int num1 = sc.nextInt();
+        int num2 = sc.nextInt();
+        int count = 0;
+        if(num1%4==0||num2%4==0) {
+            count = num1*num2/2;
+        }else{
+            count = num1*num2/2+1;
+        }
+        System.out.println(count);
+    }
+    
+    package tset.jdbc;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+class Main5 {
+    public static void main(String[] args) {
+        updata("核心");//使用prepareStatement可以防止sql注入
+    }
+
+    public static void updata(String updataName) {
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            //创建数据库连接池
+            DataSource  dataSource= new MysqlDataSource();
+
+            ((MysqlDataSource)dataSource).setUrl("jdbc:mysql://localhost:3306/chong?user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+
+            connection = dataSource.getConnection();
+
+            System.out.println(connection);
+
+            String sql = "updata book set price=price+1 where name like ?";
+            //带占位符的sql在数据库预编译，1.可以提高效率，2.占位符的方式，可以防止sql注入
+            statement = connection.prepareStatement(sql);
+
+            //替换占位符
+            statement.setString(1,"%"+updataName+"%");
+            //新增/修改/删除都是updata
+            int r = statement.executeUpdate();
+            System.out.println(r);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+}
+
+package tset.jdbc;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+class Main5 {
+    public static void main(String[] args) {
+        updata("核心");//使用prepareStatement可以防止sql注入
+    }
+
+    public static void updata(String updataName) {
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            //创建数据库连接池
+            DataSource  dataSource= new MysqlDataSource();
+
+            ((MysqlDataSource)dataSource).setUrl("jdbc:mysql://localhost:3306/chong?user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+
+            connection = dataSource.getConnection();
+
+            System.out.println(connection);
+
+            String sql = "updata book set price=price+1 where name like ?";
+            //带占位符的sql在数据库预编译，1.可以提高效率，2.占位符的方式，可以防止sql注入
+            statement = connection.prepareStatement(sql);
+
+            //替换占位符
+            statement.setString(1,"%"+updataName+"%");
+            //新增/修改/删除都是updata
+            int r = statement.executeUpdate();
+            System.out.println(r);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+}
+
+package tset.jdbc;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.*;
+
+public class Main3 {
+
+    public static void main(String[] args) {
+        query("核");
+    }
+
+    public static void query(String queryName) {
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            //创建数据库连接池
+            DataSource dataSource = new MysqlDataSource();
+
+            ((MysqlDataSource) dataSource).setUrl("jdbc:mysql://localhost:3306/chong?user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+
+            connection = dataSource.getConnection();
+
+            System.out.println(connection);
+
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery(
+                    "select book_name, book_author, price, type  from book where book_name like '%" + queryName + "%'");
+
+            while (resultSet.next()) {
+                String book_name = resultSet.getString("book_name");
+                String book_author = resultSet.getString("book_author");
+                BigDecimal price = resultSet.getBigDecimal("price");
+                String type = resultSet.getString("type");
+                System.out.println(String.format("book: book_name=%s, book_author = %s , price = %s , type = %s", book_name, book_author, price, type));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+}
+
+package tset.jdbc;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.*;
+
+public class Main2 {
+    public static void main(String[] args) {
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            //创建数据库连接池
+            DataSource  dataSource= new MysqlDataSource();
+
+            ((MysqlDataSource)dataSource).setUrl("jdbc:mysql://localhost:3306/chong?user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+
+            connection = dataSource.getConnection();
+            System.out.println(connection);
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery(
+                    "select book_name, book_author, price, type  from book");
+
+            while (resultSet.next()) {
+                String book_name = resultSet.getString("book_name");
+                String book_author = resultSet.getString("book_author");
+                BigDecimal price = resultSet.getBigDecimal("price");
+                String type = resultSet.getString("type");
+                System.out.println(String.format("book: book_name=%s, book_author = %s , price = %s , type = %s", book_name, book_author, price, type));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+}
+package tset.jdbc;
+
+import java.math.BigDecimal;
+import java.sql.*;
+
+public class Main1 {
+    public static void main(String[] args) {
+
+        //加载JDBC驱动程序：反射，这样调用初始化com.mysql.jdbc.Driver类，即将该类加载到JVM方法
+        //区，并执行该类的静态方法块、静态属性。
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/chong?user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+            System.out.println(connection);
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery(
+                    "select book_name, book_author, price, type  from book");
+
+            while (resultSet.next()){
+                String book_name = resultSet.getString("book_name");
+                String book_author = resultSet.getString("book_author");
+                BigDecimal price = resultSet.getBigDecimal("price");
+                String type = resultSet.getString("type");
+                System.out.println(String.format("book: book_name=%s, book_author = %s , price = %s , type = %s",book_name,book_author,price,type));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }  finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (statement != null)
+                    statement.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+
+//        Connection connection = null;
+//        Statement statement = null;
+//        ResultSet resultSet= null;
+//        try {
+//            // 加载JDBC驱动程序：反射，这样调用初始化com.mysql.jdbc.Driver类，即将该类加载到JVM方法
+//            //区，并执行该类的静态方法块、静态属性。
+//            Class.forName("com.mysql.jdbc.Driver");
+//
+//            // 第一步：创建数据库连接
+//            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/chong ? user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");
+//            //System.out.println(connection);
+//            //第二步：创建操作命令对象
+//            statement = connection.createStatement();
+//
+//            //第三步: 执行SQL语句
+//            resultSet = statement.executeQuery(
+//                    "select book_name, book_author, price, type  from book");
+//
+//            //第四步：处理结果集ResultSet(类似List<Map<String,字段类型>>)
+//            while (resultSet.next()) {
+//                String book_name = resultSet.getString("book_name");
+//                String book_author = resultSet.getString("book_author");
+//                BigDecimal price = resultSet.getBigDecimal("price");
+//                String type = resultSet.getString("type");
+//                System.out.printf(String.format("book: book_name=%s, book_author=%s, price=%s, type=%s%n", book_name, book_author, price, type));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }  finally {
+//            //第五步：释放资源
+//            try {
+//                if (resultSet != null){
+//                    resultSet.close();
+//                }
+//                if (statement != null) {
+//                    statement.close();
+//                }
+//                if (connection != null){
+//                    connection.close();
+//                }
+//            } catch (SQLException throwables) {
+//                throwables.printStackTrace();
+//            }
+//        }
+    }
+}
+
+
+
+//        // 关闭结果集
+//        if (resultSet != null) {
+//            try {
+//                resultSet.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        //关闭命令
+//        if (statement != null) {
+//            try {
+//                statement.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        //关闭连接命令
+//        if (connection != null) {
+//            try {
+//                connection.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
