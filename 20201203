@@ -1,0 +1,364 @@
+package org.example.servlet;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+//定义当前类为Servlet(服务端java代码提供的http服务）
+//服务路径必须以/开头，否则tomcat启动就会报错
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html");//响应头Content-Type ,对端响应体的解析方式
+
+        //getParameter可以获取url中的queryString请求数据，及请求体表单中数据类型格式的请求数据
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        System.out.printf("username=%s,password=%s%n",username,password);
+
+        PrintWriter pw = resp.getWriter();
+
+
+        //伪代码：用户登录的jdbc校验
+//        if (LoginDAO.query(username,password)){
+//            System.out.printf("登陆成功");
+//        }else {
+//            System.out.printf("登陆失败");
+//        }
+
+
+        pw.printf("登陆成功");
+        pw.flush();
+        pw.close();
+
+    }
+}
+package org.example.util;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.InputStream;
+
+public class JSONUtil {
+
+    //jackson框架中，对json字符串和java对象之间互相转换的类
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    /**
+     * 序列化操作：java对象序列化为json字符串
+     * @param o java对象
+     * @return json字符串
+     */
+    public static String serialize(Object o){
+        try {
+            return MAPPER.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RuntimeException("java对象序列化为JSON字符串出错:"+o);
+        }
+    }
+
+    //反序列化输入流
+    public static <T> T deserialize(InputStream is,Class<T> clazz){
+        try {
+            return MAPPER.readValue(is,clazz);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("反序列化失败");
+        }
+    }
+}
+
+package org.example.util;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+public class JSONUtilTest {
+    @Test//junit单元测试的注解，需要写在public void
+    public void testSerialize(){
+        Map<String,String> map = new HashMap<>();
+        map.put("username","张三");
+        map.put("password","123");
+        String json = JSONUtil.serialize(map);
+        System.out.println(json);//给自己看的，不是单元测试的标准方式
+        Assert.assertNotNull(json);
+    }
+    @Test
+    public void testDeserialize(){
+        InputStream is = JSONUtilTest.class.getClassLoader().
+                getResourceAsStream("login.json");
+        HashMap map = JSONUtil.deserialize(is,HashMap.class);
+        System.out.println(map);
+    }
+}
+
+package org.example.util;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import org.example.exception.AppException;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DBUtil {
+
+    //final 修饰引用不能改变
+    private static final DataSource DS = new MysqlDataSource();
+
+    static{
+        ((MysqlDataSource) DS).setUrl("jdbc:mysql://localhost:3306/chong_blog?user=root&password=ghz0216&useUnicode=true&useSSL=false&characterEncoding=UTF-8");//url地址
+    }
+
+    public static Connection getConnection(){
+        try {
+            return DS.getConnection();
+        } catch (SQLException e) {
+            throw new AppException("DB001","获取数据库连接失败",e);
+        }
+    }
+
+    public static void close(Connection c, Statement s){
+        close(c,s,null);
+    }
+
+    public static void close(Connection c, Statement s, ResultSet r)  {
+        try {
+            if (r != null)
+                r.close();
+            if (s != null)
+                s.close();
+            if (c != null)
+                c.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+}
+package org.example.dao;
+import org.example.exception.AppException;
+import org.example.util.DBUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class LoginDAO {
+
+    public static boolean query(String username,String password) throws SQLException {
+        Connection c = null;
+        PreparedStatement ps =null;
+        ResultSet rs = null;
+        try {
+            c = DBUtil.getConnection();
+            String sql = "";
+            ps = c.prepareStatement(sql);
+            //设置占位符的值  TODO
+            ps.setString(1,username);
+            rs = ps.executeQuery();
+            //处理结果集
+            while (rs.next()){
+
+            }
+        } catch (Exception e) {
+            throw  new AppException("LOG001","登录操作数据库执行错误",e);
+        } finally {
+            DBUtil.close(c,ps,rs);
+        }
+        return true;
+    }
+
+}
+package org.example.model;
+import java.util.Date;
+
+
+
+public class Article {
+    private Integer id;
+    private String title;
+    private String content;
+    private Integer user_id;
+    private Date create_time;
+    private Integer viewcount;
+}
+
+package org.example.model;
+
+import java.util.Date;
+
+
+
+public class User {
+    private Integer id;
+    private String user_name;
+    private String password;
+    private String nickname;
+    private Date birthday;
+    private String phoneNumber;
+    private String email;
+    private String head;
+}
+
+package org.example.util;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+public class JSONUtilTest {
+    @Test//junit单元测试的注解，需要写在public void
+    public void testSerialize(){
+        Map<String,String> map = new HashMap<>();
+        map.put("username","张三");
+        map.put("password","123");
+        String json = JSONUtil.serialize(map);
+        System.out.println(json);//给自己看的，不是单元测试的标准方式
+        Assert.assertNotNull(json);
+    }
+    @Test
+    public void testDeserialize(){
+        InputStream is = JSONUtilTest.class.getClassLoader().
+                getResourceAsStream("login.json");
+        HashMap map = JSONUtil.deserialize(is,HashMap.class);
+        System.out.println(map);
+    }
+}
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {
+    private static void testMe(){
+        System.out.println("testMe");
+    }
+
+    public static void main(String[] args) {
+//        byte b1 = 1,b2 = 2,b3,b6;
+//        final byte b4 = 4,b5 = 6;
+//        b6 = b4 + b5;
+//        b3 = (b1 + b2);
+//        int[] arr = new int[10];
+//        System.out.println(arr[9]);
+    }
+
+    //逆序输出
+    public static void main8(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Stack<Integer> stack = new Stack<>();
+        int n = sc.nextInt();
+        while (n != 0){
+            stack.add(n%10);
+            n = n / 10;
+        }
+        for (Integer val:stack) {
+            System.out.print(val);
+        }
+    }
+
+    //n的阶乘后几位0的个数
+    public static void main7(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int res = 0;
+        for(int i = n; i >= 5; i--) {
+            int tmp = i;
+            while(tmp % 5 == 0) {
+                res++;
+                tmp /= 5;
+            }
+        }System.out.println(res);
+    }
+    public static void main6(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()) {
+            int N = sc.nextInt();
+            int tmp = N / 5,val = tmp,count = 0;
+            while ( tmp > 4){
+                tmp = tmp / 5;
+                count++;
+            }
+            System.out.println(count + val);
+        }
+    }
+
+    public static int sum(int n){
+        if (n == 1) {
+            return 1;
+        }
+        return n * sum(n - 1);
+    }
+
+    public static void main5(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            int N = sc.nextInt();
+            int number = sum(N);
+            System.out.println(number);
+            int count = 0;
+            while (number % 10 == 0){
+                number = number / 10;
+                count++;
+            }
+            System.out.println(count);
+        }
+    }
+
+    public static long sum(long n){
+        if (n == 1)  return 1;
+        return n*sum(n-1);
+    }
+
+    public static void main4(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            Long N = sc.nextLong();
+            Long number = sum(N);
+            System.out.println(number);
+            int count = 0;
+            while (number % 10 == 0){
+                number = number / 10;
+                count++;
+            }
+            System.out.println(count);
+        }
+    }
+    public static void main3(String[] args) {
+        String x = "fmn";
+        x.toUpperCase();
+        String y = x.replace('f','F');
+        y = y + "wxy";
+        System.out.println(y);
+    }
+
+    public static void main2(String[] args) {
+        int i = 0;
+        Integer j = new Integer(0);
+        System.out.println(i == j);
+        System.out.println(j.equals(i));
+    }
+
+    public static void main1(String[] args) {
+        ((Main)null).testMe();
+    }
+}
