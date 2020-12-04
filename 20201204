@@ -1,0 +1,254 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {
+    private static void testMe(){
+        System.out.println("testMe");
+    }
+
+    public static void main(String[] args) {
+//        byte b1 = 1,b2 = 2,b3,b6;
+//        final byte b4 = 4,b5 = 6;
+//        b6 = b4 + b5;
+//        b3 = (b1 + b2);
+//        int[] arr = new int[10];
+//        System.out.println(arr[9]);
+    }
+
+    //逆序输出
+    public static void main8(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Stack<Integer> stack = new Stack<>();
+        int n = sc.nextInt();
+        while (n != 0){
+            stack.add(n%10);
+            n = n / 10;
+        }
+        for (Integer val:stack) {
+            System.out.print(val);
+        }
+    }
+
+    //n的阶乘后几位0的个数
+    public static void main7(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int res = 0;
+        for(int i = n; i >= 5; i--) {
+            int tmp = i;
+            while(tmp % 5 == 0) {
+                res++;
+                tmp /= 5;
+            }
+        }System.out.println(res);
+    }
+    public static void main6(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()) {
+            int N = sc.nextInt();
+            int tmp = N / 5,val = tmp,count = 0;
+            while ( tmp > 4){
+                tmp = tmp / 5;
+                count++;
+            }
+            System.out.println(count + val);
+        }
+    }
+
+    public static int sum(int n){
+        if (n == 1) {
+            return 1;
+        }
+        return n * sum(n - 1);
+    }
+
+    public static void main5(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            int N = sc.nextInt();
+            int number = sum(N);
+            System.out.println(number);
+            int count = 0;
+            while (number % 10 == 0){
+                number = number / 10;
+                count++;
+            }
+            System.out.println(count);
+        }
+    }
+
+    public static long sum(long n){
+        if (n == 1)  return 1;
+        return n*sum(n-1);
+    }
+
+    public static void main4(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            Long N = sc.nextLong();
+            Long number = sum(N);
+            System.out.println(number);
+            int count = 0;
+            while (number % 10 == 0){
+                number = number / 10;
+                count++;
+            }
+            System.out.println(count);
+        }
+    }
+    public static void main3(String[] args) {
+        String x = "fmn";
+        x.toUpperCase();
+        String y = x.replace('f','F');
+        y = y + "wxy";
+        System.out.println(y);
+    }
+
+    public static void main2(String[] args) {
+        int i = 0;
+        Integer j = new Integer(0);
+        System.out.println(i == j);
+        System.out.println(j.equals(i));
+    }
+
+    public static void main1(String[] args) {
+        ((Main)null).testMe();
+    }
+}
+
+package hashback;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+ class MyArrayList {
+     private Object[] array; // 保存顺序表的元素，即 Object 类型的引用
+     private int size; // 保存顺序表内数据个数
+
+     //尾插
+     public void add(Object o) {
+
+     }
+
+     //获取 index 位置的元素
+     public Object get(int index) {
+         return  get(2);
+     }
+ }
+
+class ListNode {
+     int val;
+     ListNode next;
+     ListNode(int x) {
+         this.val = x;
+     }
+ }
+
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        ListNode cur = head;
+        ListNode tmp = head;
+        ListNode pre = null;
+        while(cur.next != null){
+            if (tmp == cur){
+                cur = cur.next;
+            }else {
+                while (tmp != cur){
+                    pre = tmp.next;
+                    if (tmp.val > pre.val){
+                        tmp.next = pre.next;
+                        pre.next = tmp;
+                    }
+                    tmp = tmp.next;
+                }
+            }
+        }
+        return head;
+    }
+}
+
+class Solution1 {
+
+    //最后怎么找到头结点？？ 先找一个傀儡节点   让单链表接在傀儡节点之后
+    public ListNode insertionSortList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ListNode dummyHead = new ListNode(0);  ////傀儡节点
+        dummyHead.next = head;
+        ListNode lastSorted = head, cur = head.next;
+        while (cur != null) {
+            //判断两个节点的值
+            //前变值小于后边值 不进行交换
+            if (lastSorted.val <= cur.val) {
+                lastSorted = lastSorted.next;
+            //前边值大于后边值  进行交换
+            } else {
+
+                //该while是遍历lastSorted前边的节点的值  当前边有小于cur且小于lastSorted且在lastSorted前边有大与cur的值的节点时
+                //相当于选择插入  找cur应该插入的位置
+                //遍历链表
+                ListNode prev = dummyHead;
+                while (prev.next.val <= cur.val) {
+                    prev = prev.next;
+                }
+
+                //选择插入操作步骤
+                lastSorted.next = cur.next;
+                cur.next = prev.next;
+                prev.next = cur;
+            }
+            //循环继续条件
+            cur = lastSorted.next;
+        }
+        //返回傀儡节点的下一个节点
+        return dummyHead.next;
+    }
+}
+
+//两数相加求和
+
+//不全面  没有判断不存在对应元素时的情况
+class Solution2 {
+    public int[] twoSum(int[] nums, int target) {
+        int[] tmp = new int[2];
+        for (int i = 0; i <nums.length ; i++) {
+            for (int j = i+1; j < nums.length ; j++) {
+                if (nums[i] + nums[j] == target){
+                    tmp[0] = i;
+                    tmp[1] = j;
+                    break;
+                }
+            }
+        }
+        return tmp;
+    }
+}
+
+class Solution3 {
+
+    //i和j满足i+j=target   则j=target-i
+    public int[] twoSum(int[] nums, int target) {
+        //定义一个哈希表存放该数组元素和对应下标
+        Map<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i< nums.length; i++) {
+            if(map.containsKey(target - nums[i])) {
+                //将所得元素对应得下标加入到map中
+                return new int[] {map.get(target-nums[i]),i};
+            }
+            //将数组中所有元素及其对应下标加入到哈希表中
+            map.put(nums[i], i);
+        }
+        //到这里代表数组中不存在  抛出异常
+        throw new IllegalArgumentException("No two sum solution");
+    }
+}
+
+public class Test1 {
+    public static void main(String[] args) {
+        Solution2 solution2 = new Solution2();
+        int[] array = {2,3,5,4,8,4,9};
+        System.out.println(Arrays.toString(solution2.twoSum(array, 18)));
+    }
+}
