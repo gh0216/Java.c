@@ -1,0 +1,268 @@
+import java.util.*;
+
+public class Main {
+
+//    public static void main(String[] args) {
+//        System.out.println(Integer.valueOf(2));
+//        char val = 'a';
+//    }
+
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        String N = sc.next();
+        char[] chars = N.toCharArray();
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list.add(0);
+        }
+        for (int i = 0; i < chars.length; i++) {
+            list.set(chars[i]-'0',list.get(chars[i]-'0')+1);
+            System.out.println(list);
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i)>0){
+                System.out.println(i+":"+list.get(i));
+            }
+        }
+    }
+
+
+    public static void main2(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Map<Character,Integer> map = new HashMap<>();
+        while (sc.hasNextInt()){
+            String str = sc.nextLine();
+            System.out.println(Integer.valueOf(str));
+            for (Character val:str.toCharArray()) {
+                map.put(val,map.getOrDefault(val,0)+1);
+            }
+            for(Map.Entry<Character, Integer> entry : map.entrySet()){
+                System.out.println(entry.getKey() + ":" + entry.getValue());
+            }
+        }
+    }
+
+    public static void main1(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Map<Integer,Integer> map = new HashMap<>();
+        int num = sc.nextInt();
+        while (num > 0){
+            map.put(num%10,map.getOrDefault(num%10,0)+1);
+            num = num /10;
+        }
+        for(Map.Entry<Integer, Integer> entry : map.entrySet()){
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+    }
+}
+
+import java.util.HashSet;
+
+class s {
+    /**
+     * longest common substring
+     * @param str1 string字符串 the string
+     * @param str2 string字符串 the string
+     * @return string字符串
+     */
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int len = gas.length;
+        int spare = 0;
+        int minSpare = Integer.MAX_VALUE;
+        int minIndex = 0;
+
+        for (int i = 0; i < len; i++) {
+            spare += gas[i] - cost[i];
+            if (spare < minSpare) {
+                minSpare = spare;
+                minIndex = i;
+            }
+        }
+
+        return spare < 0 ? -1 : (minIndex + 1) % len;
+    }
+    public static String LCS (String str1, String str2) {
+        // write code here
+        StringBuilder sb = new StringBuilder();
+        int start = 0, end = 1;
+        while (end < str1.length() + 1) {
+            if (str2.contains(str1.substring(start, end))) {
+                if (sb.length() < end - start) {
+                    sb.delete(0, sb.length());
+                    sb.append(str1, start, end);
+                }
+                end++;
+            } else {
+                start++;
+            }
+        }
+        if (sb.length() == 0) {
+            return "-1";
+        }
+        return sb.toString();
+    }
+}
+
+public class BinaryTree {
+
+    public static int sum(int n){
+        int sum = 0;
+        if (n == 1){
+           return 1;
+        }
+        sum = n + sum(n-1);
+        return sum;
+    }
+
+    public static int func(String s, String t){
+        int count = 0;
+        HashSet<Character> set = new HashSet<>();
+        for (Character m : s.toCharArray()) {
+            set.add(m);
+        }
+        for (Character n: t.toCharArray()) {
+            if (set.contains(n)){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String S = "JSKBFJKSBF";
+        System.out.println(S.substring(2, 5));
+    }
+
+    public static void main1(String[] args) {
+        System.out.println(sum(100));
+        String s = "bsbslbdjsjlVCGSAVHDHA";
+        String t = "bBcC";
+        System.out.println(func(t, s));
+        System.out.println("小飞机");
+        System.out.println("     *");
+        System.out.println("***********");
+        System.out.println("  *     *  ");
+        System.out.println("  *     *  ");
+        System.out.println("  *     *  ");
+//        System.out.println("  *     *  ");
+    }
+}
+import java.util.*;
+
+
+class Solution1 {
+    public int firstUniqChar(String s) {
+        HashMap<Character, Integer> count = new HashMap<Character, Integer>();
+        // 创建哈希表  创建字符与其出现次数的对应关系
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            //加入c之前看count中是否有c这个字符  如果没有  设定value值默认为0值，如果有则调用value值 再+1
+            count.put(c, count.getOrDefault(c, 0) + 1);
+        }
+
+        // 找下标
+        for (int i = 0; i < s.length(); i++) {
+            if (count.get(s.charAt(i)) == 1)
+                return i;
+        }
+        return -1;
+    }
+    public int firstUniqChar1(String s) {
+        HashMap<Character, Integer> count = new HashMap<Character, Integer>();
+        int n = s.length();
+        // 创建一个哈希表  建立字符与出现次数的关系
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            count.put(c, count.getOrDefault(c, 0) + 1);
+        }
+
+        // 找下标
+        for (int i = 0; i < n; i++) {
+            if (count.get(s.charAt(i)) == 1)
+                return i;
+        }
+        return -1;
+    }
+}
+
+class Solution {
+    public int firstUniqChar(String s) {
+        char[] arr = s.toCharArray();
+        HashMap<Character,Integer> map = new HashMap<>();
+//        ArrayList<Character> list = new ArrayList<>();
+//        for(Character val : arr){
+//            list.add(val);
+//        }
+//
+//        遍历arr
+        for (Character val:arr) {
+            if (map.get(val) == null){
+                map.put(val,1);
+            }else {
+                int tmp = map.get(val);
+                map.put(val,tmp+1);   //当第二次遇到该数时  次数+1
+            }
+        }
+        Character a = ' ';
+        for (Map.Entry<Character,Integer> entry: map.entrySet()) {
+            if (entry.getValue() == 1){
+                a = entry.getKey();
+                break;
+            }
+        }
+        for (int i = 0; i < arr.length ; i++) {
+            if (arr[i] == a){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
+
+public class TestDemo {
+
+    public static void main(String[] args) {
+//        Solution solution = new Solution();
+//        System.out.println(solution.firstUniqChar("loveleetcode"));
+        HashMap<String,Integer> map = new HashMap<>();
+        map.put("吴大憨",15246231);
+        map.put("杨大憨",15245612);
+        map.put("刘大憨",15246231);
+        map.put("张小憨",15246211);
+        map.put("张大憨",15246511);
+        for (Map.Entry<String,Integer> entry: map.entrySet()) {
+            System.out.println("姓名：" + entry.getKey()+
+                    " number:"+entry.getValue());
+        }
+        System.out.println(map);
+        System.out.println(map.getOrDefault("刘大憨", 0));
+        System.out.println(map);
+    }
+}
+
+import sun.awt.image.IntegerInterleavedRaster;
+
+import java.util.HashMap;
+
+class RT{
+
+}
+
+public class Test {
+
+    public static void main(String[] args) {
+        HashMap<Integer,Integer> set = new HashMap<>();
+        set.put(2,1);
+        set.put(6,2);
+        set.put(59,3);
+        set.put(56,4);
+        set.put(8,5);
+        set.put(96,6);
+        System.out.println(set);
+        System.out.println(set.get(59));
+    }
+
+}
