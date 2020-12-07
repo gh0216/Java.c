@@ -1,0 +1,327 @@
+import java.math.BigInteger;
+import java.util.*;
+
+class Solution2 {
+    public int longestPalindrome(String s) {
+        int end = 0,start = 0,len = 0;
+        Set<Character> set = new HashSet<>();
+        char[] arr = s.toCharArray();
+        for (Character c : arr) {
+            if (!set.contains(c)) {
+                end++;
+            } else {
+                set.clear();
+                len = Math.max(len, (end - start+1));
+                start = end;
+            }
+            set.add(c);
+        }
+        return len;
+    }
+}
+class Exchange {
+    //位运算符
+    public int[] exchangeAB(int[] AB) {
+        // write code here
+        AB[0] ^= AB[1];
+        AB[1] ^= AB[0];
+        AB[0] ^= AB[1];
+        return AB;
+    }
+}
+
+class Solution1 {
+    public int[] multiply(int[] A) {
+
+        if(A==null && A.length==0){
+            return A;
+        }
+        int[] B=new int[A.length];
+        for(int i = 0;i < A.length ; i++){
+            int sum=1;
+            for(int j = 0;j < A.length;j++){
+                if(i != j ){
+                    sum*=A[j];
+                }
+            }
+            B[i]=sum;
+        }
+        return B;
+    }
+
+}
+
+class Solution {
+    public int[] multiply(int[] A) {
+        int sum = A[0],tmp = A[0];
+        int[] B =new int[A.length];
+        for (int i = 1; i < A.length; i++) {
+            if (A[i] != 0){
+                sum *= A[i];
+            }
+            tmp *= A[i];
+        }
+        for (int i = 0; i < A.length ; i++) {
+            if (A[i] == 0){
+                B[i] = sum ;
+            }else {
+                B[i] = tmp / A[i];
+            }
+        }
+        return B;
+    }
+}
+
+//格雷码
+class GrayCode1 {
+    public String[] getGray(int n) {
+        // write code here
+        String[] strings = new String[(int)Math.pow(2,n)];
+        if(n==1){
+            strings[0]="0";
+            strings[1]="1";
+            return strings;
+        }
+
+        String[] resulStrings = getGray(n-1);
+        for(int i = 0;i < resulStrings.length;i++){
+            strings[i] = "0" + resulStrings[i];
+            strings[strings.length-i-1] = "1" + resulStrings[i];
+        }
+        return strings;
+    }
+}
+
+class GrayCode {
+    public String[] getGray(int n) {
+        String[] resStrs = null;
+        if (n == 1) {
+            resStrs = new String[] {"0","1"};
+        } else {
+            String[] str = getGray(n-1);
+            resStrs = new String[2*str.length];
+            for (int i = 0; i < str.length; i++) {
+                resStrs[i] = "0"+str[i];
+                resStrs[resStrs.length-1-i] = "1"+str[i];
+            }
+        }
+        return resStrs;
+    }
+}
+public class Main{
+
+    public static void main(String[] args) {
+        
+    }
+
+    public static void main9(String[] args){
+        System.out.println("     **     ");
+        System.out.println("     **     ");
+        System.out.println("************");
+        System.out.println("************");
+        System.out.println("    *  *    ");
+        System.out.println("    *  *    ");
+    }
+
+    public static void main8(String[] args) {
+        System.out.println("The size of short is "+Short.BYTES+" bytes");
+        System.out.println("The size of int is "+Integer.BYTES+" bytes");
+        System.out.println("The size of long is "+Long.BYTES+" bytes");
+        System.out.println("The size of long long is "+Long.BYTES+" bytes");
+    }
+
+    public static void main7(String[] args){
+        System.out.println("V"+" "+" "+" "+"V");
+        System.out.println(" "+"V"+" "+ "V");
+        System.out.println(" "+" "+"V");
+    }
+
+    public static String mulNumber(String addend,String augend){
+        char ret= ' ';
+        int i =0,x1 = 0,x2 = 0,flag =0,cur = 0;//x1:操作数1的每一位 x2:操作数2的每一位 flag:进位 cur:保存当前位值（进位后）
+        int index1 = addend.length()-1;
+        int index2 = augend.length()-1;
+        char[] s1 = addend.toCharArray();
+        char[] s2 = augend.toCharArray();
+        char[] s3 = new char[s2.length+1];
+        while (index1 >= 0 || index2 >= 0){
+            if (index1 >= 0)
+            {
+                x1 = s1[index1] - '0';
+                index1--;
+            }
+            if (index2 >= 0)
+            {
+                x2 = s2[index2] - '0';
+                index2--;
+            }
+            cur = x1 + x2 + flag;
+            if (cur > 9)//需要进位
+            {
+                flag = 1;
+                cur = cur % 10;
+            }
+            else
+            {
+                flag = 0;
+            }
+            ret += (cur+'0');
+            ret = s3[i];
+            i++;
+        }
+        if (flag == 1)
+        {
+            ret += (flag+'0');
+            ret = s3[i];
+        }
+        String S = new String(s3);
+        return S;
+    }
+
+    public static void main6(String[] args) {
+        System.out.println(mulNumber("123", "123"));
+//        char s = '1';
+//        System.out.println(1+s-'0');
+        //System.out.println(mulNumber("1", "445"));
+    }
+
+    public static int sum(int a, int b) {
+        int t = 0;
+        while (b != 0) {
+            t = a ^ b;
+            b = (a & b) << 1;
+            a = t;
+        }
+        return t;
+    }
+
+    public static void main5(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        while(sc.hasNext()){
+            String a=sc.next();
+            String b=sc.next();
+            BigInteger sum=new BigInteger(a);
+            BigInteger sum1=new BigInteger(b);
+            BigInteger res=sum.add(sum1);
+            System.out.println(res);
+        }
+    }
+    //System.out.println(sum(2, 9));
+
+    public static void main4(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String str = in.nextLine();
+        String[] str2 = new String[str.length()];
+        int pop = 0;
+        int low = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if(str.charAt(i) != ' '){
+
+            }else{
+                str2[pop] = "";
+                for (int j = low; j < i; j++) {
+                    str2[pop] += str.charAt(j); //获取截取的第一个字符串
+                }
+                pop++;
+                low = i + 1;
+            }
+        }
+        str2[pop] = "";
+        for (int j = low; j < str.length(); j++) {
+            str2[pop] += str.charAt(j);    //获取截取的第二个字符串
+        }
+        int nums = Integer.parseInt(str2[0]);    //边长转换为能用的整数
+        String key = str2[1];
+        for (int i = 0; i < (nums + 1) / 2; i++) {    //列数为四舍五入之后的数字，所以nums+1
+            if(i == 0 || i == (nums + 1) / 2 - 1){    //第一行和最后一行需要输出一整行
+                for (int j = 0; j < nums; j++) {
+                    System.out.print(key);
+                }
+                if(i == 0){
+                    System.out.println();    //第一行之后需要换行而最后一行不用
+                }
+            }else{
+                for (int j = 0; j < nums; j++) {
+                    if(j == 0 || j == nums - 1){    //只有第一个和最后一个字符需要输出，其他的则是空格即可
+                        System.out.print(key);
+                    }else{
+                        System.out.print(' ');
+                    }
+                }
+                System.out.println();    //每行输出完成之后需要换行
+            }
+        }
+    }
+
+
+    public static String combNumber(String str,String str1){
+        List<Character> p1 = new ArrayList<>();
+        List<Character> p2= new ArrayList<>();
+        for (Character val:str.toCharArray()) {
+            p1.add(val);
+        }
+        for (Character tmp:str1.toCharArray()) {
+            p2.add(tmp);
+        }
+        System.out.println(p1);
+        System.out.println(p2);
+        return str;
+    }
+
+    public static void main3(String[] args) {
+        String str1 = "123456";
+        String str2 = "456789";
+        combNumber(str1,str2);
+    }
+
+    //奥巴马 搞编程C
+    public static void charStyle(int n,char b){
+        for (int i = 1; i < (n/2+1)*2; i++) {
+            if (i == 1 || i == n-1){
+                for (int j = 0; j < (n/2+1)*2-1; j++) {
+                    System.out.print(b);
+                }
+                //System.out.println();
+            }else if (i % 2 == 0){
+                System.out.println();
+            }else {
+                for (int j = 1; j <= n ; j++) {
+                    if ((j == 1 || j == n)&& j != i){
+                        System.out.print(b);
+                    }else {
+                        System.out.print(" ");
+                    }
+                }
+//                for (int j = 1; j < n/3; j++) {
+//                    if (j % 2 == 1){
+//                        System.out.print(b);
+//                    }else {
+//                        System.out.print(" ");
+//                    }
+//                }
+                //System.out.println(b + " " + b);
+            }
+        }
+    }
+
+    public static void main2(String[] args) {
+        Scanner sc =new Scanner(System.in);
+        int n = sc.nextInt();
+        String b = sc.nextLine();
+        char x = b.charAt(1);
+        charStyle(n,x);
+    }
+
+    static boolean out(char c){
+        System.out.print(c);
+        return true;
+    }
+
+    public static void main1(String[] args) {
+        int i = 0;
+        for (out('A');out('B') && (i < 2) ;out('C')){
+            i++;
+            out('D');
+        }
+    }
+}
