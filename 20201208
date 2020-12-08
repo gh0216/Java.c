@@ -1,0 +1,264 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            String s = sc.nextLine();
+            String[] str=s.split(" ");
+            int[] arr= new int[str.length];
+            for(int i=0;i<str.length;i++){
+                arr[i]=Integer.parseInt(str[i]);
+            }
+            int val = 0;
+            for (int value : arr) {
+                if (value != 0)
+                    val += value;
+            }
+            System.out.println(val);
+            int[] tmp = new int[val];
+            for (int i = 0; i < arr.length ; i++) {
+                int j = 0;
+                while (arr[i] != 0){
+                    tmp[j] = i;
+                    j++;
+                }
+            }
+            System.out.println(Arrays.toString(tmp));
+            smallNumber(tmp);
+        }
+    }
+
+    public static void main4(String[] args) {
+        System.out.println('a'+2.6+10);
+    }
+
+
+    public static String GetSequeOddNum1(int m){
+
+        return null;
+    }
+
+    public static String GetSequeOddNum(int m){
+        String s = "";
+        if(m <= 0) {
+            System.out.println("null");
+        }else {
+            int tmp = m*m*m;
+            int i = tmp/m-(m-1);
+            while (i >= tmp/m-(m-1) && i <= tmp/m+(m-1)){
+                if (i == tmp/m+(m-1)){
+                    s += i;
+                }else {
+                    s += (i+"+");
+                }
+                i += 2;
+            }
+        }
+        return s;
+    }
+
+    public static void main6(String[] args) {
+        Scanner sc =new Scanner(System.in);
+        while (sc.hasNextInt()){
+            int n = sc.nextInt();
+            System.out.println(GetSequeOddNum(n));
+        }
+    }
+
+    public static void smallNumber(int[] arr){
+        for (int i = 1; i < arr.length ; i++) {
+            for (int j = 0; j < i; j++) {
+                if (arr[i] < arr[j]){
+                    int tmp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = tmp;
+                }
+            }
+        }
+        //System.out.println(Arrays.toString(arr));
+        int tmp = 0;
+        for (int j = 0; j <arr.length ; j++) {
+            if (arr[j] != 0){
+                tmp = arr[0];
+                arr[0] = arr[j];
+                arr[j] = tmp;
+                break;
+            }
+        }
+        //System.out.println(Arrays.toString(arr));
+        for (int val:arr) {
+            System.out.print(val);
+        }
+    }
+
+    public static void main2(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            String s = sc.nextLine();
+            String[] str=s.split(" ");
+            int[] arr= new int[str.length];
+            for(int i=0;i<str.length;i++){
+                arr[i]=Integer.parseInt(str[i]);
+            }
+            smallNumber(arr);
+        }
+    }
+
+    public static void main3(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            String s = sc.nextLine();
+            String[] str=s.split(" ");
+            int[] arr= new int[str.length];
+            for(int i=0;i<str.length;i++){
+                arr[i]=Integer.parseInt(str[i]);
+            }
+            System.out.println(Arrays.toString(arr));
+        }
+    }
+
+    public static int switchInt(int x){
+        int j = 1;
+        switch (x){
+            case 1:j++;
+            case 2:j++;
+            case 3:j++;
+            case 4:j++;
+            case 5:j++;
+            default: j++;
+        }
+        return j+x;
+    }
+    public static void main1(String[] args) {
+        System.out.println("values = "+switchInt(4));
+    }
+}
+public class Test {
+    private float f = 10f;
+    int m = 12;
+    static int n =2;
+
+    public static void main(String[] args) {
+        Test y = new Test();
+        System.out.println(Test.n);
+    }
+}
+public static String mulNumber(String addend,String augend){
+        char ret= ' ';
+        int i =0,x1 = 0,x2 = 0,flag =0,cur = 0;//x1:操作数1的每一位 x2:操作数2的每一位 flag:进位 cur:保存当前位值（进位后）
+        int index1 = addend.length()-1;
+        int index2 = augend.length()-1;
+        char[] s1 = addend.toCharArray();
+        char[] s2 = augend.toCharArray();
+        char[] s3 = new char[s2.length+1];
+        while (index1 >= 0 || index2 >= 0){
+            if (index1 >= 0)
+            {
+                x1 = s1[index1] - '0';
+                index1--;
+            }
+            if (index2 >= 0)
+            {
+                x2 = s2[index2] - '0';
+                index2--;
+            }
+            cur = x1 + x2 + flag;
+            if (cur > 9)//需要进位
+            {
+                flag = 1;
+                cur = cur % 10;
+            }
+            else
+            {
+                flag = 0;
+            }
+            ret += (cur+'0');
+            ret = s3[i];
+            i++;
+        }
+        if (flag == 1)
+        {
+            ret += (flag+'0');
+            ret = s3[i];
+        }
+        String S = new String(s3);
+        return S;
+    }
+
+    public static void main6(String[] args) {
+        System.out.println(mulNumber("123", "123"));
+//        char s = '1';
+//        System.out.println(1+s-'0');
+        //System.out.println(mulNumber("1", "445"));
+    }
+
+    public static int sum(int a, int b) {
+        int t = 0;
+        while (b != 0) {
+            t = a ^ b;
+            b = (a & b) << 1;
+            a = t;
+        }
+        return t;
+    }
+
+    public static void main5(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        while(sc.hasNext()){
+            String a=sc.next();
+            String b=sc.next();
+            BigInteger sum=new BigInteger(a);
+            BigInteger sum1=new BigInteger(b);
+            BigInteger res=sum.add(sum1);
+            System.out.println(res);
+        }
+    }
+    //System.out.println(sum(2, 9));
+
+    public static void main4(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String str = in.nextLine();
+        String[] str2 = new String[str.length()];
+        int pop = 0;
+        int low = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if(str.charAt(i) != ' '){
+
+            }else{
+                str2[pop] = "";
+                for (int j = low; j < i; j++) {
+                    str2[pop] += str.charAt(j); //获取截取的第一个字符串
+                }
+                pop++;
+                low = i + 1;
+            }
+        }
+        str2[pop] = "";
+        for (int j = low; j < str.length(); j++) {
+            str2[pop] += str.charAt(j);    //获取截取的第二个字符串
+        }
+        int nums = Integer.parseInt(str2[0]);    //边长转换为能用的整数
+        String key = str2[1];
+        for (int i = 0; i < (nums + 1) / 2; i++) {    //列数为四舍五入之后的数字，所以nums+1
+            if(i == 0 || i == (nums + 1) / 2 - 1){    //第一行和最后一行需要输出一整行
+                for (int j = 0; j < nums; j++) {
+                    System.out.print(key);
+                }
+                if(i == 0){
+                    System.out.println();    //第一行之后需要换行而最后一行不用
+                }
+            }else{
+                for (int j = 0; j < nums; j++) {
+                    if(j == 0 || j == nums - 1){    //只有第一个和最后一个字符需要输出，其他的则是空格即可
+                        System.out.print(key);
+                    }else{
+                        System.out.print(' ');
+                    }
+                }
+                System.out.println();    //每行输出完成之后需要换行
+            }
+        }
+    }
