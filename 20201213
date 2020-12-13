@@ -1,0 +1,252 @@
+package com.ghz.servlet;
+
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+@WebServlet("")
+public class indexServlet extends HttpServlet {
+    static int count = 0;
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        count++;
+
+        resp.setCharacterEncoding("utf-8");
+        resp.setContentType("text/html");
+
+        PrintWriter writer = resp.getWriter();
+
+        String template = "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <title>首页</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <p id=\"content\">::count::</p>\n" +
+                "    <script src=\"js/jquery-3.5.0.min.js\"></script>\n" +
+                "    <script src=\"js/index.js\"></script>\n" +
+                "</body>\n" +
+                "</html>";
+        String content = template.replace
+                ("::count::",String.valueOf(count));
+        writer.println(content);
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+    <p id="content">::count::</p>
+    <script src="js/jquery-3.5.0.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
+
+$(function main() {
+    setInterval(function () {
+        $.get("get-request-count",function (count) {
+           $("#content").html(count);
+        })
+    },5000)
+});
+
+package com.ghz.servlet;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+@WebServlet("/get-request-count")
+public class GetCountServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/plain;charset=utf-8");
+        PrintWriter writer = resp.getWriter();
+        writer.println(indexServlet.count);
+    }
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+  version="3.1">
+
+
+</web-app>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>列表项内容来自后端的响应</h1>
+        <ol id="content">
+        </ol>
+        <button>点击发送AJAX</button>
+
+        <script src="jquery-3.5.0.min.js"></script>
+        <script src="index.js"></script>
+   </body>
+</html>
+
+$(function main() {
+    $("button").on("click",function(){
+        $.get("test.txt",function(data){
+            console.log(data);
+
+            let li = $("li");
+            li.html(data);
+            console.log(li);
+        });
+    });
+});
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>艺衡</h1>
+        <button>点击</button>
+
+        <script src="jquery-3.5.0.min.js"></script>
+        <script src="index.js"></script>
+   </body>
+</html>
+$(function main() {
+    $("button").on("click",function(){
+        let e =$("h1");
+
+        e.html("姜子牙");
+
+        setTimeout(function (){
+            console.log("变身");
+            e.html("艺衡");
+        },3000);
+    });
+});
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            .ball{
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
+                background-color: red;
+                position: absolute;
+                top: 200px;
+                left: 200px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="ball"></div>
+        <script src="jquery-3.5.0.min.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>
+$(function main() {
+    setInterval(function () {
+        let ball = $(".ball");
+        let top = parseInt(ball.css("top").slice(0,-2));
+        //let left = parseInt((ball.css("left")).slice(0,2));
+        top += 10;//left += 10;
+        ball.css("top",top+"px");
+        //ball.css("left",left+"px");
+    }, 1000/24);
+});
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+        .square{
+            width: 50px;
+            height: 50px;
+            margin-bottom: 20px;
+        }
+
+        .s1{
+            background-color: red;
+        }
+        .s2{
+            background-color: blue;
+        }
+    </style>
+    <script src="index.js"></script>
+  </head>
+  <body>
+    <div class="square s1"></div>
+    <div class="square s2"></div>
+    <div class="square s1"></div>
+    <div class="square s2"></div>
+    <div class="square s1"></div>
+    <div class="square s2"></div>
+
+    <script src="jquery-3.5.0.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
+$(function main() {
+    setInterval(function () {
+        let
+    }, 50);
+});
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>艺衡之经典</title>
+    </head>
+    <body>
+        <h1 id="content">艺衡</h1>
+        <button id="button">请点我</button>
+        <script src="jquery-3.5.0.min.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>
+
+$(function main(){
+    //找到id是content的元素
+    //当这个元素发生了mouseover(鼠标越过)事件时
+    //执行我们传入的方法
+    //把id是content的元素的内部html内容替换成“姜子牙”
+    $("#content").on("mouseover",function(){
+        console.log("hello");
+        $("#content").html("姜子牙");
+    });
+
+    $("#content").on("mouseout",function () {
+        $("#content").html("艺衡");
+    })
+});
+
+window.onload = function() {
+    document.getElementById("button").onclick = function () {
+        console.log("点击成功");
+        document.getElementById("content").innerHTML = "姜子牙";
+    };
+};
