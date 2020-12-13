@@ -1,0 +1,340 @@
+import java.util.*;
+
+public class Main {
+    private static List<int[]> list = new ArrayList<>();   //存放所有可能的出栈序列【不一定合法】
+    private static List<String> res = new ArrayList<>();   //存放最终所有合法的出栈序列
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            int n = scanner.nextInt();
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                arr[i] = scanner.nextInt();
+            }
+
+            backTrace(n, arr, 0);
+//            for (int[] l : list) {
+//                String s = arrToStr(l, n);
+//                System.out.println(s);
+//            }
+            for (int[] t : list) {
+                if (isLegal(arr, t, n)) {
+                    String s = arrToStr(t, n);
+                    res.add(s);
+                }
+            }
+            //对最终结果按字典序排序后再输出
+            Collections.sort(res);
+            for (String r : res) {
+                System.out.println(r);
+            }
+        }
+    }
+
+    //数组变成字符串，方便最后结果按字典序进行排序
+    private static String arrToStr(int[] t, int n) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            sb.append(t[i]);
+            if (i != n - 1) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+
+    //判断出栈序列是否合法
+    //将进站序列依次压入栈中，如果栈顶元素和出站序列元素相同，那么栈顶元素出栈，同时出栈序列向后走一步，继续比较；如果不相同，那么继续进站序列入栈
+    //直到进站序列元素全部压入栈中。
+    //最后如果栈为空，说明出栈序列合法；否则，出栈序列就是不合法的
+    private static boolean isLegal(int[] in, int[] out, int n) {
+        Stack<Integer> stack = new Stack<>();
+        int j = 0;
+        for (int i = 0; i < n; i++) {
+            stack.push(in[i]);
+            while (j < n && !stack.isEmpty() && out[j] == stack.peek()) {
+                stack.pop();
+                j++;
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    //求解所有可能的出栈序列【不一定合法】
+    private static void backTrace(int n, int[] arr, int beginIndex) {
+        if (beginIndex == n - 1) {   //此时只剩下一个元素，不用再交换了，并将此时所得数组存入集合list中
+            int[] tmp = arr.clone();
+            list.add(tmp);
+            return;
+        }
+        for (int i = beginIndex; i < n; i++) {
+            swap(arr, i, beginIndex);
+            backTrace(n, arr, beginIndex + 1);
+            swap(arr, i, beginIndex);
+        }
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+
+
+    public static void main10(String[] args) {
+        Scanner scanner =new Scanner(System.in);
+        Stack<Integer> stack =new Stack<>();
+        List<Integer> list = new ArrayList<>();
+        int s = scanner.nextInt();
+        int[] arr = new int[s];
+        for (int i = 0; i < s ; i++) {
+            int d = scanner.nextInt();
+            arr[i] = d;
+        }
+        //System.out.println(Arrays.toString(arr));
+        int i = arr.length-1;
+        while (i >= 0 ){
+            stack.push(arr[i]);
+            list.add(stack.pop());
+            i--;
+        }
+        System.out.println(list);
+    }
+
+    public static void func1(int[] arr){
+        for (int i = 0; i < arr.length ; i++) {
+
+        }
+    }
+
+    private int count;
+    Main(int a){
+        count = a;
+    }
+    static boolean p;
+    public static void main9(String[] args) {
+        Main t = new Main(88);
+        System.out.println(t.count);
+//        System.out.println(p);
+    }
+
+    public static int[] func(int[] arr,int m) {
+        int[] arr1 = new int[arr.length/2];
+        int[] arr2 = new int[arr.length/2];
+        for (int i = 0; i < arr.length/2; i++) {
+            arr1[i] = arr[i];
+            arr2[i] = arr[i+arr.length/2];
+        }
+        //洗牌
+        while ( m > 0){
+            int i = 0,j = 1,n = arr1.length-1;
+            int[] tmp = new int[arr.length];
+            while (n >= 0){
+                tmp[i] = arr2[n];
+                tmp[j] = arr1[n];
+                i = j + 1;
+                j = i + 1;
+                n--;
+            }
+            for (int k = 0; k < arr.length; k++) {
+                arr[k] = tmp[arr.length-1-k];
+            }
+            m--;
+        }
+        return arr;
+//        System.out.println(i+" "+j);
+//        System.out.println(Arrays.toString(arr));
+//        System.out.println(Arrays.toString(arr1));
+//        System.out.println(Arrays.toString(arr2));
+    }
+
+    public static void main8(String[] args) {
+        Scanner scanner =new Scanner(System.in);
+        String str = scanner.nextLine();
+        String[] arr = str.split(" ");
+        int[] array = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            array[i] = Integer.parseInt(arr[i]);
+        }
+        System.out.println(Arrays.toString(func(array,2)));
+    }
+
+    /**
+     * 解法一：模拟洗牌法
+     * 例如有6张牌，最开始牌的序列是1,2,3,4,5,6。首先分成两组，左手拿着1,2,3；右手拿着4,5,6。
+     * 新建一个ArrayList,先加入1，然后4，接着依次加入 2 ， 5 ， 3 ， 6
+     * 于是1,4,2,5,3,6，这就完成了一次洗牌的过程
+     * k次洗牌，就把上述过程重复k次。
+     * 优点： 直观易懂，模拟题中的洗牌过程。
+     * 缺点： 大量运用arrayList 和数组的数字转移，且for循环次数过多，繁琐
+     */
+    public static void main7(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+        for (int i = 0; i < T; i ++) {
+            int n = sc.nextInt();
+            int k = sc.nextInt();
+            int[] arr = new int[2 * n];
+            for (int j = 0; j < 2 * n; j ++) {
+                arr[j] = sc.nextInt();
+            }
+            for (int times = 0; times < k; times ++) {
+                ShuffleOnce(arr, arr.length);
+            }
+            for (int a = 0; a < n * 2 - 1; a ++) {
+                System.out.print(arr[a] + " ");
+            }
+            System.out.println(arr[n * 2 - 1]);
+        }
+    }
+
+    private static void ShuffleOnce(int[] arr, int n) {
+        ArrayList<Integer> list = new ArrayList<>(n);
+        for (int i = 0; i < n / 2; i ++) {
+            list.add(arr[i]);
+            list.add(arr[i + n / 2]);
+        }
+        for (int i = 0; i < n; i ++) {
+            arr[i] = list.get(i);
+        }
+    }
+
+    public static void main6(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int a =sc.nextInt();
+        String str = sc.nextLine();
+        System.out.println(Arrays.toString(parseLineToIntArr(str)));
+    }
+
+    public static void findStuSource(int a,int[] arr,int c){
+        int count = 0;
+        for (int val:arr) {
+            if (val == c){
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+
+    public static void main3(String[] args) {
+//        int a = 6;
+//        int[] arr = {2,3,5,6,4,50};
+//        int c = 5;
+//        int d = 21;
+//        findStuSource(a,arr,c);
+//        findStuSource(a,arr,d);
+
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()) {
+            int a = sc.nextInt();
+            String b = sc.nextLine();
+            int c = sc.nextInt();
+            int[] arr = parseLineToIntArr(b);
+            if (a != 0){
+                assert arr != null;
+                findStuSource(a,arr,c);
+            }
+        }
+    }
+
+
+//        int a = 6;
+//        int[] arr = {2,3,5,6,4,50};
+//        int c = 5;
+//        int d = 21;
+//        findStuSource(a,arr,c);
+//        findStuSource(a,arr,d);
+//          String[] str = b.split(" ");
+//            int[] arr = new int[str.length];
+//            for (int i = 0; i < str.length; i++) {
+//                arr[i] = Integer.parseInt(str[i]);
+//            }
+//            System.out.println(Arrays.toString(arr));
+
+
+    public static void main5(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入一行数字，以空格分开...");
+        String line = sc.nextLine();
+        parseLineToIntArr(line);
+    }
+
+    public static int[] parseLineToIntArr(String s) {
+        //字符串为空，则不作操作
+        if (s.isEmpty()) {
+            return null;
+        }
+
+        //将字符串按空格切分，转成字符串数组
+        String[] strArr = s.split(" ");
+        int strArrLen = strArr.length;
+
+        //将字符串数组转成整型数组
+        int[] intArr = new int[strArrLen];
+
+        //循环遍历字符串数组中的每一个字符串，尝试解析这个字符串到整型数组里。出错的话，就退出
+        for (int i = 0; i < strArrLen; i++) {
+            //
+            try {
+                intArr[i] = Integer.parseInt(strArr[i]);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return intArr;
+    }
+//        System.out.println(Arrays.toString(intArr));
+//        输出转换之后的整型数组
+//        for (int x : intArr) {
+//            System.out.print(x+" ");
+//        }
+
+
+    public static void main4(String[] args) {
+        Scanner scanner =new Scanner(System.in);
+        while (scanner.hasNextInt()){
+            int a = scanner.nextInt();
+//            int b = scanner.nextInt();
+//            int[] arr = new int[a];
+//            Arrays.fill(arr, b);
+//            System.out.println(Arrays.toString(arr));
+            String s = scanner.nextLine();
+            System.out.println(Arrays.toString(s.split(" ")));
+            String[] str=s.split(" ");
+            System.out.println(Arrays.toString(str));
+//            Integer[] arr= new Integer[str.length];
+//            for(int i=0;i<str.length;i++){
+//                arr[i]=Integer.parseInt(str[i]);
+//            }
+        }
+    }
+
+//        System.out.println(str.length);
+//        System.out.println(arr.length == a);
+//            for (int i = 0; i < arr.length ; i++) {
+//                if (arr[i] == c){
+//                    a = i;
+//                }else {
+//                    break;
+//                }
+//            }
+
+    public static void main2(String[] args) {
+        int i = 0,j = 0;
+        if ((++i)>0||(++j)>0){
+            System.out.println("i = "+i +" "+"j = "+j);
+        }
+    }
+
+    public static void main1(String[] args) {
+        int i = 5;
+        int s =(i++),tmp=(++i),pre=(i--),val=(--i);
+        System.out.println(s);
+        System.out.println(tmp);
+        System.out.println(pre);
+        System.out.println(val);
+        //System.out.println(s);
+    }
+}
