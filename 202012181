@@ -1,0 +1,314 @@
+import java.io.IOException;
+import java.util.*;
+ 
+public class Main{
+    public static void main(String[] args) {
+     
+    try {
+        char c =(char)System.in.read();
+        int number = Integer.valueOf(c);
+        System.out.println(number);
+    } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+   }    
+}
+import java.util.Scanner;
+ 
+public class Main{
+    public static void main(String[] args){
+            System.out.print((-8+22)*40-10+212/2);
+        }
+}
+import java.io.*;
+public class Main{
+    public static void main(String[] args) throws IOException{
+        BufferedReader fs = new BufferedReader(new InputStreamReader(System.in));
+        String[] str = fs.readLine().split(" ");
+        int a = Integer.parseInt(str[0]);
+        int b = Integer.parseInt(str[1]);
+        System.out.println((int)a/b+" "+(int)a%b);
+    }
+}
+import java.io.*;
+public class Main{
+    public static void main(String[] args)throws IOException{
+         
+         
+       BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        String str=br.readLine();
+         
+        char[] chararray=str.toCharArray();
+         
+        for(int i=chararray.length-1;i>=0;i--){
+            System.out.print(chararray[i]);
+        }       
+    }
+}
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+ 
+public class Main{
+    public static void main(String[] args) throws IOException {
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        String[] str=br.readLine().split(" ");
+        int s1=Integer.parseInt(str[0]);
+        int s2=Integer.parseInt(str[1]);
+        System.out.println((s1+s2)%100);
+    }
+}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        String str = br.readLine();
+        String[] str1 = str.split("\\.");
+        String str2 = str1[0].substring(str1[0].length()-1);
+        System.out.println(str2);
+    }
+}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+ 
+public class Main {
+    static long s = 31560000;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String str = br.readLine();
+        int age = Integer.parseInt(str);
+        System.out.println(age*s);
+    }
+}
+import java.io.*;
+public class Main{
+    public static void main(String[] args) throws IOException{
+        BufferedReader str = new BufferedReader(new InputStreamReader(System.in));
+        String nums = str.readLine();
+        int seconds = Integer.parseInt(nums);
+        int h = seconds/3600;
+        seconds = seconds%3600;
+        int m = seconds/60;
+        seconds = seconds%60;
+        System.out.println(h+" "+m+" "+seconds);
+         
+    }
+}
+import java.util.*;
+import java.io.*;
+public class Main {
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] str = br.readLine().split(" ");
+        double a = 0;
+        for(int i=0;i<3;i++) {
+            a = a+Double.parseDouble(str[i]);
+        }
+        System.out.printf("%.2f %.2f",a,a/3);
+    }
+}
+import java.io.*;
+  
+public class Main{
+    public static void main(String[] args)throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] str = br.readLine().split(" ");
+        double weight = Double.parseDouble(str[0]);
+        double height = Double.parseDouble(str[1])/100;
+        double bmi = 0;
+        bmi = weight / (height * height);
+        System.out.print(String.format("%.2f",bmi));
+    }
+}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+public class Main {
+ 
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String str = br.readLine();
+        String[] scores = str.split(" ");
+        double a = Double.parseDouble(scores[0]);
+        double b = Double.parseDouble(scores[1]);
+        double c = Double.parseDouble(scores[2]);
+        double p = (a + b + c) / 2;
+        double circumference = a + b + c;
+        double area = Math.sqrt(p * (p - a) * (p - b) * (p - c));
+        System.out.println("circumference=" + String.format("%.2f", circumference) + " area=" + String.format("%.2f", area));
+    }
+ 
+}
+import java.io.*;
+public class Main{
+    public static void main(String[] args)throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s=br.readLine();
+        Double r=Double.parseDouble(s);
+        Double v=4*3.1415926*r*r*r/3;
+        System.out.printf("%.3f",v);
+    }
+}
+import java.io.*;
+public class Main{
+    public static void main(String[] args)throws IOException{
+        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+        String str=null;
+        while((str=br.readLine())!=null){
+            System.out.println(str.toLowerCase());
+        }
+    }
+}
+import java.io.*;
+ 
+public class Main{
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s ="";
+        while((s=br.readLine())!=null){
+            int a = Integer.parseInt(s);
+            int result = 1;
+            for(int i =0; i<a; i++){
+                result *=2;
+            }
+            System.out.println(result);
+        }
+    }
+}
+import java.io.*; 
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String []str=br.readLine().split(" ");
+        int n=Integer.parseInt(str[0]);
+        int h=Integer.parseInt(str[1]);
+        int m=Integer.parseInt(str[2]);
+        int rest=0;
+        if(m%h==0) {
+            rest=n-m/h;
+        }else {
+            rest=n-m/h-1;
+        }
+        System.out.println(rest);
+    }         
+}
+import java.io.*;
+public class Main{
+    public static void main(String[] args)
+    {
+        try{
+            BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+            String[] str=br.readLine().split(" ");
+            int sum=0;
+            for(int i=0;i<str.length;i++)
+            {
+                int num=Integer.parseInt(str[i]);
+                sum+=num;
+            }
+            System.out.print(sum/5.0);
+             
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+ 
+/*
+题目描述
+输入一个十六进制数a，和一个八进制数b，输出a+b的十进制结果（范围-231~231-1）。
+输入描述:
+一行，一个十六进制数a，和一个八进制数b，中间间隔一个空格。
+输出描述:
+一行，a+b的十进制结果。
+示例1
+输入 0x12 05
+输出 23
+ */
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        String[] s = bf.readLine().split(" ");
+        int i1 = Integer.parseInt(s[0].substring(2), 16);//进制转换，十六进制不包含0x
+        int i2 = Integer.parseInt(s[1], 8);
+        System.out.println(i1+i2);
+    }
+}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+ 
+//BC035判断字母
+public class Main {
+ 
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String str;
+        char c;
+        while ((str = br.readLine()) != null) {
+            c = str.charAt(0);
+            if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
+                System.out.println("YES");
+            } else {
+                System.out.println("NO");
+            }
+        }
+    }
+}
+import java.io.*;
+ 
+public class Main{
+    public static void main(String[] args)throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String s;
+        while((s = br.readLine())!=null){
+            int num = Integer.parseInt(s);
+            if(num>0){
+                System.out.println("1");
+            }
+            if(num==0){
+                System.out.println("0.5");
+            }
+            if(num<0){
+                System.out.println("0");
+            }
+        }
+    }
+}
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+   
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String str;
+        while ((str = br.readLine()) != null) {
+            String[] split = str.split(" ");
+            int a = Integer.parseInt(split[0]);
+            int b = Integer.parseInt(split[1]);
+            int c = Integer.parseInt(split[2]);
+            if (a + b > c && a + c > b && b + c > a) {
+                if (a == b && b == c) {
+                    System.out.println("Equilateral triangle!");
+                }else if (a == b || a == c || b == c) {
+                    System.out.println("Isosceles triangle!");
+                }else {
+                    System.out.println("Ordinary triangle!");
+                }
+            }else {
+                System.out.println("Not a triangle!");
+            }
+        }
+    }
+}
