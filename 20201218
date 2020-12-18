@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="org.example"/>
+<!--    <bean id="loginController" class="org.example.controller.LoginController"/>-->
+<!--    <bean id="loginService" class="org.example.service.LoginService"/>-->
+<!--    <bean id="loginDAO" class="org.example.dao.LoginDAO"/>-->
+
+</beans>
+
+package org.example;
+
+import org.example.controller.LoginController;
+import org.example.dao.LoginDAO;
+import org.example.model.User;
+import org.example.service.LoginService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+
+    public static void main(String[] args) {
+        //根据Spring配置文件路径创建容器：应用上下文对象
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        //1.类注解:
+        //获取注册的Bean对象:根据名称获取 或 根据类型
+        //根据名称获取
+        LoginController loginController = (LoginController)context
+                .getBean("loginController");
+        System.out.println(loginController);
+        //根据类型获取
+        LoginController loginController1 = (LoginController)context
+                .getBean(LoginController.class);
+        System.out.println(loginController1);
+
+        //判断两个地址是否相等   单例模式  多线程
+        System.out.printf("loginController:%s%n",
+                loginController == loginController1);
+
+        //获取Service  DAO对象  打印
+        LoginService loginService = (LoginService)context.
+                getBean("loginService");
+        LoginDAO loginDAO = (LoginDAO)context.
+                getBean("loginDAO");
+        System.out.println(loginDAO);
+        System.out.println(loginService);
+
+        //2.Bean注解:  在方法上  方法名作为Bean的id(名称)  更灵活  可设置属性
+        //方法的返回值  作为注册到容器
+        //选用名称获取
+        User user1 =(User)context.getBean("user1");
+        User user2 =(User)context.getBean("user2");
+        System.out.println(user1);
+        System.out.println(user2);
+
+        //3.@Configuration：表示配置 类
+        User user4 = (User)context.getBean("user1") ;
+        System.out.println(user4);
+
+        //补充4.注册一个Bean对象的工厂(实现FactoryBean<T>)，其实是注册getObject()方法返回值对象到容器中
+        User user3 = (User)context.getBean("userFactory");
+        System.out.println(user3);
+        //关闭容器
+        ((ClassPathXmlApplicationContext) context).close();
+    }
+}
+
+package org.example.controller;
+
+import org.example.model.User;
+import org.example.service.LoginService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Controller;
+
+@Controller  //只可生成一个
+public class LoginController {
+
+    @Autowired
+    private LoginService loginService;
+
+
+    //@RequestMapping("/服务路径")
+//    public String login(String username,String password){
+//
+//        //请求数据校验放在这里
+//        loginService.login(username,password);
+//        return "前端页面路径";
+//    }
+
+    @Bean  //可生成多个
+    public User user1(){
+        User user = new User();
+        user.setUsername("张艺衡");
+        user.setPassword("123");
+        return user;
+    }
+
+    @Bean
+    public User user2(){
+        User user = new User();
+        user.setUsername("姜子牙");
+        user.setPassword("123");
+        return user;
+    }
+}
+
+package org.example.util;
+
+import org.example.model.User;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UserFactory implements FactoryBean<User> {
+
+    @Override
+    public User getObject() throws Exception {
+        User user = new User();
+        user.setUsername("张艺衡");
+        user.setPassword("姜子牙");
+        return user;
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return User.class;
+    }
+}
+
+package org.example.config;
+
+import org.example.model.User;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig {
+
+    public User user1(){
+        User user = new User();
+        user.setUsername("哪吒");
+        user.setPassword("123");
+        return user;
+    }
+}
+package org.example.dao;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class LoginDAO {
+
+    //数据库jdbc
+//    public Uesr query(String username) {
+//
+//    }
+}
+
+package org.example.service;
+
+import org.example.dao.LoginDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class LoginService {
+
+    @Autowired
+    private LoginDAO loginDAO;
+
+    //service:业务逻辑，根据传入，执行不同条件的dao操作
+//    public String login(int id,String username,String password){
+//        if (id == 1)
+//            Uesr user = loginDAO.query(username);
+//        else if (id == 2)
+//            userDAO.query(...);
+//    }
+}
+
+package org.example.model;
+
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+public class User {
+    private String username;
+    private String password;
+}
