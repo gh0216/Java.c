@@ -1,0 +1,553 @@
+import java.io.*;
+public class Main{
+    public static void main(String [] args)throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        long n = Integer.parseInt(br.readLine());
+        long sum=(1+n)*n/2;
+         
+        System.out.println(sum);
+    }
+}
+import java.io.*;
+public class Main{
+    public static void main(String[] args)throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int[][] arr = new int[n][n];
+        for(int i =0;i < n;i++){
+            for(int j = 0;j <= i;j++){
+                if(j == 0||j == i){
+                    arr[i][j] = 1;
+                }else{
+                    arr[i][j] = arr[i - 1][j -1]+arr[i - 1][j];
+                }
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0;i < n;i++){
+            for(int j = 0;j <i + 1;j++){
+                int len = (arr[i][j] + "").length();
+                for(int k = 0;k < 5-len;k++){
+                    sb.append(" ");
+                }
+                System.out.print(sb.toString() + arr[i][j]);
+                sb.setLength(0);
+            }
+            if(i != n -1){
+                System.out.println();
+            }
+        }
+    }
+}
+class Solution {
+    public String removeDuplicateLetters(String s) {
+        boolean[] vis = new boolean[26];
+        int[] num = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            num[s.charAt(i) - 'a']++;
+        }
+
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (!vis[ch - 'a']) {
+                while (sb.length() > 0 && sb.charAt(sb.length() - 1) > ch) {
+                    if (num[sb.charAt(sb.length() - 1) - 'a'] > 0) {
+                        vis[sb.charAt(sb.length() - 1) - 'a'] = false;
+                        sb.deleteCharAt(sb.length() - 1);
+                    } else {
+                        break;
+                    }
+                }
+                vis[ch - 'a'] = true;
+                sb.append(ch);
+            }
+            num[ch - 'a'] -= 1;
+        }
+        return sb.toString();
+    }
+}
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int length1 = nums1.length, length2 = nums2.length;
+        int totalLength = length1 + length2;
+        if (totalLength % 2 == 1) {
+            int midIndex = totalLength / 2;
+            double median = getKthElement(nums1, nums2, midIndex + 1);
+            return median;
+        } else {
+            int midIndex1 = totalLength / 2 - 1, midIndex2 = totalLength / 2;
+            double median = (getKthElement(nums1, nums2, midIndex1 + 1) + getKthElement(nums1, nums2, midIndex2 + 1)) / 2.0;
+            return median;
+        }
+    }
+
+    public int getKthElement(int[] nums1, int[] nums2, int k) {
+        /* 主要思路：要找到第 k (k>1) 小的元素，那么就取 pivot1 = nums1[k/2-1] 和 pivot2 = nums2[k/2-1] 进行比较
+         * 这里的 "/" 表示整除
+         * nums1 中小于等于 pivot1 的元素有 nums1[0 .. k/2-2] 共计 k/2-1 个
+         * nums2 中小于等于 pivot2 的元素有 nums2[0 .. k/2-2] 共计 k/2-1 个
+         * 取 pivot = min(pivot1, pivot2)，两个数组中小于等于 pivot 的元素共计不会超过 (k/2-1) + (k/2-1) <= k-2 个
+         * 这样 pivot 本身最大也只能是第 k-1 小的元素
+         * 如果 pivot = pivot1，那么 nums1[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 "删除"，剩下的作为新的 nums1 数组
+         * 如果 pivot = pivot2，那么 nums2[0 .. k/2-1] 都不可能是第 k 小的元素。把这些元素全部 "删除"，剩下的作为新的 nums2 数组
+         * 由于我们 "删除" 了一些元素（这些元素都比第 k 小的元素要小），因此需要修改 k 的值，减去删除的数的个数
+         */
+
+        int length1 = nums1.length, length2 = nums2.length;
+        int index1 = 0, index2 = 0;
+        int kthElement = 0;
+
+        while (true) {
+            // 边界情况
+            if (index1 == length1) {
+                return nums2[index2 + k - 1];
+            }
+            if (index2 == length2) {
+                return nums1[index1 + k - 1];
+            }
+            if (k == 1) {
+                return Math.min(nums1[index1], nums2[index2]);
+            }
+            
+            // 正常情况
+            int half = k / 2;
+            int newIndex1 = Math.min(index1 + half, length1) - 1;
+            int newIndex2 = Math.min(index2 + half, length2) - 1;
+            int pivot1 = nums1[newIndex1], pivot2 = nums2[newIndex2];
+            if (pivot1 <= pivot2) {
+                k -= (newIndex1 - index1 + 1);
+                index1 = newIndex1 + 1;
+            } else {
+                k -= (newIndex2 - index2 + 1);
+                index2 = newIndex2 + 1;
+            }
+        }
+    }
+}
+class Solution {
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        boolean[][] dp = new boolean[n][n];
+        String ans = "";
+        for (int l = 0; l < n; ++l) {
+            for (int i = 0; i + l < n; ++i) {
+                int j = i + l;
+                if (l == 0) {
+                    dp[i][j] = true;
+                } else if (l == 1) {
+                    dp[i][j] = (s.charAt(i) == s.charAt(j));
+                } else {
+                    dp[i][j] = (s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1]);
+                }
+                if (dp[i][j] && l + 1 > ans.length()) {
+                    ans = s.substring(i, i + l + 1);
+                }
+            }
+        }
+        return ans;
+    }
+}
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        } else if (l1.val < l2.val) {
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l1, l2.next);
+            return l2;
+        }
+
+    }
+}
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        } else if (l1.val < l2.val) {
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l1, l2.next);
+            return l2;
+        }
+
+    }
+}
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        } else if (l1.val < l2.val) {
+            l1.next = mergeTwoLists(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists(l1, l2.next);
+            return l2;
+        }
+
+    }
+}
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0, head);
+        Deque<ListNode> stack = new LinkedList<ListNode>();
+        ListNode cur = dummy;
+        while (cur != null) {
+            stack.push(cur);
+            cur = cur.next;
+        }
+        for (int i = 0; i < n; ++i) {
+            stack.pop();
+        }
+        ListNode prev = stack.peek();
+        prev.next = prev.next.next;
+        ListNode ans = dummy.next;
+        return ans;
+    }
+}
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode first = head;
+        ListNode second = dummy;
+        for (int i = 0; i < n; ++i) {
+            first = first.next;
+        }
+        while (first != null) {
+            first = first.next;
+            second = second.next;
+        }
+        second.next = second.next.next;
+        ListNode ans = dummy.next;
+        return ans;
+    }
+}
+import java.util.*;
+
+class Solution {
+    public int romanToInt(String s) {
+        int sum = 0;
+        int preNum = getValue(s.charAt(0));
+        for(int i = 1;i < s.length(); i ++) {
+            int num = getValue(s.charAt(i));
+            if(preNum < num) {
+                sum -= preNum;
+            } else {
+                sum += preNum;
+            }
+            preNum = num;
+        }
+        sum += preNum;
+        return sum;
+    }
+    
+    private int getValue(char ch) {
+        switch(ch) {
+            case 'I': return 1;
+            case 'V': return 5;
+            case 'X': return 10;
+            case 'L': return 50;
+            case 'C': return 100;
+            case 'D': return 500;
+            case 'M': return 1000;
+            default: return 0;
+        }
+    }
+}
+
+class Solution {
+    public int romanToInt(String s) {
+        s = s.replace("IV","a");
+        s = s.replace("IX","b");
+        s = s.replace("XL","c");
+        s = s.replace("XC","d");
+        s = s.replace("CD","e");
+        s = s.replace("CM","f");
+        
+        int result = 0;
+        for (int i=0; i<s.length(); i++) {
+            result += which(s.charAt(i));
+        }
+        return result;
+    }
+
+    public int which(char ch) {
+        switch(ch) {
+            case 'I': return 1;
+            case 'V': return 5;
+            case 'X': return 10;
+            case 'L': return 50;
+            case 'C': return 100;
+            case 'D': return 500;
+            case 'M': return 1000;
+            case 'a': return 4;
+            case 'b': return 9;
+            case 'c': return 40;
+            case 'd': return 90;
+            case 'e': return 400;
+            case 'f': return 900;
+        }
+        return 0;
+    }
+}
+class Solution {
+    public String convert(String s, int numRows) {
+
+        if (numRows == 1) return s;
+
+        List<StringBuilder> rows = new ArrayList<>();
+        for (int i = 0; i < Math.min(numRows, s.length()); i++)
+            rows.add(new StringBuilder());
+
+        int curRow = 0;
+        boolean goingDown = false;
+
+        for (char c : s.toCharArray()) {
+            rows.get(curRow).append(c);
+            if (curRow == 0 || curRow == numRows - 1) goingDown = !goingDown;
+            curRow += goingDown ? 1 : -1;
+        }
+
+        StringBuilder ret = new StringBuilder();
+        for (StringBuilder row : rows) ret.append(row);
+        return ret.toString();
+    }
+}
+class Solution {
+    public String convert(String s, int numRows) {
+
+        if (numRows == 1) return s;
+
+        List<StringBuilder> rows = new ArrayList<>();
+        for (int i = 0; i < Math.min(numRows, s.length()); i++)
+            rows.add(new StringBuilder());
+
+        int curRow = 0;
+        boolean goingDown = false;
+
+        for (char c : s.toCharArray()) {
+            rows.get(curRow).append(c);
+            if (curRow == 0 || curRow == numRows - 1) goingDown = !goingDown;
+            curRow += goingDown ? 1 : -1;
+        }
+
+        StringBuilder ret = new StringBuilder();
+        for (StringBuilder row : rows) ret.append(row);
+        return ret.toString();
+    }
+}
+class Solution {
+    public int jump(int[] nums) {
+        int position = nums.length - 1;
+        int steps = 0;
+        while (position > 0) {
+            for (int i = 0; i < position; i++) {
+                if (i + nums[i] >= position) {
+                    position = i;
+                    steps++;
+                    break;
+                }
+            }
+        }
+        return steps;
+    }
+}
+class Solution {
+    public int jump(int[] nums) {
+        int length = nums.length;
+        int end = 0;
+        int maxPosition = 0; 
+        int steps = 0;
+        for (int i = 0; i < length - 1; i++) {
+            maxPosition = Math.max(maxPosition, i + nums[i]); 
+            if (i == end) {
+                end = maxPosition;
+                steps++;
+            }
+        }
+        return steps;
+    }
+}
+class Solution {
+    private boolean[][] line = new boolean[9][9];
+    private boolean[][] column = new boolean[9][9];
+    private boolean[][][] block = new boolean[3][3][9];
+    private boolean valid = false;
+    private List<int[]> spaces = new ArrayList<int[]>();
+
+    public void solveSudoku(char[][] board) {
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                if (board[i][j] == '.') {
+                    spaces.add(new int[]{i, j});
+                } else {
+                    int digit = board[i][j] - '0' - 1;
+                    line[i][digit] = column[j][digit] = block[i / 3][j / 3][digit] = true;
+                }
+            }
+        }
+
+        dfs(board, 0);
+    }
+
+    public void dfs(char[][] board, int pos) {
+        if (pos == spaces.size()) {
+            valid = true;
+            return;
+        }
+
+        int[] space = spaces.get(pos);
+        int i = space[0], j = space[1];
+        for (int digit = 0; digit < 9 && !valid; ++digit) {
+            if (!line[i][digit] && !column[j][digit] && !block[i / 3][j / 3][digit]) {
+                line[i][digit] = column[j][digit] = block[i / 3][j / 3][digit] = true;
+                board[i][j] = (char) (digit + '0' + 1);
+                dfs(board, pos + 1);
+                line[i][digit] = column[j][digit] = block[i / 3][j / 3][digit] = false;
+            }
+        }
+    }
+}
+
+class Solution {
+    private int[] line = new int[9];
+    private int[] column = new int[9];
+    private int[][] block = new int[3][3];
+    private boolean valid = false;
+    private List<int[]> spaces = new ArrayList<int[]>();
+
+    public void solveSudoku(char[][] board) {
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                if (board[i][j] == '.') {
+                    spaces.add(new int[]{i, j});
+                } else {
+                    int digit = board[i][j] - '0' - 1;
+                    flip(i, j, digit);
+                }
+            }
+        }
+
+        dfs(board, 0);
+    }
+
+    public void dfs(char[][] board, int pos) {
+        if (pos == spaces.size()) {
+            valid = true;
+            return;
+        }
+
+        int[] space = spaces.get(pos);
+        int i = space[0], j = space[1];
+        int mask = ~(line[i] | column[j] | block[i / 3][j / 3]) & 0x1ff;
+        for (; mask != 0 && !valid; mask &= (mask - 1)) {
+            int digitMask = mask & (-mask);
+            int digit = Integer.bitCount(digitMask - 1);
+            flip(i, j, digit);
+            board[i][j] = (char) (digit + '0' + 1);
+            dfs(board, pos + 1);
+            flip(i, j, digit);
+        }
+    }
+
+    public void flip(int i, int j, int digit) {
+        line[i] ^= (1 << digit);
+        column[j] ^= (1 << digit);
+        block[i / 3][j / 3] ^= (1 << digit);
+    }
+}
+方法三：枚举优化
+思路与算法
+
+我们可以顺着方法二的思路继续优化下去：
+
+如果一个空白格只有唯一的数可以填入，也就是其对应的 bb 值和 b-1b−1 进行按位与运算后得到 00（即 bb 中只有一个二进制位为 11）。此时，我们就可以确定这个空白格填入的数，而不用等到递归时再去处理它。
+这样一来，我们可以不断地对整个数独进行遍历，将可以唯一确定的空白格全部填入对应的数。随后我们再使用与方法二相同的方法对剩余无法唯一确定的空白格进行递归 + 回溯。
+
+代码
+
+C++JavaPython3GolangC
+
+class Solution {
+    private int[] line = new int[9];
+    private int[] column = new int[9];
+    private int[][] block = new int[3][3];
+    private boolean valid = false;
+    private List<int[]> spaces = new ArrayList<int[]>();
+
+    public void solveSudoku(char[][] board) {
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                if (board[i][j] != '.') {
+                    int digit = board[i][j] - '0' - 1;
+                    flip(i, j, digit);
+                }
+            }
+        }
+
+        while (true) {
+            boolean modified = false;
+            for (int i = 0; i < 9; ++i) {
+                for (int j = 0; j < 9; ++j) {
+                    if (board[i][j] == '.') {
+                        int mask = ~(line[i] | column[j] | block[i / 3][j / 3]) & 0x1ff;
+                        if ((mask & (mask - 1)) == 0) {
+                            int digit = Integer.bitCount(mask - 1);
+                            flip(i, j, digit);
+                            board[i][j] = (char) (digit + '0' + 1);
+                            modified = true;
+                        }
+                    }
+                }
+            }
+            if (!modified) {
+                break;
+            }
+        }
+
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                if (board[i][j] == '.') {
+                    spaces.add(new int[]{i, j});
+                }
+            }
+        }
+
+        dfs(board, 0);
+    }
+
+    public void dfs(char[][] board, int pos) {
+        if (pos == spaces.size()) {
+            valid = true;
+            return;
+        }
+
+        int[] space = spaces.get(pos);
+        int i = space[0], j = space[1];
+        int mask = ~(line[i] | column[j] | block[i / 3][j / 3]) & 0x1ff;
+        for (; mask != 0 && !valid; mask &= (mask - 1)) {
+            int digitMask = mask & (-mask);
+            int digit = Integer.bitCount(digitMask - 1);
+            flip(i, j, digit);
+            board[i][j] = (char) (digit + '0' + 1);
+            dfs(board, pos + 1);
+            flip(i, j, digit);
+        }
+    }
+
+    public void flip(int i, int j, int digit) {
+        line[i] ^= (1 << digit);
+        column[j] ^= (1 << digit);
+        block[i / 3][j / 3] ^= (1 << digit);
+    }
+}
+
