@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 默认使用的Spring Framework版本为5.2.10.RELEASE -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.5.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>org.example</groupId>
+    <artifactId>springboot-study</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- spring-boot-starter-web: 基于SpringBoot开发的依赖包，
+                                 会再次依赖spring-framework中基本依赖包，aop相关依赖包，web相关依赖包，
+                                 还会引入其他如json，tomcat，validation等依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 排除tomcat依赖 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 添加 Undertow 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
+        </dependency>
+
+        <!--引入AOP依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- spring-boot-devtools: SpringBoot的热部署依赖包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <!-- 不能被其它模块继承，如果多个子模块可以去掉 -->
+            <optional>true</optional>
+        </dependency>
+
+        <!-- lombok: 简化bean代码的框架 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- spring-boot-starter-test: SpringBoot测试框架 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- SpringBoot的maven打包插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- 明确指定一些插件的版本，以免受到 maven 版本的影响 -->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
+debug=true
+# 设置打印日志的级别，及打印sql语句
+#日志级别：trace,debug,info,warn,error
+#基本日志
+logging.level.root=INFO
+#扫描的包：druid.sql.Statement类和frank包
+logging.level.druid.sql.Statement=ERROR
+logging.level.org.example=DEBUG
+
+# 美化JSON数据格式
+spring.jackson.serialization.indent-output=true
+# 设置JSON数据的日期格式
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone=GMT+8
+# JSON数据属性为null时不返回
+spring.jackson.default-property-inclusion=non_null
+package org.example;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <script src="js/jquery@3.3.1/jquery.js" type="text/javascript"></script>
+    <script src="js/login.js" type="text/javascript"></script>
+</head>
+<body>
+<h4>用户登录</h4>
+<form id="login_from" method="post" >
+    用户名:<input type="text" name="username" placeholder="请输入应户名">
+    <br><br>
+    密码:<input type="password" name="password" placeholder="请输入密码">
+    <br><br>
+    <input type="submit" value="登录">
+</form>
+</body>
+</html>
+$(function () {//html页面加载完成之后执行方法
+    $("#login_from").submit(function () {  //绑定表单提交事件
+
+        $.ajax({
+            url:"data/login.json", //url路径
+            type:"get",//请求方法
+            //dataType:""
+            data:$("login_from").serialize(),//请求数据。使用表单的数据
+            contentType:"json",
+            success:function (resp) {
+                alert(JSON.stringify(resp))//提示框:JSON对象
+            }
+        })
+        //alert("submit")  //验证用的
+        return false;  //返回值决定是否使用表单默认提交
+    })
+})
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+
+</body>
+</html>
