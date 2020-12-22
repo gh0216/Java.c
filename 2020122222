@@ -1,0 +1,318 @@
+class Solution {
+    public void recoverTree(TreeNode root) {
+        List<Integer> nums = new ArrayList<Integer>();
+        inorder(root, nums);
+        int[] swapped = findTwoSwapped(nums);
+        recover(root, 2, swapped[0], swapped[1]);
+    }
+
+    public void inorder(TreeNode root, List<Integer> nums) {
+        if (root == null) {
+            return;
+        }
+        inorder(root.left, nums);
+        nums.add(root.val);
+        inorder(root.right, nums);
+    }
+
+    public int[] findTwoSwapped(List<Integer> nums) {
+        int n = nums.size();
+        int x = -1, y = -1;
+        for (int i = 0; i < n - 1; ++i) {
+            if (nums.get(i + 1) < nums.get(i)) {
+                y = nums.get(i + 1);
+                if (x == -1) {
+                    x = nums.get(i);
+                } else {
+                    break;
+                }
+            }
+        }
+        return new int[]{x, y};
+    }
+
+    public void recover(TreeNode root, int count, int x, int y) {
+        if (root != null) {
+            if (root.val == x || root.val == y) {
+                root.val = root.val == x ? y : x;
+                if (--count == 0) {
+                    return;
+                }
+            }
+            recover(root.right, count, x, y);
+            recover(root.left, count, x, y);
+        }
+    }
+}
+class Solution {
+    public void recoverTree(TreeNode root) {
+        Deque<TreeNode> stack = new ArrayDeque<TreeNode>();
+        TreeNode x = null, y = null, pred = null;
+
+        while (!stack.isEmpty() || root != null) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            root = stack.pop();
+            if (pred != null && root.val < pred.val) {
+                y = root;
+                if (x == null) {
+                    x = pred;
+                } else {
+                    break;
+                }
+            }
+            pred = root;
+            root = root.right;
+        }
+
+        swap(x, y);
+    }
+
+    public void swap(TreeNode x, TreeNode y) {
+        int tmp = x.val;
+        x.val = y.val;
+        y.val = tmp;
+    }
+}
+class Solution {
+    public void recoverTree(TreeNode root) {
+        TreeNode x = null, y = null, pred = null, predecessor = null;
+
+        while (root != null) {
+            if (root.left != null) {
+                // predecessor 节点就是当前 root 节点向左走一步，然后一直向右走至无法走为止
+                predecessor = root.left;
+                while (predecessor.right != null && predecessor.right != root) {
+                    predecessor = predecessor.right;
+                }
+                
+                // 让 predecessor 的右指针指向 root，继续遍历左子树
+                if (predecessor.right == null) {
+                    predecessor.right = root;
+                    root = root.left;
+                }
+                // 说明左子树已经访问完了，我们需要断开链接
+                else {
+                    if (pred != null && root.val < pred.val) {
+                        y = root;
+                        if (x == null) {
+                            x = pred;
+                        }
+                    }
+                    pred = root;
+
+                    predecessor.right = null;
+                    root = root.right;
+                }
+            }
+            // 如果没有左孩子，则直接访问右孩子
+            else {
+                if (pred != null && root.val < pred.val) {
+                    y = root;
+                    if (x == null) {
+                        x = pred;
+                    }
+                }
+                pred = root;
+                root = root.right;
+            }
+        }
+        swap(x, y);
+    }
+
+    public void swap(TreeNode x, TreeNode y) {
+        int tmp = x.val;
+        x.val = y.val;
+        y.val = tmp;
+    }
+}
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0) {
+            return new LinkedList<TreeNode>();
+        }
+        return generateTrees(1, n);
+    }
+
+    public List<TreeNode> generateTrees(int start, int end) {
+        List<TreeNode> allTrees = new LinkedList<TreeNode>();
+        if (start > end) {
+            allTrees.add(null);
+            return allTrees;
+        }
+
+        // 枚举可行根节点
+        for (int i = start; i <= end; i++) {
+            // 获得所有可行的左子树集合
+            List<TreeNode> leftTrees = generateTrees(start, i - 1);
+
+            // 获得所有可行的右子树集合
+            List<TreeNode> rightTrees = generateTrees(i + 1, end);
+
+            // 从左子树集合中选出一棵左子树，从右子树集合中选出一棵右子树，拼接到根节点上
+            for (TreeNode left : leftTrees) {
+                for (TreeNode right : rightTrees) {
+                    TreeNode currTree = new TreeNode(i);
+                    currTree.left = left;
+                    currTree.right = right;
+                    allTrees.add(currTree);
+                }
+            }
+        }
+        return allTrees;
+    }
+}
+
+class Solution {
+    public int lengthOfLastWord(String s) {
+        int end = s.length() - 1;
+        while(end >= 0 && s.charAt(end) == ' ') end--;
+        if(end < 0) return 0;
+        int start = end;
+        while(start >= 0 && s.charAt(start) != ' ') start--;
+        return end - start;
+    }
+}
+class Solution {
+    public int climbStairs(int n) {
+        int p = 0, q = 0, r = 1;
+        for (int i = 1; i <= n; ++i) {
+            p = q; 
+            q = r; 
+            r = p + q;
+        }
+        return r;
+    }
+}
+class Solution {
+    public int climbStairs(int n) {
+        int p = 0, q = 0, r = 1;
+        for (int i = 1; i <= n; ++i) {
+            p = q; 
+            q = r; 
+            r = p + q;
+        }
+        return r;
+    }
+}
+
+public class Solution {
+    public int climbStairs(int n) {
+        double sqrt5 = Math.sqrt(5);
+        double fibn = Math.pow((1 + sqrt5) / 2, n + 1) - Math.pow((1 - sqrt5) / 2, n + 1);
+        return (int) Math.round(fibn / sqrt5);
+    }
+}
+class Solution {
+  public void setZeroes(int[][] matrix) {
+    int R = matrix.length;
+    int C = matrix[0].length;
+    Set<Integer> rows = new HashSet<Integer>();
+    Set<Integer> cols = new HashSet<Integer>();
+
+    // Essentially, we mark the rows and columns that are to be made zero
+    for (int i = 0; i < R; i++) {
+      for (int j = 0; j < C; j++) {
+        if (matrix[i][j] == 0) {
+          rows.add(i);
+          cols.add(j);
+        }
+      }
+    }
+
+    // Iterate over the array once again and using the rows and cols sets, update the elements.
+    for (int i = 0; i < R; i++) {
+      for (int j = 0; j < C; j++) {
+        if (rows.contains(i) || cols.contains(j)) {
+          matrix[i][j] = 0;
+        }
+      }
+    }
+  }
+}
+class Solution {
+  public void setZeroes(int[][] matrix) {
+    int MODIFIED = -1000000;
+    int R = matrix.length;
+    int C = matrix[0].length;
+
+    for (int r = 0; r < R; r++) {
+      for (int c = 0; c < C; c++) {
+        if (matrix[r][c] == 0) {
+          // We modify the corresponding rows and column elements in place.
+          // Note, we only change the non zeroes to MODIFIED
+          for (int k = 0; k < C; k++) {
+            if (matrix[r][k] != 0) {
+              matrix[r][k] = MODIFIED;
+            }
+          }
+          for (int k = 0; k < R; k++) {
+            if (matrix[k][c] != 0) {
+              matrix[k][c] = MODIFIED;
+            }
+          }
+        }
+      }
+    }
+
+    for (int r = 0; r < R; r++) {
+      for (int c = 0; c < C; c++) {
+        // Make a second pass and change all MODIFIED elements to 0 """
+        if (matrix[r][c] == MODIFIED) {
+          matrix[r][c] = 0;
+        }
+      }
+    }
+  }
+}
+class Solution {
+  public void setZeroes(int[][] matrix) {
+    Boolean isCol = false;
+    int R = matrix.length;
+    int C = matrix[0].length;
+
+    for (int i = 0; i < R; i++) {
+
+      // Since first cell for both first row and first column is the same i.e. matrix[0][0]
+      // We can use an additional variable for either the first row/column.
+      // For this solution we are using an additional variable for the first column
+      // and using matrix[0][0] for the first row.
+      if (matrix[i][0] == 0) {
+        isCol = true;
+      }
+
+      for (int j = 1; j < C; j++) {
+        // If an element is zero, we set the first element of the corresponding row and column to 0
+        if (matrix[i][j] == 0) {
+          matrix[0][j] = 0;
+          matrix[i][0] = 0;
+        }
+      }
+    }
+
+    // Iterate over the array once again and using the first row and first column, update the elements.
+    for (int i = 1; i < R; i++) {
+      for (int j = 1; j < C; j++) {
+        if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+          matrix[i][j] = 0;
+        }
+      }
+    }
+
+    // See if the first row needs to be set to zero as well
+    if (matrix[0][0] == 0) {
+      for (int j = 0; j < C; j++) {
+        matrix[0][j] = 0;
+      }
+    }
+
+    // See if the first column needs to be set to zero as well
+    if (isCol) {
+      for (int i = 0; i < R; i++) {
+        matrix[i][0] = 0;
+      }
+    }
+  }
+}
