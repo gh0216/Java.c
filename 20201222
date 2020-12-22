@@ -1,0 +1,99 @@
+public class 通过Runnable启动线程 {
+    static class MyRunnable implements Runnable{
+        @Override
+        public void run() {
+            while (true){
+                System.out.println("我是子线程");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Runnable runnable = new MyRunnable();//先创建一个作业对象！
+        Thread thread = new Thread(runnable);//把作业传给线程并创建一个线程对象！
+        thread.start();//让线程处于就绪状态(可被调度的单位)
+        while (true){
+            System.out.println("我是父线程");
+        }
+    }
+}
+package 利用多线程算fib数;
+
+import java.util.Scanner;
+
+public class Main {
+
+    private static class MyThread extends Thread{
+
+        private final int n;
+
+        MyThread(int n){
+            this.n = n;
+        }
+
+        @Override
+        public void run() {
+            System.out.println(fib(n));
+        }
+    }
+
+    private static long fib(int n){
+        if (n < 2){
+            return n;
+        }
+        return fib(n-1)+fib(n-2);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        while (true){
+            int n = scanner.nextInt();
+            Thread thread = new MyThread(n);
+            thread.start();
+        }
+    }
+}
+
+public class NoFirstHeadProcess {
+    public static void main(String[] args) {
+        Thread thread =new Thread();//新建状态
+        thread.start();//让新建的线程(子线程)的状态变成就绪状态
+    }
+}
+public class SpecialRunning {
+    static class MyThread extends Thread{
+        @Override
+        public void run() {
+            while (true){
+                System.out.println("我是子线程");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Thread thread = new MyThread();
+        thread.start();
+        while (true){
+            System.out.println("我是父线程");
+        }
+    }
+}
+public class 把Thraed当Runnable使用 {
+    static class MyThread extends Thread{
+        @Override
+        public void run() {
+            while (true){
+                System.out.println("我是子线程");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Thread runnable = new MyThread();
+        Thread thread = new Thread(runnable);
+        thread.start();
+        while (true){
+            System.out.println("我是父线程");
+        }
+    }
+}
