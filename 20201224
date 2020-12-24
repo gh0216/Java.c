@@ -1,0 +1,322 @@
+class Solution {
+    public double quickMul(double x, long N) {
+        if (N == 0) {
+            return 1.0;
+        }
+        double y = quickMul(x, N / 2);
+        return N % 2 == 0 ? y * y : y * y * x;
+    }
+
+    public double myPow(double x, int n) {
+        long N = n;
+        return N >= 0 ? quickMul(x, N) : 1.0 / quickMul(x, -N);
+    }
+}
+class Solution {
+    double quickMul(double x, long N) {
+        double ans = 1.0;
+        // 贡献的初始值为 x
+        double x_contribute = x;
+        // 在对 N 进行二进制拆分的同时计算答案
+        while (N > 0) {
+            if (N % 2 == 1) {
+                // 如果 N 二进制表示的最低位为 1，那么需要计入贡献
+                ans *= x_contribute;
+            }
+            // 将贡献不断地平方
+            x_contribute *= x_contribute;
+            // 舍弃 N 二进制表示的最低位，这样我们每次只要判断最低位即可
+            N /= 2;
+        }
+        return ans;
+    }
+
+    public double myPow(double x, int n) {
+        long N = n;
+        return N >= 0 ? quickMul(x, N) : 1.0 / quickMul(x, -N);
+    }
+}
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int pre = 0, maxAns = nums[0];
+        for (int x : nums) {
+            pre = Math.max(pre + x, x);
+            maxAns = Math.max(maxAns, pre);
+        }
+        return maxAns;
+    }
+}
+class Solution {
+    public class Status {
+        public int lSum, rSum, mSum, iSum;
+
+        public Status(int lSum, int rSum, int mSum, int iSum) {
+            this.lSum = lSum;
+            this.rSum = rSum;
+            this.mSum = mSum;
+            this.iSum = iSum;
+        }
+    }
+
+    public int maxSubArray(int[] nums) {
+        return getInfo(nums, 0, nums.length - 1).mSum;
+    }
+
+    public Status getInfo(int[] a, int l, int r) {
+        if (l == r) {
+            return new Status(a[l], a[l], a[l], a[l]);
+        }
+        int m = (l + r) >> 1;
+        Status lSub = getInfo(a, l, m);
+        Status rSub = getInfo(a, m + 1, r);
+        return pushUp(lSub, rSub);
+    }
+
+    public Status pushUp(Status l, Status r) {
+        int iSum = l.iSum + r.iSum;
+        int lSum = Math.max(l.lSum, l.iSum + r.lSum);
+        int rSum = Math.max(r.rSum, r.iSum + l.rSum);
+        int mSum = Math.max(Math.max(l.mSum, r.mSum), l.rSum + r.lSum);
+        return new Status(lSum, rSum, mSum, iSum);
+    }
+}
+public class Solution {
+    public boolean canJump(int[] nums) {
+        int n = nums.length;
+        int rightmost = 0;
+        for (int i = 0; i < n; ++i) {
+            if (i <= rightmost) {
+                rightmost = Math.max(rightmost, i + nums[i]);
+                if (rightmost >= n - 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> order = new ArrayList<Integer>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return order;
+        }
+        int rows = matrix.length, columns = matrix[0].length;
+        boolean[][] visited = new boolean[rows][columns];
+        int total = rows * columns;
+        int row = 0, column = 0;
+        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int directionIndex = 0;
+        for (int i = 0; i < total; i++) {
+            order.add(matrix[row][column]);
+            visited[row][column] = true;
+            int nextRow = row + directions[directionIndex][0], nextColumn = column + directions[directionIndex][1];
+            if (nextRow < 0 || nextRow >= rows || nextColumn < 0 || nextColumn >= columns || visited[nextRow][nextColumn]) {
+                directionIndex = (directionIndex + 1) % 4;
+            }
+            row += directions[directionIndex][0];
+            column += directions[directionIndex][1];
+        }
+        return order;
+    }
+}
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> order = new ArrayList<Integer>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return order;
+        }
+        int rows = matrix.length, columns = matrix[0].length;
+        int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
+        while (left <= right && top <= bottom) {
+            for (int column = left; column <= right; column++) {
+                order.add(matrix[top][column]);
+            }
+            for (int row = top + 1; row <= bottom; row++) {
+                order.add(matrix[row][right]);
+            }
+            if (left < right && top < bottom) {
+                for (int column = right - 1; column > left; column--) {
+                    order.add(matrix[bottom][column]);
+                }
+                for (int row = bottom; row > top; row--) {
+                    order.add(matrix[row][left]);
+                }
+            }
+            left++;
+            right--;
+            top++;
+            bottom--;
+        }
+        return order;
+    }
+}
+private static List<Integer> spiralOrder(int[][] matrix) {
+        LinkedList<Integer> result = new LinkedList<>();
+        if(matrix==null||matrix.length==0) return result;
+        int left = 0;
+        int right = matrix[0].length - 1;
+        int top = 0;
+        int bottom = matrix.length - 1;
+        int numEle = matrix.length * matrix[0].length;
+        while (numEle >= 1) {
+            for (int i = left; i <= right && numEle >= 1; i++) {
+                result.add(matrix[top][i]);
+                numEle--;
+            }
+            top++;
+            for (int i = top; i <= bottom && numEle >= 1; i++) {
+                result.add(matrix[i][right]);
+                numEle--;
+            }
+            right--;
+            for (int i = right; i >= left && numEle >= 1; i--) {
+                result.add(matrix[bottom][i]);
+                numEle--;
+            }
+            bottom--;
+            for (int i = bottom; i >= top && numEle >= 1; i--) {
+                result.add(matrix[i][left]);
+                numEle--;
+            }
+            left++;
+        }
+        return result;
+    }
+    class Solution {
+    public int calculateMinimumHP(int[][] dungeon) {
+        int n = dungeon.length, m = dungeon[0].length;
+        int[][] dp = new int[n + 1][m + 1];
+        for (int i = 0; i <= n; ++i) {
+            Arrays.fill(dp[i], Integer.MAX_VALUE);
+        }
+        dp[n][m - 1] = dp[n - 1][m] = 1;
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = m - 1; j >= 0; --j) {
+                int minn = Math.min(dp[i + 1][j], dp[i][j + 1]);
+                dp[i][j] = Math.max(minn - dungeon[i][j], 1);
+            }
+        }
+        return dp[0][0];
+    }
+}
+public int calculateMinimumHP(int[][] dungeon) {
+	if (dungeon == null || dungeon.length == 0 || dungeon[0].length == 0) {
+		return 0;
+	}
+	int rowLen = dungeon.length;
+	int colLen = dungeon[0].length;
+	// 最低的耗血量为 + 1；就是骑士的救公主的最低血量。
+	return dfs(0, 0, rowLen, colLen, dungeon) + 1;
+}
+
+public int dfs (int rowIndex, int colIndex, int rowSize, int colSize, int[][] dungeon) {
+	//
+	if (rowIndex >= rowSize || colIndex >= colSize) {
+		return Integer.MAX_VALUE;
+	}
+	// 退出条件
+	if (rowIndex == rowSize - 1 && colIndex == colSize - 1) {
+		if (dungeon[rowIndex][colIndex] >= 0) {
+			// 如果最后一个大于等于0，就返还0。
+			return 0;
+		} else {
+			//如果最后一个小于零，就返回负的值。
+			return -dungeon[rowIndex][colIndex];
+		}
+	}
+//  右边格子的最优解，也就是最低的耗血量
+	int rightMin = dfs(rowIndex, colIndex + 1, rowSize, colSize, dungeon);
+//  下边格子的最优解
+	int downMin = dfs(rowIndex + 1, colIndex, rowSize, colSize, dungeon);
+	// f(i,j) = min(f(i+1, j), f(i, j+1)) - dungeon[i][j]
+	int needMin = Math.min(rightMin, downMin) - dungeon[rowIndex][colIndex];
+	int res = 0;
+	if (needMin < 0) {
+		res =  0;
+	} else {
+		res = needMin;
+	}
+	System.out.println(rowIndex+ " "+colIndex + " "  + res);
+	return res;
+}
+private int rowSize = 0;
+private int colSize = 0;
+private int[][] globalDun = null;
+public int calculateMinimumHP(int[][] dungeon) {
+    if (dungeon == null || dungeon.length == 0 || dungeon[0].length == 0) {
+        return 0;
+    }
+    rowSize = dungeon.length;
+    colSize = dungeon[0].length;
+    globalDun = dungeon;
+    int[][] memory = new int[rowSize][colSize];
+	// 初始化为-1，便于区别是否计算过结果了。
+    for (int i = 0; i < rowSize; ++i) {
+        for (int j = 0; j < colSize; ++j) {
+            memory[i][j] = -1;
+        }
+    }
+    return dfs(0, 0, memory) + 1;
+}
+
+public int dfs (int rowIndex, int colIndex,  int[][] memory) {
+    if (rowIndex >= rowSize || colIndex  >=  colSize) {
+        return Integer.MAX_VALUE;
+    }
+	// 不为-1就是计算过了，直接返回结果。
+    if (memory[rowIndex][colIndex] != -1) {
+        return memory[rowIndex][colIndex];
+    }
+    if (rowIndex == rowSize - 1 && colIndex == colSize - 1) {
+        if (globalDun[rowIndex][colIndex] >= 0) {
+            return 0;
+        } else {
+            return -globalDun[rowIndex][colIndex];
+        }
+    }
+    int right = dfs(rowIndex, colIndex + 1, memory);
+    int down = dfs(rowIndex + 1, colIndex, memory);
+    int needMin = Math.min(right, down) - globalDun[rowIndex][colIndex];
+    int res = 0;
+    if (needMin < 0) {
+        res =  0;
+    } else {
+        res =  needMin;
+    }
+    memory[rowIndex][colIndex] = res;
+    System.out.println(rowIndex+ " "+colIndex + " "  + res);
+    return res;
+}
+
+public int calculateMinimumHPBest(int[][] dungeon) {
+    if (dungeon == null || dungeon.length == 0 || dungeon[0].length == 0) {
+        return 0;
+    }
+    int rowSize = dungeon.length;
+    int colSize = dungeon[0].length;
+    int[][] dp = new int[rowSize][colSize];
+    // 设置最后一个值。
+  	dp[rowSize - 1][colSize -1] = Math.max(0, -dungeon[rowSize - 1][colSize - 1]);
+
+    // 设置最后一列的值
+  	for (int i = rowSize - 2; i >= 0; --i) {
+        int needMin = dp[i + 1][colSize - 1] - dungeon[i][colSize - 1];
+        dp[i][colSize -1] = Math.max(0, needMin);
+    }
+
+    // 设置最后一行的值
+  	for (int i = colSize - 2; i >= 0; --i) {
+        int needMin = dp[rowSize - 1][i + 1] - dungeon[rowSize - 1][i];
+        dp[rowSize - 1][i] = Math.max(0, needMin);
+    }
+
+    for (int i = rowSize - 2; i >= 0; --i) {
+        for (int j = colSize - 2; j >= 0; --j) {
+			// 从右边和下边选择一个最小值，然后减去当前的 dungeon 值
+            int needMin = Math.min(dp[i + 1][j], dp[i][j + 1]) - dungeon[i][j];
+            dp[i][j] = Math.max(0, needMin);
+        }
+    }
+    return dp[0][0] + 1;
+}
