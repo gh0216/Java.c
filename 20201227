@@ -1,0 +1,538 @@
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length == 0) {
+            return new int[0][2];
+        }
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            public int compare(int[] interval1, int[] interval2) {
+                return interval1[0] - interval2[0];
+            }
+        });
+        List<int[]> merged = new ArrayList<int[]>();
+        for (int i = 0; i < intervals.length; ++i) {
+            int L = intervals[i][0], R = intervals[i][1];
+            if (merged.size() == 0 || merged.get(merged.size() - 1)[1] < L) {
+                merged.add(new int[]{L, R});
+            } else {
+                merged.get(merged.size() - 1)[1] = Math.max(merged.get(merged.size() - 1)[1], R);
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);
+    }
+}
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        List<int[]> res = new ArrayList<>();
+        if (intervals.length == 0 || intervals == null) return res.toArray(new int[0][]);
+        // 对起点终点进行排序
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        int i = 0;
+        while (i < intervals.length) {
+            int left = intervals[i][0];
+            int right = intervals[i][1];
+            // 如果有重叠，循环判断哪个起点满足条件
+            while (i < intervals.length - 1 && intervals[i + 1][0] <= right) {
+                i++;
+                right = Math.max(right, intervals[i][1]);
+            }
+            // 将现在的区间放进res里面
+            res.add(new int[]{left, right});
+            // 接着判断下一个区间
+            i++;
+        }
+        return res.toArray(new int[0][]);
+    }
+}
+
+class Solution {
+    public int rangeSum(int[] nums, int n, int left, int right) {
+        final int MODULO = 1000000007;
+        int sumsLength = n * (n + 1) / 2;
+        int[] sums = new int[sumsLength];
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                sum += nums[j];
+                sums[index++] = sum;
+            }
+        }
+        Arrays.sort(sums);
+        int ans = 0;
+        for (int i = left - 1; i < right; i++) {
+            ans = (ans + sums[i]) % MODULO;
+        }
+        return ans;
+    }
+}
+class Solution {
+    static final int MODULO = 1000000007;
+
+    public int rangeSum(int[] nums, int n, int left, int right) {
+        int[] prefixSums = new int[n + 1];
+        prefixSums[0] = 0;
+        for (int i = 0; i < n; i++) {
+            prefixSums[i + 1] = prefixSums[i] + nums[i];
+        }
+        int[] prefixPrefixSums = new int[n + 1];
+        prefixPrefixSums[0] = 0;
+        for (int i = 0; i < n; i++) {
+            prefixPrefixSums[i + 1] = prefixPrefixSums[i] + prefixSums[i + 1];
+        }
+        return (getSum(prefixSums, prefixPrefixSums, n, right) - getSum(prefixSums, prefixPrefixSums, n, left - 1)) % MODULO;
+    }
+
+    public int getSum(int[] prefixSums, int[] prefixPrefixSums, int n, int k) {
+        int num = getKth(prefixSums, n, k);
+        int sum = 0;
+        int count = 0;
+        for (int i = 0, j = 1; i < n; i++) {
+            while (j <= n && prefixSums[j] - prefixSums[i] < num) {
+                j++;
+            }
+            j--;
+            sum = (sum + prefixPrefixSums[j] - prefixPrefixSums[i] - prefixSums[i] * (j - i)) % MODULO;
+            count += j - i;
+        }
+        sum = (sum + num * (k - count)) % MODULO;
+        return sum;
+    }
+
+    public int getKth(int[] prefixSums, int n, int k) {
+        int low = 0, high = prefixSums[n];
+        while (low < high) {
+            int mid = (high - low) / 2 + low;
+            int count = getCount(prefixSums, n, mid);
+            if (count < k) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+
+    public int getCount(int[] prefixSums, int n, int x) {
+        int count = 0;
+        for (int i = 0, j = 1; i < n; i++) {
+            while (j <= n && prefixSums[j] - prefixSums[i] <= x) {
+                j++;
+            }
+            j--;
+            count += j - i;
+        }
+        return count;
+    }
+}
+class Solution {
+    public List<Boolean> checkArithmeticSubarrays(int[] nums, int[] l, int[] r) {
+        List<Boolean> lt=new ArrayList<>();
+        for(int i=0;i<l.length;i++){
+            int[] a=new int[r[i]-l[i]+1];
+            int f=0;
+            for(int j=l[i];j<=r[i];j++){
+                a[f++]=nums[j];
+            }Arrays.sort(a);
+            int cha=a[1]-a[0],sign=0;
+            for(int k=2;k<a.length;k++){
+                if(a[k]-a[k-1]!=cha){
+                    lt.add(false);
+                    sign=1;
+                    break;
+                }
+            }if(sign==0){
+                lt.add(true);
+            }
+        }return lt;
+    }
+}
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        ListNode lastSorted = head, curr = head.next;
+        while (curr != null) {
+            if (lastSorted.val <= curr.val) {
+                lastSorted = lastSorted.next;
+            } else {
+                ListNode prev = dummyHead;
+                while (prev.next.val <= curr.val) {
+                    prev = prev.next;
+                }
+                lastSorted.next = curr.next;
+                curr.next = prev.next;
+                prev.next = curr;
+            }
+            curr = lastSorted.next;
+        }
+        return dummyHead.next;
+    }
+}
+ public ListNode insertionSortList(ListNode head) {
+        if(head == null || head.next == null) return head;
+
+        ListNode newHead = new ListNode(0);
+        ListNode node = head;
+        while(node != null){
+            ListNode next = node.next;
+            //在排好序的链表中找到合适的位置, 插入
+            ListNode prevNode = newHead;
+            ListNode sortNode = newHead.next;
+            while(sortNode != null){
+                if(node.val > sortNode.val){
+                    prevNode = sortNode;
+                    sortNode = sortNode.next;
+                }else{
+                    break;
+                }
+            }
+            prevNode.next = node;
+            node.next = sortNode;
+
+            node = next;
+        }
+        return newHead.next;
+    }
+    class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        // 1. 首先判断给定的链表是否为空，若为空，则不需要进行排序，直接返回。
+        if(head == null){
+            return head;
+        }
+
+        // 2. 链表初始化操作
+        ListNode dummyHead = new ListNode(0); // 引入哑节点
+        dummyHead.next = head;                // 目的是在head之前插入节点
+        ListNode lastSorted = head;           // 维护lastSorted为链表已经排好序的最后一个节点并初始化
+        ListNode curr = head.next;            // 维护curr 为待插入的元素并初始化
+
+        // 3. 插入排序
+        while(curr != null){
+            if(lastSorted.val <= curr.val){     // 说明curr应该位于lastSorted之后
+                lastSorted = lastSorted.next;   // 将lastSorted后移一位,curr变成新的lastSorted
+            }else{                              // 否则,从链表头结点开始向后遍历链表中的节点
+                ListNode prev = dummyHead;      // 从链表头开始遍历 prev是插入节点curr位置的前一个节点
+                while(prev.next.val <= curr.val){ // 循环退出的条件是找到curr应该插入的位置
+                    prev = prev.next;
+                }
+                // 以下三行是为了完成对curr的插入（配合题解动图可以直观看出）
+                lastSorted.next = curr.next;
+                curr.next = prev.next;
+                prev.next = curr;
+            }
+            curr = lastSorted.next; // 此时 curr 为下一个待插入的元素
+        }
+        // 返回排好序的链表
+        return dummyHead.next;
+    }
+}
+class Solution {
+    public int minDeletions(String s) {
+        int[] a = new int[26];
+        char[] cs = s.toCharArray();
+        for (char c : cs) a[c - 'a'] ++;// 统计字母个数
+
+        Set<Integer> h = new HashSet<Integer>();
+        int res = 0;
+        for (int i : a) {
+            if (i != 0) {               // 有数目才进行判断
+                while (h.contains(i)) { // set已经包含就自减
+                    i --;
+                    res ++;
+                }
+                if (i != 0) h.add(i);   // 自减到0时，表示完全删除了某个字母，不能加入set中
+            }
+        }
+        return res;
+    }
+}
+
+class jobs{
+    int start,end,profit;
+    jobs(int s,int e,int p){
+        start=s;
+        end=e;
+        profit=p;
+    }
+}
+class Solution {
+    public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        int n=startTime.length;
+        int dp[]=new int[n+1];
+        jobs[] job=new jobs[n];
+        for(int i=0;i<n;i++)
+            job[i]=new jobs(startTime[i],endTime[i],profit[i]);
+        Arrays.sort(job,Comparator.comparingInt(o->o.end));
+        for(int i=0;i<n;i++)
+            dp[i]=job[i].profit;
+        for(int i=1;i<n;i++){
+            dp[i] = Math.max(dp[i-1], job[i].profit);
+            for(int j=i-1;j>=0;j--)
+                if(job[j].end<=job[i].start){
+                    dp[i]=Math.max(dp[i],dp[j]+job[i].profit);
+                    break;
+                }
+        }
+        return dp[n-1];
+    }
+}
+class Solution {
+    public String reorganizeString(String S) {
+        if (S.length() < 2) {
+            return S;
+        }
+        int[] counts = new int[26];
+        int maxCount = 0;
+        int length = S.length();
+        for (int i = 0; i < length; i++) {
+            char c = S.charAt(i);
+            counts[c - 'a']++;
+            maxCount = Math.max(maxCount, counts[c - 'a']);
+        }
+        if (maxCount > (length + 1) / 2) {
+            return "";
+        }
+        PriorityQueue<Character> queue = new PriorityQueue<Character>(new Comparator<Character>() {
+            public int compare(Character letter1, Character letter2) {
+                return counts[letter2 - 'a'] - counts[letter1 - 'a'];
+            }
+        });
+        for (char c = 'a'; c <= 'z'; c++) {
+            if (counts[c - 'a'] > 0) {
+                queue.offer(c);
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        while (queue.size() > 1) {
+            char letter1 = queue.poll();
+            char letter2 = queue.poll();
+            sb.append(letter1);
+            sb.append(letter2);
+            int index1 = letter1 - 'a', index2 = letter2 - 'a';
+            counts[index1]--;
+            counts[index2]--;
+            if (counts[index1] > 0) {
+                queue.offer(letter1);
+            }
+            if (counts[index2] > 0) {
+                queue.offer(letter2);
+            }
+        }
+        if (queue.size() > 0) {
+            sb.append(queue.poll());
+        }
+        return sb.toString();
+    }
+}
+class Solution {
+    public String reorganizeString(String S) {
+        if (S.length() < 2) {
+            return S;
+        }
+        int[] counts = new int[26];
+        int maxCount = 0;
+        int length = S.length();
+        for (int i = 0; i < length; i++) {
+            char c = S.charAt(i);
+            counts[c - 'a']++;
+            maxCount = Math.max(maxCount, counts[c - 'a']);
+        }
+        if (maxCount > (length + 1) / 2) {
+            return "";
+        }
+        char[] reorganizeArray = new char[length];
+        int evenIndex = 0, oddIndex = 1;
+        int halfLength = length / 2;
+        for (int i = 0; i < 26; i++) {
+            char c = (char) ('a' + i);
+            while (counts[i] > 0 && counts[i] <= halfLength && oddIndex < length) {
+                reorganizeArray[oddIndex] = c;
+                counts[i]--;
+                oddIndex += 2;
+            }
+            while (counts[i] > 0) {
+                reorganizeArray[evenIndex] = c;
+                counts[i]--;
+                evenIndex += 2;
+            }
+        }
+        return new String(reorganizeArray);
+    }
+}
+public String reorganizeString(String S) {
+        int[] count = new int[26];
+        for (char c : S.toCharArray()) {
+            count[c - 'a']++;
+        }
+        List<Character> list = new ArrayList<>();
+        for (int i = 0; i < 26; i++) {
+            if (count[i] != 0) {
+                list.add((char) ('a' + i));
+            }
+        }
+        Collections.sort(list, new Comparator<Character>() {
+            @Override
+            public int compare(Character o1, Character o2) {
+                return count[o2 - 'a'] - count[o1 - 'a'];
+            }
+        });
+        StringBuilder sb = new StringBuilder();
+        if (list.size() < 2 && S.length() > 1) {
+            return "";
+        }
+        int i = 1;
+        char c1 = list.get(i - 1);
+        int val1 = count[c1 - 'a'];
+        while (i < list.size()) {
+            char c2 = list.get(i);
+            int val2 = count[c2 - 'a'];
+            if (val1 < val2) {
+                char temp = c1;
+                c1 = c2;
+                c2 = temp;
+                val1 = val1 + val2;
+                val2 = val1 - val2;
+                val1 = val1 - val2;
+            }
+            while (val2 > 0) {
+                sb.append(c1);
+                sb.append(c2);
+                val2--;
+                val1--;
+            }
+            i++;
+        }
+        if (val1 == 0) {
+            return sb.toString();
+        } else if (val1 == 1) {
+            sb.append(c1);
+            return sb.toString();
+        } else if (val1 == 2 && sb.toString().charAt(0) != c1) {
+            sb.append(c1);
+            return c1 + sb.toString();
+        } else {
+            return "";
+        }
+    }
+    class Solution {
+    public String reorganizeString(String S) {
+        int[] tmp = new int[26];
+        StringBuilder st = new StringBuilder();
+        //对字符串中每个字符进行计数
+        for(int i=0;i<S.length();i++){
+            tmp[S.charAt(i)-'a']++;
+        }
+        //判断能否进行重新排序
+        for(int i=0;i<26;i++){
+            if(tmp[i]>(S.length()+1)/2) return "";  
+        }
+        while(st.length()<S.length()){
+            int index = 0;  //记录还未排序字符串中出现频次最多的字符
+            for(int i=0;i<26;i++){
+                if(tmp[index]<tmp[i]) index = i;
+            }
+            //放入一个还未经排序的字符中的频数最大的字符
+            st.append((char)('a'+index));
+            tmp[index]--;
+            //放入一个与前一个放入不同的字符
+            for(int i=0;i<26;i++){
+                if(i!=index && tmp[i]>0){
+                    st.append((char)('a'+i));
+                    tmp[i]--;
+                    break;
+                }
+            }
+        }
+        return st.toString();
+    }
+}
+class Solution {
+    public String reorganizeString(String s) {
+        char[] arr = s.toCharArray();
+        int n = arr.length;
+
+        int[] count = new int[26];
+        for(char c : arr){
+            count[c-'a']++;
+        }
+
+        int maxIndex = 0;
+        for(int i=0; i<count.length; i++){
+            if(count[i] > count[maxIndex]){
+                maxIndex = i;
+            }
+        }
+
+        // (n+1) / 2 同时考虑了 奇数 和 偶数 情况
+        if(count[maxIndex] > (n+1)/2)   return "";
+
+        // 先把出现次数最多的字符放在偶数位置上
+        char[] res = new char[n];
+        int i = 0;
+        while(count[maxIndex]-- > 0){
+            res[i] = (char)('a' + maxIndex);
+            i += 2;
+        }
+
+        // 考虑其他的字符
+        for(int j=0; j<count.length; j++){
+            while(count[j]-- > 0){
+                if(i >= n)  i = 1; // 偶数位置用完了，放到奇数位置
+                res[i] = (char)('a' + j);
+                i += 2;
+            }
+        }
+
+        return String.valueOf(res);
+    }
+}
+public String reorganizeString(String s) {
+    int n = s.length();
+    int[] array = new int[26];
+    // 统计字符数量
+    for (int i = 0; i < n; i++) {
+        array[s.charAt(i) - 'a']++;
+    }
+    int maxIdx = 0;
+    for (int i = 1; i < array.length; i++) {
+        if (array[i] > array[maxIdx]) {
+            maxIdx = i;
+        }
+    }
+
+    if (array[maxIdx] > (n + 1) / 2) {
+        return "";
+    }
+
+    // 构造结果
+    char[] ans = new char[n];
+    // 先填充数量最多的字符
+    char curr = (char) (maxIdx + 'a');
+    // 从位置0开始填充字符
+    int idx = 0;
+    for (int i = 0; i < array[maxIdx]; i++) {
+        ans[idx] = curr;
+        idx += 2;
+    }
+    array[maxIdx] = 0;
+
+    // 接着之前的idx，再填充其余字符
+    for (int i = 0; i < 26; i++) {
+        if (array[i] > 0) {
+            curr = (char) (i + 'a');
+            do {
+                if (idx >= n) {
+                    // 第一轮填满奇数位置后，回到第一个偶数位置1
+                    idx = 1;
+                }
+                ans[idx] = curr;
+                array[i]--;
+                idx += 2;
+            } while (array[i] > 0);
+        }
+    }
+    return new String(ans);
+}
