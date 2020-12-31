@@ -1,0 +1,407 @@
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> solutions = new ArrayList<List<String>>();
+        int[] queens = new int[n];
+        Arrays.fill(queens, -1);
+        Set<Integer> columns = new HashSet<Integer>();
+        Set<Integer> diagonals1 = new HashSet<Integer>();
+        Set<Integer> diagonals2 = new HashSet<Integer>();
+        backtrack(solutions, queens, n, 0, columns, diagonals1, diagonals2);
+        return solutions;
+    }
+
+    public void backtrack(List<List<String>> solutions, int[] queens, int n, int row, Set<Integer> columns, Set<Integer> diagonals1, Set<Integer> diagonals2) {
+        if (row == n) {
+            List<String> board = generateBoard(queens, n);
+            solutions.add(board);
+        } else {
+            for (int i = 0; i < n; i++) {
+                if (columns.contains(i)) {
+                    continue;
+                }
+                int diagonal1 = row - i;
+                if (diagonals1.contains(diagonal1)) {
+                    continue;
+                }
+                int diagonal2 = row + i;
+                if (diagonals2.contains(diagonal2)) {
+                    continue;
+                }
+                queens[row] = i;
+                columns.add(i);
+                diagonals1.add(diagonal1);
+                diagonals2.add(diagonal2);
+                backtrack(solutions, queens, n, row + 1, columns, diagonals1, diagonals2);
+                queens[row] = -1;
+                columns.remove(i);
+                diagonals1.remove(diagonal1);
+                diagonals2.remove(diagonal2);
+            }
+        }
+    }
+
+    public List<String> generateBoard(int[] queens, int n) {
+        List<String> board = new ArrayList<String>();
+        for (int i = 0; i < n; i++) {
+            char[] row = new char[n];
+            Arrays.fill(row, '.');
+            row[queens[i]] = 'Q';
+            board.add(new String(row));
+        }
+        return board;
+    }
+}
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        int[] queens = new int[n];
+        Arrays.fill(queens, -1);
+        List<List<String>> solutions = new ArrayList<List<String>>();
+        solve(solutions, queens, n, 0, 0, 0, 0);
+        return solutions;
+    }
+
+    public void solve(List<List<String>> solutions, int[] queens, int n, int row, int columns, int diagonals1, int diagonals2) {
+        if (row == n) {
+            List<String> board = generateBoard(queens, n);
+            solutions.add(board);
+        } else {
+            int availablePositions = ((1 << n) - 1) & (~(columns | diagonals1 | diagonals2));
+            while (availablePositions != 0) {
+                int position = availablePositions & (-availablePositions);
+                availablePositions = availablePositions & (availablePositions - 1);
+                int column = Integer.bitCount(position - 1);
+                queens[row] = column;
+                solve(solutions, queens, n, row + 1, columns | position, (diagonals1 | position) << 1, (diagonals2 | position) >> 1);
+                queens[row] = -1;
+            }
+        }
+    }
+
+    public List<String> generateBoard(int[] queens, int n) {
+        List<String> board = new ArrayList<String>();
+        for (int i = 0; i < n; i++) {
+            char[] row = new char[n];
+            Arrays.fill(row, '.');
+            row[queens[i]] = 'Q';
+            board.add(new String(row));
+        }
+        return board;
+    }
+}
+
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        //生成N*N的棋盘
+        char[][] arr = new char[n][n];
+        //填充棋盘，每个格子默认是“。”表示没有放置皇后
+        for(int i=0;i<n;++i) {
+            Arrays.fill(arr[i],'.');
+        }
+        List<List<String>> res = new ArrayList<List<String>>();
+        dfs(arr,0,n,res);
+        return res;
+    }
+    //检查当前的行和列是否可以放置皇后
+    private boolean check(char[][] arr,int x,int y,int n) {
+        //检查竖着的一列是否有皇后
+        for(int i=0;i<x;++i) {
+            if(arr[i][y]=='Q') {
+                return false;
+            }
+        }
+        //检查左上到右下的斜边是否有皇后
+        int i=x-1, j=y-1;
+        while(i>=0 && j>=0) {
+            if(arr[i][j]=='Q') {
+                return false;
+            }
+            --i;
+            --j;
+        }
+        //检查左下到右上的斜边是否有皇后
+        i = x-1;
+        j = y+1;
+        while(i>=0 && j<n) {
+            if(arr[i][j]=='Q') {
+                return false;
+            }
+            --i;
+            ++j;
+        }
+        return true;
+    }
+
+    private void dfs(char[][] arr,int x,int n,List<List<String>> res) {
+        //x是从0开始计算的，当x==n时所有行的皇后都放置完毕，此时记录结果
+        if(x==n) {
+            List<String> ans = new ArrayList<String>();
+            for(int i=0;i<n;++i) {
+                StringBuilder tmp = new StringBuilder();
+                for(int j=0;j<n;++j) {
+                    if(arr[i][j]=='.') {
+                        tmp.append(".");
+                    } else {
+                        tmp.append("Q");
+                    }
+                }
+                ans.add(tmp.toString());
+            }
+            res.add(ans);
+            return;
+        }
+        //遍历每一列
+        for(int y=0;y<n;++y) {
+            //检查[x,y]这一坐标是否可以放置皇后
+            //如果满足条件，就放置皇后，并继续检查下一行
+            if(check(arr,x,y,n)) {
+                arr[x][y] = 'Q';
+                dfs(arr,x+1,n,res);
+                arr[x][y] = '.';
+            }
+        }
+    }
+}
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        //创建一个N行的数组，下标i对应N*N棋盘格子第i行的皇后位置
+        int[] arr = new int[n];
+        List<List<String>> res = new ArrayList<List<String>>();
+        //三个集合，分别判断某一列，左斜线(左上到右下的斜线)，右斜线(左下到右上的斜线)
+        Set<Integer> columns = new HashSet<Integer>();
+        Set<Integer> hypotenuse1 = new HashSet<Integer>();
+        Set<Integer> hypotenuse2 = new HashSet<Integer>();
+        dfs(res,n,0,arr,columns,hypotenuse1,hypotenuse2);
+        return res;
+    }
+
+    private void dfs(List<List<String>> res,int n,int x,int[] arr,
+	Set<Integer> columns,Set<Integer> hypotenuse1,Set<Integer> hypotenuse2) {
+        if(x==n) {
+            //如果x==n说明所有的皇后都摆放完了
+            //将arr数组中保存的结果拼接起来
+            List<String> tmp = new ArrayList<String>();	
+            for(int k=0;k<n;++k) {
+                char[] row = new char[n];
+                Arrays.fill(row, '.');
+                row[arr[k]] = 'Q';
+                tmp.add(new String(row));
+            }
+            res.add(tmp);
+            return;
+        }
+        //遍历一行中的每一列，并检查竖线、左斜线、右斜线是否有皇后
+        for(int y=0;y<n;++y) {
+            if(columns.contains(y)) {
+                continue;
+            }
+            if(hypotenuse1.contains(x-y)) {
+                continue;
+            }
+            if(hypotenuse2.contains(x+y)) {
+                continue;
+            }
+            //如果检查通过，设置这一行的皇后位置，并将竖线、左斜线、右斜线的值放入集合中，并继续下一行递归
+            //当下一层的所有递归遍历完后，回到本轮需要将之前集合、arr数组中保存的结果都清空
+            arr[x] = y;
+            columns.add(y);
+            hypotenuse1.add(x-y);
+            hypotenuse2.add(x+y);
+            dfs(res,n,x+1,arr,columns,hypotenuse1,hypotenuse2);
+            arr[x] = -1;
+            columns.remove(y);
+            hypotenuse1.remove(x-y);
+            hypotenuse2.remove(x+y);
+        }
+    }
+}
+class Solution {
+    public int swimInWater(int[][] grid) {
+        int N = grid.length;
+        Set<Integer> seen = new HashSet();
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>((k1, k2) ->
+                grid[k1 / N][k1 % N] - grid[k2 / N][k2 % N]);
+        pq.offer(0);
+        int ans = 0;
+
+        int[] dr = new int[]{1, -1, 0, 0};
+        int[] dc = new int[]{0, 0, 1, -1};
+
+        while (!pq.isEmpty()) {
+            int k = pq.poll();
+            int r = k / N, c = k % N;
+            ans = Math.max(ans, grid[r][c]);
+            if (r == N-1 && c == N-1) return ans;
+
+            for (int i = 0; i < 4; ++i) {
+                int cr = r + dr[i], cc = c + dc[i];
+                int ck = cr * N + cc;
+                if (0 <= cr && cr < N && 0 <= cc && cc < N && !seen.contains(ck)) {
+                    pq.offer(ck);
+                    seen.add(ck);
+                }
+            }
+        }
+
+        throw null;
+    }
+}
+class Solution {
+    public int swimInWater(int[][] grid) {
+        int N = grid.length;
+        int lo = grid[0][0], hi = N * N;
+        while (lo < hi) {
+            int mi = lo + (hi - lo) / 2;
+            if (!possible(mi, grid)) {
+                lo = mi + 1;
+            } else {
+                hi = mi;
+            }
+        }
+        return lo;
+    }
+
+    public boolean possible(int T, int[][] grid) {
+        int N = grid.length;
+        Set<Integer> seen = new HashSet();
+        seen.add(0);
+        int[] dr = new int[]{1, -1, 0, 0};
+        int[] dc = new int[]{0, 0, 1, -1};
+
+        Stack<Integer> stack = new Stack();
+        stack.add(0);
+
+        while (!stack.empty()) {
+            int k = stack.pop();
+            int r = k / N, c = k % N;
+            if (r == N-1 && c == N-1) return true;
+
+            for (int i = 0; i < 4; ++i) {
+                int cr = r + dr[i], cc = c + dc[i];
+                int ck = cr * N + cc;
+                if (0 <= cr && cr < N && 0 <= cc && cc < N
+                        && !seen.contains(ck) && grid[cr][cc] <= T) {
+                    stack.add(ck);
+                    seen.add(ck);
+                }
+            }
+        }
+
+        return false;
+    }
+}
+class Solution {
+    public int findKthNumber(int m, int n, int k) {
+        int[] table = new int[m*n];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                table[(i - 1) * n + j - 1] = i * j;
+            }
+        }
+        Arrays.sort(table);
+        return table[k-1];
+    }
+}
+class Solution {
+    public int findKthNumber(int m, int n, int k) {
+        PriorityQueue<Node> heap = new PriorityQueue<Node>(m,
+            Comparator.<Node> comparingInt(node -> node.val));
+
+        for (int i = 1; i <= m; i++) {
+            heap.offer(new Node(i, i));
+        }
+
+        Node node = null;
+        for (int i = 0; i < k; i++) {
+            node = heap.poll();
+            int nxt = node.val + node.root;
+            if (nxt <= node.root * n) {
+                heap.offer(new Node(nxt, node.root));
+            }
+        }
+        return node.val;
+    }
+}
+
+class Node {
+    int val;
+    int root;
+    public Node(int v, int r) {
+        val = v;
+        root = r;
+    }
+}
+class Solution {
+    public boolean enough(int x, int m, int n, int k) {
+        int count = 0;
+        for (int i = 1; i <= m; i++) {
+            count += Math.min(x / i, n);
+        }
+        return count >= k;
+    }
+
+    public int findKthNumber(int m, int n, int k) {
+        int lo = 1, hi = m * n;
+        while (lo < hi) {
+            int mi = lo + (hi - lo) / 2;
+            if (!enough(mi, m, n, k)) lo = mi + 1;
+            else hi = mi;
+        }
+        return lo;
+    }
+}
+class Solution {
+    public int splitArray(int[] nums, int m) {
+        int n = nums.length;
+        int[][] f = new int[n + 1][m + 1];
+        for (int i = 0; i <= n; i++) {
+            Arrays.fill(f[i], Integer.MAX_VALUE);
+        }
+        int[] sub = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            sub[i + 1] = sub[i] + nums[i];
+        }
+        f[0][0] = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= Math.min(i, m); j++) {
+                for (int k = 0; k < i; k++) {
+                    f[i][j] = Math.min(f[i][j], Math.max(f[k][j - 1], sub[i] - sub[k]));
+                }
+            }
+        }
+        return f[n][m];
+    }
+}
+class Solution {
+    public int splitArray(int[] nums, int m) {
+        int left = 0, right = 0;
+        for (int i = 0; i < nums.length; i++) {
+            right += nums[i];
+            if (left < nums[i]) {
+                left = nums[i];
+            }
+        }
+        while (left < right) {
+            int mid = (right - left) / 2 + left;
+            if (check(nums, mid, m)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public boolean check(int[] nums, int x, int m) {
+        int sum = 0;
+        int cnt = 1;
+        for (int i = 0; i < nums.length; i++) {
+            if (sum + nums[i] > x) {
+                cnt++;
+                sum = nums[i];
+            } else {
+                sum += nums[i];
+            }
+        }
+        return cnt <= m;
+    }
+}
