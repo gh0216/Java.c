@@ -1,0 +1,345 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+
+    public static int func(int[] arr){
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int a:arr) {
+            map.put(a,map.getOrDefault(a,0)+1);
+        }
+        for(Map.Entry<Integer,Integer> entry : map.entrySet()){
+//            System.out.println(entry.getKey() + "--->" + entry.getValue());
+            if (entry.getValue()>arr.length/2)  return entry.getKey();
+        }
+//        System.out.println();
+//        Set<Integer> set = map.keySet();
+//        for (Integer key : set) {
+//            if (set > arr.length/2)
+//                return key;
+//        }
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            String s = sc.nextLine();
+            String[] str=s.split(" ");
+            int[] arr= new int[str.length];
+            for(int i=0;i<str.length;i++){
+                arr[i]=Integer.parseInt(str[i]);
+            }
+            System.out.println(func(arr));
+        }
+//        while (sc.hasNextInt()){
+//
+//        }
+//       int[] arr = {1,2,3,2,2};
+    }
+}
+
+class Gift {
+    public int getValue(int[] gifts, int n) {
+        // write code here
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int a:gifts) {
+            map.put(a,map.getOrDefault(a,0)+1);
+        }
+        for(Map.Entry<Integer,Integer> entry : map.entrySet()){
+            if (entry.getValue()>gifts.length/2)  return entry.getKey();
+        }
+        return 0;
+    }
+}
+class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+class Partition {
+    public ListNode partition(ListNode pHead, int x) {
+        // write code here
+        ListNode less = null;//这是小于x的元素所在的链表
+        ListNode lessLast = null;//小于x的链表的最后一个结点
+
+        ListNode great = null;//这是大于等于x的元素所在的链表
+        ListNode greatLast = null;//大于等于x的链表的最后一个结点
+
+        ListNode cur = pHead;//从原链表的头结点开始遍历
+        while (cur != null) {
+            if (cur.val < x) {//当原链表中的元素小于x时
+                if(less == null) {//当小于x的链表为空时
+                    less = cur;
+                }else{//当小于x的链表不为空时
+                    lessLast.next = cur;
+                }
+                lessLast = cur;//相当于让lessLast也往后走了一步
+            }else{//当原链表中的元素大于等于x时
+                if(great == null) {
+                    great = cur;
+                }else{
+                    greatLast.next = cur;
+                }
+                greatLast = cur;
+            }
+            cur = cur.next;
+        }
+        //或许会有一个空链表
+        if(less == null) {
+            return great;
+        }else{
+            lessLast.next = great;
+            if(greatLast != null){
+                greatLast.next = null;
+            }
+            return less;
+        }
+    }
+}
+class TrieNode {
+
+    // R links to node children
+    private TrieNode[] links;
+
+    private final int R = 26;
+
+    private boolean isEnd;
+
+    public TrieNode() {
+        links = new TrieNode[R];
+    }
+
+    public boolean containsKey(char ch) {
+        return links[ch -'a'] != null;
+    }
+    public TrieNode get(char ch) {
+        return links[ch -'a'];
+    }
+    public void put(char ch, TrieNode node) {
+        links[ch -'a'] = node;
+    }
+    public void setEnd() {
+        isEnd = true;
+    }
+    public boolean isEnd() {
+        return isEnd;
+    }
+}
+class Trie {
+    private TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    // Inserts a word into the trie.
+    public void insert(String word) {
+        TrieNode node = root;
+        for (int i = 0; i < word.length(); i++) {
+            char currentChar = word.charAt(i);
+            if (!node.containsKey(currentChar)) {
+                node.put(currentChar, new TrieNode());
+            }
+            node = node.get(currentChar);
+        }
+        node.setEnd();
+    }
+}
+public class Trie {
+    private boolean is_string=false;
+    private Trie next[]=new Trie[26];
+
+    public Trie(){}
+
+    public void insert(String word){//插入单词
+        Trie root=this;
+        char w[]=word.toCharArray();
+        for(int i=0;i<w.length;++i){
+            if(root.next[w[i]-'a']==null)root.next[w[i]-'a']=new Trie();
+            root=root.next[w[i]-'a'];
+        }
+        root.is_string=true;
+    }
+
+    public boolean search(String word){//查找单词
+        Trie root=this;
+        char w[]=word.toCharArray();
+        for(int i=0;i<w.length;++i){
+            if(root.next[w[i]-'a']==null)return false;
+            root=root.next[w[i]-'a'];
+        }
+        return root.is_string;
+    }
+    
+    public boolean startsWith(String prefix){//查找前缀
+        Trie root=this;
+        char p[]=prefix.toCharArray();
+        for(int i=0;i<p.length;++i){
+            if(root.next[p[i]-'a']==null)return false;
+            root=root.next[p[i]-'a'];
+        }
+        return true;
+    }
+}
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length == 0) {
+            return new int[0][2];
+        }
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            public int compare(int[] interval1, int[] interval2) {
+                return interval1[0] - interval2[0];
+            }
+        });
+        List<int[]> merged = new ArrayList<int[]>();
+        for (int i = 0; i < intervals.length; ++i) {
+            int L = intervals[i][0], R = intervals[i][1];
+            if (merged.size() == 0 || merged.get(merged.size() - 1)[1] < L) {
+                merged.add(new int[]{L, R});
+            } else {
+                merged.get(merged.size() - 1)[1] = Math.max(merged.get(merged.size() - 1)[1], R);
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);
+    }
+}
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        List<int[]> res = new ArrayList<>();
+        if (intervals.length == 0 || intervals == null) return res.toArray(new int[0][]);
+        // 对起点终点进行排序
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        int i = 0;
+        while (i < intervals.length) {
+            int left = intervals[i][0];
+            int right = intervals[i][1];
+            // 如果有重叠，循环判断哪个起点满足条件
+            while (i < intervals.length - 1 && intervals[i + 1][0] <= right) {
+                i++;
+                right = Math.max(right, intervals[i][1]);
+            }
+            // 将现在的区间放进res里面
+            res.add(new int[]{left, right});
+            // 接着判断下一个区间
+            i++;
+        }
+        return res.toArray(new int[0][]);
+    }
+}
+class Solution {
+    public int rangeSum(int[] nums, int n, int left, int right) {
+        final int MODULO = 1000000007;
+        int sumsLength = n * (n + 1) / 2;
+        int[] sums = new int[sumsLength];
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                sum += nums[j];
+                sums[index++] = sum;
+            }
+        }
+        Arrays.sort(sums);
+        int ans = 0;
+        for (int i = left - 1; i < right; i++) {
+            ans = (ans + sums[i]) % MODULO;
+        }
+        return ans;
+    }
+}
+class Solution {
+    static final int MODULO = 1000000007;
+
+    public int rangeSum(int[] nums, int n, int left, int right) {
+        int[] prefixSums = new int[n + 1];
+        prefixSums[0] = 0;
+        for (int i = 0; i < n; i++) {
+            prefixSums[i + 1] = prefixSums[i] + nums[i];
+        }
+        int[] prefixPrefixSums = new int[n + 1];
+        prefixPrefixSums[0] = 0;
+        for (int i = 0; i < n; i++) {
+            prefixPrefixSums[i + 1] = prefixPrefixSums[i] + prefixSums[i + 1];
+        }
+        return (getSum(prefixSums, prefixPrefixSums, n, right) - getSum(prefixSums, prefixPrefixSums, n, left - 1)) % MODULO;
+    }
+
+    public int getSum(int[] prefixSums, int[] prefixPrefixSums, int n, int k) {
+        int num = getKth(prefixSums, n, k);
+        int sum = 0;
+        int count = 0;
+        for (int i = 0, j = 1; i < n; i++) {
+            while (j <= n && prefixSums[j] - prefixSums[i] < num) {
+                j++;
+            }
+            j--;
+            sum = (sum + prefixPrefixSums[j] - prefixPrefixSums[i] - prefixSums[i] * (j - i)) % MODULO;
+            count += j - i;
+        }
+        sum = (sum + num * (k - count)) % MODULO;
+        return sum;
+    }
+
+    public int getKth(int[] prefixSums, int n, int k) {
+        int low = 0, high = prefixSums[n];
+        while (low < high) {
+            int mid = (high - low) / 2 + low;
+            int count = getCount(prefixSums, n, mid);
+            if (count < k) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        return low;
+    }
+
+    public int getCount(int[] prefixSums, int n, int x) {
+        int count = 0;
+        for (int i = 0, j = 1; i < n; i++) {
+            while (j <= n && prefixSums[j] - prefixSums[i] <= x) {
+                j++;
+            }
+            j--;
+            count += j - i;
+        }
+        return count;
+    }
+}
+class Solution {
+    public List<Boolean> checkArithmeticSubarrays(int[] nums, int[] l, int[] r) {
+        List<Boolean> list = new ArrayList<>();
+        for (int i = 0; i < l.length; i++) {
+            int[] target = new int[r[i] - l[i] + 1];
+            for(int j = l[i],index = 0 ; j <= r[i] ; j++,index++) {
+                target[index] = nums[j];
+            }
+            if(target.length < 2) {
+              list.add(false);
+            }else if(target.length == 2) {
+                list.add(true);
+            }else{
+                Arrays.sort(target);
+                int chazhi = target[1] - target[0];
+                boolean flag = true;
+                for (int j = 1; j < target.length - 1; j++) {
+                    if(target[j + 1] - target[j] != chazhi) {
+                        list.add(false);
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag) {
+                    list.add(true);
+                }
+            }
+
+        }
+        return list;
+    }
+}
