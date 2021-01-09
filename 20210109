@@ -1,0 +1,335 @@
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int provinces = isConnected.length;
+        boolean[] visited = new boolean[provinces];
+        int circles = 0;
+        for (int i = 0; i < provinces; i++) {
+            if (!visited[i]) {
+                dfs(isConnected, visited, provinces, i);
+                circles++;
+            }
+        }
+        return circles;
+    }
+
+    public void dfs(int[][] isConnected, boolean[] visited, int provinces, int i) {
+        for (int j = 0; j < provinces; j++) {
+            if (isConnected[i][j] == 1 && !visited[j]) {
+                visited[j] = true;
+                dfs(isConnected, visited, provinces, j);
+            }
+        }
+    }
+}
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int provinces = isConnected.length;
+        boolean[] visited = new boolean[provinces];
+        int circles = 0;
+        Queue<Integer> queue = new LinkedList<Integer>();
+        for (int i = 0; i < provinces; i++) {
+            if (!visited[i]) {
+                queue.offer(i);
+                while (!queue.isEmpty()) {
+                    int j = queue.poll();
+                    visited[j] = true;
+                    for (int k = 0; k < provinces; k++) {
+                        if (isConnected[j][k] == 1 && !visited[k]) {
+                            queue.offer(k);
+                        }
+                    }
+                }
+                circles++;
+            }
+        }
+        return circles;
+    }
+}
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int provinces = isConnected.length;
+        int[] parent = new int[provinces];
+        for (int i = 0; i < provinces; i++) {
+            parent[i] = i;
+        }
+        for (int i = 0; i < provinces; i++) {
+            for (int j = i + 1; j < provinces; j++) {
+                if (isConnected[i][j] == 1) {
+                    union(parent, i, j);
+                }
+            }
+        }
+        int circles = 0;
+        for (int i = 0; i < provinces; i++) {
+            if (parent[i] == i) {
+                circles++;
+            }
+        }
+        return circles;
+    }
+
+    public void union(int[] parent, int index1, int index2) {
+        parent[find(parent, index1)] = find(parent, index2);
+    }
+
+    public int find(int[] parent, int index) {
+        if (parent[index] != index) {
+            parent[index] = find(parent, parent[index]);
+        }
+        return parent[index];
+    }
+}
+class Solution {
+    public int swimInWater(int[][] grid) {
+        int N = grid.length;
+        Set<Integer> seen = new HashSet();
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>((k1, k2) ->
+                grid[k1 / N][k1 % N] - grid[k2 / N][k2 % N]);
+        pq.offer(0);
+        int ans = 0;
+
+        int[] dr = new int[]{1, -1, 0, 0};
+        int[] dc = new int[]{0, 0, 1, -1};
+
+        while (!pq.isEmpty()) {
+            int k = pq.poll();
+            int r = k / N, c = k % N;
+            ans = Math.max(ans, grid[r][c]);
+            if (r == N-1 && c == N-1) return ans;
+
+            for (int i = 0; i < 4; ++i) {
+                int cr = r + dr[i], cc = c + dc[i];
+                int ck = cr * N + cc;
+                if (0 <= cr && cr < N && 0 <= cc && cc < N && !seen.contains(ck)) {
+                    pq.offer(ck);
+                    seen.add(ck);
+                }
+            }
+        }
+
+        throw null;
+    }
+}
+class Solution {
+    public int swimInWater(int[][] grid) {
+        int N = grid.length;
+        int lo = grid[0][0], hi = N * N;
+        while (lo < hi) {
+            int mi = lo + (hi - lo) / 2;
+            if (!possible(mi, grid)) {
+                lo = mi + 1;
+            } else {
+                hi = mi;
+            }
+        }
+        return lo;
+    }
+
+    public boolean possible(int T, int[][] grid) {
+        int N = grid.length;
+        Set<Integer> seen = new HashSet();
+        seen.add(0);
+        int[] dr = new int[]{1, -1, 0, 0};
+        int[] dc = new int[]{0, 0, 1, -1};
+
+        Stack<Integer> stack = new Stack();
+        stack.add(0);
+
+        while (!stack.empty()) {
+            int k = stack.pop();
+            int r = k / N, c = k % N;
+            if (r == N-1 && c == N-1) return true;
+
+            for (int i = 0; i < 4; ++i) {
+                int cr = r + dr[i], cc = c + dc[i];
+                int ck = cr * N + cc;
+                if (0 <= cr && cr < N && 0 <= cc && cc < N
+                        && !seen.contains(ck) && grid[cr][cc] <= T) {
+                    stack.add(ck);
+                    seen.add(ck);
+                }
+            }
+        }
+
+        return false;
+    }
+}
+public double frogPosition(int n, int[][] edges, int t, int target) {
+    if (n == 1) return 1;
+    // 构造节点
+    Map<Integer, TreeNode> map = new HashMap<>();
+    for (int i = 1; i <= n; i++) map.put(i, new TreeNode(i));
+    // 记录链接
+    Map<TreeNode, List<TreeNode>> abMap = new HashMap<>(), baMap = new HashMap<>();
+    for (int[] edge : edges) {
+        TreeNode a = map.get(edge[0]);
+        TreeNode b = map.get(edge[1]);
+        if (!abMap.containsKey(a)) abMap.put(a, new LinkedList<>());
+        if (!baMap.containsKey(b)) baMap.put(b, new LinkedList<>());
+        abMap.get(a).add(b);
+        baMap.get(b).add(a);
+    }
+    // 连接节点
+    TreeNode from = map.get(1); // root
+    dfs(from, abMap, baMap); // 通过dfs连接树的各个节点
+
+    // 开始反着跳
+    TreeNode node = map.get(target);
+    int step = 0, branches = 1; // 回头看看有多少分支
+    while (node != null && node.num != 1) {
+        step++;
+        node = node.parent;
+        if (node != null) branches *= node.subList.size();
+    }
+
+    if (t < step) return 0; // 时间不够
+    if (t > step && map.get(target).subList.size() > 0) return 0; // 跳过了
+    return 1.0 / branches;
+}
+
+private void dfs(TreeNode from, Map<TreeNode, List<TreeNode>> abMap, Map<TreeNode, List<TreeNode>> baMap) {
+    List<TreeNode> subs = new LinkedList<>();
+    if (abMap.containsKey(from)) subs.addAll(abMap.get(from));
+    if (baMap.containsKey(from)) subs.addAll(baMap.get(from));
+    for (TreeNode sub : subs) {
+        if (sub == from.parent) continue; // 向下的，才是sub
+        sub.parent = from;
+        from.subList.add(sub);
+        dfs(sub, abMap, baMap);
+    }
+}
+
+class TreeNode {
+    int num;
+    TreeNode parent;
+    List<TreeNode> subList;
+
+    TreeNode(int num) {
+        this.num = num;
+        this.parent = null;
+        this.subList = new LinkedList<>();
+    }
+}
+class Solution {
+    //使用树状数组，每次求小于他的值与大于他的值中的较小值
+    class arrTrie{
+        int [] arr;
+        int n;
+        public arrTrie(int n){
+            this.n = n;
+            arr = new int [n];
+        }
+        public int lowbit(int i){
+            return i&(-i);
+        }
+        public int query(int x){
+            int ans = 0;
+            for(int i=x;i>0;i-=lowbit(i)){
+                ans+=arr[i];
+            }
+            return ans;
+        }
+        public void update(int x,int add){
+            for(int i=x;i<n;i+=lowbit(i)){
+                arr[i]+=add;
+            }
+        }
+    }
+    public int createSortedArray(int[] instructions) {
+        //先进行离散化
+        Map<Integer,Integer> map = new HashMap<>();
+        TreeSet<Integer> set = new TreeSet<>();
+        for(int i:instructions){
+            set.add(i);
+        }
+        int index = 1;
+        while(!set.isEmpty()){
+            map.put(set.pollFirst(),index++);
+        }
+        arrTrie tree = new arrTrie(map.size()+1);
+        int ans = 0;
+        for(int i=0;i<instructions.length;i++){
+            int l = map.get(instructions[i]);
+            int less = tree.query(l-1);
+            int more = i-tree.query(l);//比他大的元素
+            int temp = Math.min(less,more);
+            ans = ans%1000000007+temp%1000000007;
+            tree.update(l, 1);
+        }
+        return ans;
+        
+    }
+}
+class Solution {
+    public int numMusicPlaylists(int N, int L, int K) {
+        int MOD = 1_000_000_007;
+
+        long[][] dp = new long[L+1][N+1];
+        dp[0][0] = 1;
+        for (int i = 1; i <= L; ++i)
+            for (int j = 1; j <= N; ++j) {
+                dp[i][j] += dp[i-1][j-1] * (N-j+1);
+                dp[i][j] += dp[i-1][j] * Math.max(j-K, 0);
+                dp[i][j] %= MOD;
+            }
+
+        return (int) dp[L][N];
+    }
+}
+class Solution {
+    public int numMusicPlaylists(int N, int L, int K) {
+        int MOD = 1_000_000_007;
+
+        // dp[S] at time P = <S, P> as discussed in article
+        long[] dp = new long[L-N+1];
+        Arrays.fill(dp, 1);
+        for (int p = 2; p <= N-K; ++p)
+            for (int i = 1; i <= L-N; ++i) {
+                dp[i] += dp[i-1] * p;
+                dp[i] %= MOD;
+            }
+
+        // Multiply by N!
+        long ans = dp[L-N];
+        for (int k = 2; k <= N; ++k)
+            ans = ans * k % MOD;
+        return (int) ans;
+    }
+}
+public class Solution {
+    public int findMaxForm(String[] strs, int m, int n) {
+        int[][] dp = new int[m + 1][n + 1];
+        for (String s: strs) {
+            int[] count = countzeroesones(s);
+            for (int zeroes = m; zeroes >= count[0]; zeroes--)
+                for (int ones = n; ones >= count[1]; ones--)
+                    dp[zeroes][ones] = Math.max(1 + dp[zeroes - count[0]][ones - count[1]], dp[zeroes][ones]);
+        }
+        return dp[m][n];
+    }
+    public int[] countzeroesones(String s) {
+        int[] c = new int[2];
+        for (int i = 0; i < s.length(); i++) {
+            c[s.charAt(i)-'0']++;
+        }
+        return c;
+    }
+}
+public int findMaxForm(String[] strs, int m, int n) {
+        int M = m+1;
+        int N = n+1;
+        int[][][] dp = new int[strs.length+1][M][N]; // dp[插入/不插入第i个字符串][m个1][n个0] 组合最多的字符串数量
+        for (int i=1;i<strs.length+1;i++) {
+            String str = strs[i-1];
+            int zeroCount = getZeroCount(str);
+            int oneCount = str.length()-zeroCount;
+            for (int j = 0; j < M; j++) {
+                for (int k = 0; k < N; k++) {
+                    if(j>=zeroCount&&k>=oneCount)
+                    dp[i][j][k] = Math.max(dp[i-1][j-zeroCount][k-oneCount]+1,dp[i][j][k]);
+                    dp[i][j][k] = Math.max(dp[i-1][j][k],dp[i][j][k]);
+                }
+            }
+        }
+        return dp[strs.length][m][n];
+    }
