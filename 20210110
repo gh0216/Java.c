@@ -1,0 +1,303 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+
+    public static int energy(int n, int a, int[] b) {
+        for (int i = 0; i < n; i++) {
+            if (a >= b[i])
+                a += b[i];
+            else
+                a += maxCommonNum(b[i], a);
+        }
+        return a;
+    }
+
+    static int maxCommonNum(int m, int n) {
+        if (m < n) {// 保证m>n,若m<n,则进行数据交换
+            int temp = m;
+            m = n;
+            n = temp;
+        }
+        if (m % n == 0) // 若余数为0,返回最大公约数
+            return n;
+        else // 否则,进行递归,把n赋给m,把余数赋给n
+            return maxCommonNum(n, m % n);
+    }
+
+    public static void main(String[] args) {
+        // 对于每组数据,第一行是两个整数n(1≤n<100000)表示怪物的数量和a表示小易的初始能力值.
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            int n = sc.nextInt();
+            int a = sc.nextInt();
+            // 第二行n个整数,b1,b2...bn(1≤bi≤n)表示每个怪物的防御力
+            int[] b = new int[n];
+            for (int i = 0; i < n; i++)
+                b[i] = sc.nextInt();
+            System.out.println(energy(n, a, b));
+        }
+
+    }
+
+
+    public static void main4(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        while (sc.hasNext()) {
+            int num = sc.nextInt();
+            int power = sc.nextInt();
+            sc.nextLine();
+            String s = sc.nextLine();
+            String[] s1 = s.split(" ");
+            for (int i = 0; i < s1.length; i++) {
+                if (power >= Integer.parseInt(s1[i])) {
+                    power += Integer.valueOf(s1[i]);
+                } else {
+                    power += maxDivisor(power, Integer.valueOf(s1[i]));
+                }
+            }
+            System.out.println(power);
+        }
+    }
+
+    public static int maxDivisor(int A, int B) {
+        int num = 1;
+        int n = Math.min(A, B);
+        for (int i = 1; i < n; i++) {
+            if (A % i == 0 && B % i == 0) {
+                num = i;
+            }
+        }
+        return num;
+    }
+    public static void main3(String[] args)
+    {
+        Scanner sc=new Scanner(System.in);
+        int n = sc.nextInt();
+        int []a = new int[n];
+        int A1=0,A2=0,A3=0,A5,t=0,c1=0,c2=0,c3=0,c4=0,c5=0;
+        double A4=0;
+        int sum=0,b=0;
+        int max=0;
+        int count=1;
+        for(int i=0;i<n;i++)
+        {
+            a[i]=sc.nextInt();
+            if(a[i]%5==0)
+            {
+                if(a[i]%2==0)
+                {
+                    A1=A1+a[i];
+                    c1++;
+                }
+            }
+            else if(a[i]%5==1)
+            {
+                c2++;
+
+                if(count%2==1)
+                    a[i]=a[i];
+                else
+                    a[i]=(-1)*a[i];
+                A2=A2+a[i];
+                count++;
+            }
+            else if(a[i]%5==2)
+            {
+                c3++;
+                A3++;
+            }
+            else if(a[i]%5==3)
+            {
+                c4++;
+                b++;
+                sum=sum+a[i];
+            }
+            else if(a[i]%5==4)
+            {
+                c5++;
+
+                if(max<a[i])
+                {
+                    t=max;
+                    max=a[i];
+                    a[i]=t;
+                }
+
+            }
+        }
+
+        A5=max;
+        if(c1==0)
+        {
+            System.out.print("N"+" ");
+        }
+        if(c1!=0)
+        {
+            System.out.print(A1+" ");
+        }
+        if(c2==0)
+        {
+            System.out.print("N"+" ");
+        }
+        if(c2!=0)
+        {
+            System.out.print(A2+" ");
+        }
+        if(c3==0)
+        {
+            System.out.print("N"+" ");
+        }
+        if(c3!=0)
+        {
+            System.out.print(A3+" ");
+        }
+        if(c4==0)
+        {
+            System.out.print("N"+" ");
+        }
+        if(c4!=0)
+        {
+            A4=(float)sum/b;
+            System.out.printf("%.1f"+" ",A4);
+        }
+        if(c5==0)
+        {
+            System.out.print("N");
+        }
+        if(c5!=0)
+        {
+            System.out.print(A5);
+        }
+    }
+
+    static int sum1 = 0;
+    static int sum2 = 0;
+    public static int func0(int a){
+        if (a % 10 == 0)
+            sum1 += a;
+        return sum1;
+    }
+    public static int func3(int a){
+            sum2 += a;
+        return sum2;
+    }
+
+    public static void main2(String[] args) {
+        int[] arr = new int[10];
+        int count = 0;
+        for (int a:arr) {
+            if (a % 5 == 0) {
+                int yi = func0(a);
+            }else if (a % 5 == 1) {
+                func0(a);
+            }else if (a % 5 == 2){
+                func3(a);
+                count++;
+            }else if (a % 5 == 3){
+                func3(a);
+            }else {
+
+            }
+        }
+    }
+
+    public static int func(int[] arr){
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int a:arr) {
+            map.put(a,map.getOrDefault(a,0)+1);
+        }
+        for(Map.Entry<Integer,Integer> entry : map.entrySet()){
+//            System.out.println(entry.getKey() + "--->" + entry.getValue());
+            if (entry.getValue()>arr.length/2)  return entry.getKey();
+        }
+//        System.out.println();
+//        Set<Integer> set = map.keySet();
+//        for (Integer key : set) {
+//            if (set > arr.length/2)
+//                return key;
+//        }
+        return 0;
+    }
+
+    public static void main1(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+            String s = sc.nextLine();
+            String[] str=s.split(" ");
+            int[] arr= new int[str.length];
+            for(int i=0;i<str.length;i++){
+                arr[i]=Integer.parseInt(str[i]);
+            }
+            System.out.println(func(arr));
+        }
+//        while (sc.hasNextInt()){
+//
+//        }
+//       int[] arr = {1,2,3,2,2};
+    }
+}
+
+class Gift {
+    public int getValue(int[] gifts, int n) {
+        // write code here
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int a:gifts) {
+            map.put(a,map.getOrDefault(a,0)+1);
+        }
+        for(Map.Entry<Integer,Integer> entry : map.entrySet()){
+            if (entry.getValue()>gifts.length/2)  return entry.getKey();
+        }
+        return 0;
+    }
+}
+class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+class Partition {
+    public ListNode partition(ListNode pHead, int x) {
+        // write code here
+        ListNode less = null;//这是小于x的元素所在的链表
+        ListNode lessLast = null;//小于x的链表的最后一个结点
+
+        ListNode great = null;//这是大于等于x的元素所在的链表
+        ListNode greatLast = null;//大于等于x的链表的最后一个结点
+
+        ListNode cur = pHead;//从原链表的头结点开始遍历
+        while (cur != null) {
+            if (cur.val < x) {//当原链表中的元素小于x时
+                if(less == null) {//当小于x的链表为空时
+                    less = cur;
+                }else{//当小于x的链表不为空时
+                    lessLast.next = cur;
+                }
+                lessLast = cur;//相当于让lessLast也往后走了一步
+            }else{//当原链表中的元素大于等于x时
+                if(great == null) {
+                    great = cur;
+                }else{
+                    greatLast.next = cur;
+                }
+                greatLast = cur;
+            }
+            cur = cur.next;
+        }
+        //或许会有一个空链表
+        if(less == null) {
+            return great;
+        }else{
+            lessLast.next = great;
+            if(greatLast != null){
+                greatLast.next = null;
+            }
+            return less;
+        }
+    }
+}
