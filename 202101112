@@ -1,0 +1,306 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        int count = 0;
+        String str = " ";
+        Scanner scanner = new Scanner(System.in);
+        double money = scanner.nextDouble();
+        int money1 = (int)money;  //整数位
+        double money2 = money-money1;   //小数位
+        int do1 = money1;
+        while (do1 != 0){
+            do1 = do1/10;
+            count++;
+        }
+        String[] arr = new String[count];
+        int[] arr1 = new int[count];
+        while (money1 != 0){
+            arr1[count-1] = money1%10;
+            money1 = money1 / 10;
+            count--;
+        }
+        for (int i = 0; i < arr1.length ; i++) {
+            if (arr1[i] == 0){
+                arr[i] = "零";
+            }else if (arr1[i] == 1){
+                arr[i] = "壹";
+            }else if (arr1[i] == 2){
+                arr[i] = "贰";
+            }else if (arr1[i] == 3){
+                arr[i] = "叁";
+            }else if (arr1[i] == 4){
+                arr[i] = "肆";
+            }else if (arr1[i] == 5){
+                arr[i] = "伍";
+            }else if (arr1[i] == 6){
+                arr[i] = "陆";
+            }else if (arr1[i] == 7){
+                arr[i] = "柒";
+            }else if (arr1[i] == 8){
+                arr[i] = "捌";
+            }else if (arr1[i] == 9){
+                arr[i] = "玖";
+            }
+        }
+        for (int i = 0; i < arr.length; i++) {
+            
+        }
+        System.out.println(count);
+        System.out.println(money1);
+        System.out.println(money2);
+        System.out.println(Arrays.toString(arr1));
+        System.out.println(Arrays.toString(arr));
+    }
+
+    public static void main2(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        //输入课程数n
+        int n = sc.nextInt();
+        int[] a = new int[n]; //存放学分的数组
+        int[] b = new int[n];//存放对应成绩的数组
+        float sum = 0;
+        int v = 0;//存放学分的总和
+        //输入相应课程学分
+        for(int i = 0;i< n;i++){
+            a[i] = sc.nextInt();
+            v += a[i];
+        }
+        //成绩
+        for(int i = 0;i<n;i++){
+            b[i] = sc.nextInt();
+        }
+
+        for(int i = 0;i<n;i++){
+            int grade = b[i];
+
+            if(grade>=90){
+                sum +=4.0*a[i];
+            }
+            if(grade>=85&&grade <= 89){
+                sum +=3.7*a[i];
+            }
+            if(grade <= 84 && grade>=82 ){
+                sum +=3.3*a[i];
+
+            }
+            if(grade <= 81 && grade>=78){
+                sum +=3.0*a[i];
+            }
+            if(grade <= 77 && grade>=75 ){
+                sum +=2.7*a[i];
+            }
+            if(grade <= 74 && grade>=72){
+                sum +=2.3*a[i];
+            }
+            if(grade<=71 && grade>=68 ){
+                sum +=2.0*a[i];
+            }
+            if( grade<=67 && grade>=64){
+                sum +=1.5*a[i];
+            }
+            if(grade<=63 && grade>=60){
+                sum +=1.0*a[i];
+            }
+            if(grade<60){
+                sum += 0;
+            }
+
+        }
+
+        System.out.println(String.format("%.2f",sum/v));
+    }
+    public static double func(int a,int b){
+        if (b >= 90) return a*1.0*(b/100);
+        return a*1.0;
+    }
+
+    public static void main1(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextInt()){
+
+        }
+    }
+}
+/*
+public class ListNode {
+    int val;
+    ListNode next = null;
+ 
+    ListNode(int val) {
+        this.val = val;
+    }
+}*/
+public class Solution {
+    public ListNode ReverseList(ListNode head) {
+        if(head==null) {
+            return null;
+        }
+        ListNode newHead=null;
+        ListNode cur=head;
+         
+        ListNode pre=null;
+        while(cur!=null) {
+            ListNode curNext=cur.next;
+            if(curNext==null) {
+                newHead=cur;
+            }
+            cur.next=pre;
+            pre=cur;
+            cur=curNext;
+        }
+        return newHead;
+         
+    }
+}
+import java.util.*;
+public class Solution {
+    public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
+        int f=0;
+            ArrayList<Integer> s= new ArrayList<Integer>();
+        if (k>input.length)
+            return s;
+            for (int i =0 ; i<k ; i++) {
+                for (int j=i;j<input.length;j++) {
+                    if (input[i]> input[j])
+                    {
+                        f=input[i];
+                        input[i]=input[j];
+                        input[j]=f;
+                    }
+                }
+                s.add(input[i]);
+            }
+            return s;
+    }
+}
+import java.util.*;
+ 
+/*
+ * public class TreeNode {
+ *   int val = 0;
+ *   TreeNode left = null;
+ *   TreeNode right = null;
+ * }
+ */
+ 
+public class Solution {
+    /**
+     *
+     * @param root TreeNode类 the root of binary tree
+     * @return int整型二维数组
+     */
+   public int flag = 0, flag1 = 0, flag2 = 0;
+    public int[][] threeOrders (TreeNode root) {
+        // write code here
+        int[][] nums = new int[3][getRootSize(root)];
+         
+        getOrder(root, nums);
+        return nums;
+    }
+    public void getOrder(TreeNode root, int[][] nums){
+        if(root == null){return ;}
+        nums[0][flag++] = root.val;
+        getOrder(root.left, nums);
+        nums[1][flag1++] = root.val;
+        getOrder(root.right, nums);
+        nums[2][flag2++] = root.val;
+    }
+    public int getRootSize(TreeNode root){
+        if(root == null){return 0;}
+        return 1 + getRootSize(root.left) + getRootSize(root.right);
+    }
+}
+import java.util.*;
+ 
+ 
+public class Solution {
+    /**
+     * max water
+     * @param arr int整型一维数组 the array
+     * @return long长整型
+     */
+    public long maxWater (int[] arr) {
+        // write code here
+        if(arr==null || arr.length==0) return 0L;
+        long ans = 0;
+        int l=0, r=arr.length-1;
+        int lmax = arr[0], rmax=arr[arr.length-1];
+        while(l<=r) {
+            lmax = Math.max(arr[l], lmax);
+            rmax = Math.max(arr[r], rmax);
+            if(lmax < rmax) {
+                ans += lmax - arr[l];
+                l++;
+            } else {
+                ans += rmax - arr[r];
+                r--;
+            }
+        }
+        return (long) ans;
+    }
+}
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+     
+        if(head==null){
+             
+            return false;
+        }
+         
+        ListNode q=head;
+        ListNode p=head;
+        while(q!=null&&q.next!=null){
+             
+            q=q.next.next;
+            p=p.next;
+            if(q==p){
+                 
+                return true;
+            } 
+        }
+        return false;
+         
+    }
+}
+import java.util.*;
+ 
+public class Solution {
+    public int getLongestPalindrome(String A, int n) {
+        // write code here
+        char[] ch = A.toCharArray();
+        int res = 0;
+        for(int i = 0; i < n; i++){
+            int l = i, r = i, sameR = i;
+            //定位左右两边,避免abba和aba
+            while(l - 1 >= 0 && ch[l - 1] == ch[i]) l--;
+            while(r + 1 < n && ch[r + 1] == ch[i]) r++;
+            sameR = r;
+             
+            while(l - 1 >= 0 && r + 1 < n && ch[l - 1] == ch[r + 1]){
+                l--;
+                r++;
+            }
+             
+            res = Math.max(res, r - l + 1);
+             
+            //优化
+            i = sameR;
+        }
+        return res;
+    }
+}
